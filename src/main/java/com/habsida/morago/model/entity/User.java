@@ -73,7 +73,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Withdrawals> withdrawals;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<com.habsida.morago.entities.Notification> notifications;
+    private List<Notification> notifications;
     @OneToMany(mappedBy = "whoUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Ratings> givenRatings;
     @OneToMany(mappedBy = "toWhomUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
