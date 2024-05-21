@@ -3,9 +3,7 @@ package com.habsida.morago.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDateTime;
 
@@ -26,11 +24,9 @@ public class PasswordReset {
 
     @CreatedDate
     @Column(updatable = false)
-//    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-//    @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
 
 }

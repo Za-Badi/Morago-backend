@@ -1,12 +1,10 @@
 package com.habsida.morago.model.entity;
 
 
-import com.habsida.morago.model.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Timer;
 
 @Entity
 @Table(name = "notification")

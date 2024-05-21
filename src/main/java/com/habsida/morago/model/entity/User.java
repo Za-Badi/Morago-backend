@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.management.relation.Role;
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -54,7 +53,7 @@ public class User implements UserDetails {
     private Integer onBoardingStatus;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="image_id", nullable = false)
-    private Image image;
+    private Files image;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name="translator_profile_id", nullable = false)
     private TranslatorProfile translatorProfile;
@@ -79,9 +78,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "toWhomUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Ratings> receivedRatings;
     @OneToMany(mappedBy = "recipientUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Call> recipientCalls;
+    private List<Calls> recipientCalls;
     @OneToMany(mappedBy = "callerUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Call> callerCalls;
+    private List<Calls> callerCalls;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return roles;}
     @Override
