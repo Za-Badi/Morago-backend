@@ -30,7 +30,7 @@ public class Debtor {
     private LocalDateTime updated_at;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

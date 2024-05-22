@@ -1,16 +1,41 @@
 package com.habsida.morago.model.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.sun.java.accessibility.util.Translator;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ratings")
+@Data
 @NoArgsConstructor
-@Getter
-@Setter
+@AllArgsConstructor
+
 public class Ratings {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "translator_id", nullable = false)
+    private Translator translator;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "ratings")
+    private Double ratings;
+
+    @Column(name = "total_ratings")
+    private Integer totalRatings;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_id")
+    private Files file;
 }
