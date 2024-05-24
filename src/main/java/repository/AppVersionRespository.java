@@ -1,6 +1,6 @@
 package repository;
 
-import com.habsida.morago.enums.EPlatform;
+import com.habsida.morago.model.enums.EPlatform;
 import com.habsida.morago.model.entity.AppVersion;
 import org.springframework.data.jpa.repository.JpaRepository;
 

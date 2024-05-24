@@ -1,6 +1,6 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.enums.EPlatform;
+import com.habsida.morago.model.enums.EPlatform;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,9 +26,7 @@ public class AppVersion {
     private String latest;
     @CreatedDate
     @Column(updatable = false)
-//    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     @LastModifiedDate
-//    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
 }

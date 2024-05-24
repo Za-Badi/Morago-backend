@@ -1,6 +1,6 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.enums.QuestionsCategories;
+import com.habsida.morago.model.enums.QuestionsCategories;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
