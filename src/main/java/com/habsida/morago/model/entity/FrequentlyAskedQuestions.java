@@ -29,11 +29,9 @@ public class FrequentlyAskedQuestions {
 
     @CreatedDate
     @Column(updatable = false)
-//    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-//    @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
 
 }

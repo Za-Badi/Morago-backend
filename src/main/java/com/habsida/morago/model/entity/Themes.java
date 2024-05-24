@@ -1,6 +1,6 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.enums.QuestionsCategories;
+import com.habsida.morago.model.enums.QuestionsCategories;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,7 +43,6 @@ public class Themes {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
     private Categories categories;
 
     @Override
