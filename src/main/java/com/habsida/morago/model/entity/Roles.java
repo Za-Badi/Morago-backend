@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-
+import java.util.List;
 import java.time.LocalDateTime;
 
 @Entity
@@ -28,6 +28,9 @@ public class Roles implements GrantedAuthority {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 
     @Override
     public String getAuthority() {
