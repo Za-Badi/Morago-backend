@@ -40,10 +40,11 @@ public class Calls {
     @Column(name = "commission")
     private Double commission;
 
-    @Column(name = "translator_has_rated", columnDefinition = "bit(1)")
+//    @Column(name = "translator_has_rated", columnDefinition = "bit(1)")
+    @Column(name = "translator_has_rated")
     private Boolean translatorHasRated;
-
-    @Column(name = "user_has_rated", columnDefinition = "bit(1)")
+//    @Column(name = "user_has_rated", columnDefinition = "bit(1)")
+    @Column(name = "user_has_rated")
     private Boolean userHasRated;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -17,10 +17,11 @@ public class Debtor {
     @Column(name = "account_holder", length = 200)
     private String account_holder;
 
-    @Column(name = "account_holder", length = 200)
+    @Column(name = "name_of_bank", length = 200)
     private String name_of_bank;
 
-    @Column(name = "isPaid", columnDefinition = "bit(1)")
+//    @Column(name = "isPaid", columnDefinition = "bit(1)")
+    @Column(name = "isPaid")
     private Boolean isPaid;
 
     @Column(name = "created_at")

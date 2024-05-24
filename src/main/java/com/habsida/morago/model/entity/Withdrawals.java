@@ -1,6 +1,5 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.model.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,8 +19,7 @@ public class Withdrawals {
     @Column(name = "account_holder", length = 200)
     private String account_holder;
 
-    @Column(name = "account_holder", length = 200)
-    private String name_of_bank;
+
 
     @Column(name = "sum")
     private Double sum;
