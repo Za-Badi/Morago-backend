@@ -31,10 +31,10 @@ public class Deposits {
     private String status;
 
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

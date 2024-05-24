@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Roles {
+public class Roles implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,8 @@ public class Roles {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 }

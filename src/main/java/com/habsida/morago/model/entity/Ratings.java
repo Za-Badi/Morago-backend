@@ -19,12 +19,12 @@ public class Ratings {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "translator_id", nullable = false)
-    private Translator translator;
+    @JoinColumn(name = "who_user_id", nullable = false)
+    private User whoUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "to_whom_user_id", nullable = false)
+    private User toWhomUser;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

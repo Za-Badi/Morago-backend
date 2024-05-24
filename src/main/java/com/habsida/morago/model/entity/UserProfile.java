@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.User;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,5 +22,5 @@ public class UserProfile {
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
     @OneToOne(mappedBy = "userProfile", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private UserProfile user;
+    private User user;
 }

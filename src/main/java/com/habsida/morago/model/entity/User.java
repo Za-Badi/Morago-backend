@@ -1,6 +1,5 @@
 package com.habsida.morago.model.entity;
 
-
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -77,9 +76,9 @@ public class User implements UserDetails {
     private List<Ratings> givenRatings;
     @OneToMany(mappedBy = "toWhomUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Ratings> receivedRatings;
-    @OneToMany(mappedBy = "recipientUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Calls> recipientCalls;
-    @OneToMany(mappedBy = "callerUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Calls> callerCalls;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {return roles;}
