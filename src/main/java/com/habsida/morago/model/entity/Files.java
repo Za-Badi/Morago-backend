@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class Files {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,4 +27,6 @@ public class Files {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+    @OneToOne(mappedBy = "image", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private User user;
 }
