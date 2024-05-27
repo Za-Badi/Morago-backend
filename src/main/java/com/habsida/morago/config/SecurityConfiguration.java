@@ -44,7 +44,6 @@ public class SecurityConfiguration {
                 .sessionManagement(sessionManagementCustomizer -> sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-
                 .cors(corsCustomizer->corsCustomizer.disable());
 //                .cors(corsCustomizer-> corsCustomizer.configurationSource(corsConfigurationSource()));
 
