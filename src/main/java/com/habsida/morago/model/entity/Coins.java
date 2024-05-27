@@ -19,8 +19,8 @@ public class Coins {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String coin;
-    private String won;
+    private Double coin;
+    private Double won;
     @Column(updatable = false)
 //    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;

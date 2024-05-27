@@ -1,0 +1,40 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+type Query {
+    getCoins(id:ID): Coins
+    getAllCoins: [Coins]
+    getAppVersionByPlatform(platform: EPlatform!):AppVersion
+    getAllAppVersions:[AppVersion]
+    test(t:String): String
+}
+
+type Mutation {
+    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
+    updateAppVersion(platform: EPlatform!, min: String, latest: String):AppVersion
+    deleteAppVersion(platform: EPlatform!): Boolean
+    createCoins(coin: Float!, won: Float!): Coins
+    updateCoins(id:ID,coin: Float!, won: Float!): Coins
+    deleteCoins(id: ID!): Boolean
+}
+
+type AppVersion {
+    platform: EPlatform
+    min: String
+    latest: String
+    createdAt: String
+    updatedAt: String
+}
+type Coins {
+    coin: String
+    won: String
+    createdAt: String
+    updatedAt: String
+}
+
+enum EPlatform {
+    IOS
+    ANDROID
+}
+
