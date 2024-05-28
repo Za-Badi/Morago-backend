@@ -1,6 +1,7 @@
 package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import com.habsida.morago.exceptions.GraphqlExceptionHandler;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
 import com.habsida.morago.service.AppVersionService;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AppVersionResolver implements GraphQLMutationResolver {
     private final AppVersionService appVersionService;
-    public AppVersion createAppVersion(EPlatform platform, String min, String latest) {
+    public AppVersion createAppVersion(EPlatform platform, String min, String latest) throws GraphqlExceptionHandler {
         System.out.println("zaha za");
         return appVersionService.create(platform, min, latest);
     }

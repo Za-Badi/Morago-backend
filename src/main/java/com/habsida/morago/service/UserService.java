@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
 
 
 @Service
@@ -19,6 +19,13 @@ import java.util.List;
 public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
+
+
+
+//    Kiran
+public Optional<User> getUserById (Long id) {
+    return repository.findById(id);
+}
 
 
 //   Commented this to remove the error

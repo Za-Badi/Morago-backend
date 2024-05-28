@@ -1,8 +1,9 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.model.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -15,23 +16,25 @@ public class Debtor {
     private Long id;
 
     @Column(name = "account_holder", length = 200)
-    private String account_holder;
+    private String accountHolder;
 
     @Column(name = "name_of_bank", length = 200)
-    private String name_of_bank;
+    private String nameOfBank;
 
-//    @Column(name = "isPaid", columnDefinition = "bit(1)")
-    @Column(name = "isPaid")
+    @Column(name = "isPaid", columnDefinition = "bit(1)")
     private Boolean isPaid;
 
-    @Column(name = "created_at")
-    private LocalDateTime created_at;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
+
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 }

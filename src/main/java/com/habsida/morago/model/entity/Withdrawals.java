@@ -2,6 +2,8 @@ package com.habsida.morago.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -14,12 +16,13 @@ public class Withdrawals {
     private Long id;
 
     @Column(name = "account_number", length = 200)
-    private String account_number;
+    private String accountNumber;
 
     @Column(name = "account_holder", length = 200)
-    private String account_holder;
+    private String accountHolder;
 
-
+    @Column(name = "name_of_bank", length = 200)
+    private String nameOfBank;
 
     @Column(name = "sum")
     private Double sum;
@@ -27,14 +30,16 @@ public class Withdrawals {
     @Column(name = "status", length = 50)
     private String status;
 
-    @Column(name = "created_at")
-    private LocalDateTime created_at;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @Column(name = "updated_at")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 }
