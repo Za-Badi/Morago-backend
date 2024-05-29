@@ -1,4 +1,4 @@
-
+package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.model.entity.Ratings;
 import com.habsida.morago.repository.RatingsRepository;

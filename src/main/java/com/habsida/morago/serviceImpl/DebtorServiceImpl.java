@@ -3,7 +3,6 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.model.entity.Debtor;
 import com.habsida.morago.repository.DebtorRepository;
 import com.habsida.morago.service.DebtorService;
-import com.habsida.morago.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

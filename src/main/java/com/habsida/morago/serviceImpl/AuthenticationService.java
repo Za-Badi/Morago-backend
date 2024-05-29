@@ -1,4 +1,4 @@
-package com.habsida.morago.service;
+package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.dtos.LoginUserDto;
 import com.habsida.morago.dtos.RegisterUserDto;

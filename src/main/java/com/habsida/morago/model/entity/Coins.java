@@ -15,16 +15,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Setter
 @Getter
-public class Coins {
+public class Coins{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double coin;
     private Double won;
     @Column(updatable = false)
-//    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime createdAt;
     @LastModifiedDate
-//    @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updatedAt;
 }

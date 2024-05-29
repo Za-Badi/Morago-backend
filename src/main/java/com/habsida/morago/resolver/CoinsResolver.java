@@ -1,15 +1,12 @@
 package com.habsida.morago.resolver;
 
 //import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.entity.Coins;
-import com.habsida.morago.model.enums.EPlatform;
-import com.habsida.morago.service.CoinsService;
+import com.habsida.morago.serviceImpl.CoinsService;
 //import graphql.kickstart.tools.GraphQLMutationResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 @Controller

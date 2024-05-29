@@ -2,7 +2,7 @@
 //
 //import com.habsida.morago.model.entity.User;
 //import com.habsida.morago.repository.UserRepository;
-//import com.habsida.morago.service.UserService;
+//import com.habsida.morago.serviceImpl.UserService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Service;
 //

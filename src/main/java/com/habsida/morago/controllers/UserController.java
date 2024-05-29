@@ -1,7 +1,7 @@
 package com.habsida.morago.controllers;
 
 import com.habsida.morago.model.entity.User;
-import com.habsida.morago.service.UserService;
+import com.habsida.morago.serviceImpl.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

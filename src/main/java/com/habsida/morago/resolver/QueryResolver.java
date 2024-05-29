@@ -5,13 +5,12 @@ package com.habsida.morago.resolver;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.entity.Coins;
 import com.habsida.morago.model.enums.EPlatform;
-import com.habsida.morago.service.AppVersionService;
-import com.habsida.morago.service.CoinsService;
+import com.habsida.morago.serviceImpl.AppVersionService;
+import com.habsida.morago.serviceImpl.CoinsService;
 //import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 

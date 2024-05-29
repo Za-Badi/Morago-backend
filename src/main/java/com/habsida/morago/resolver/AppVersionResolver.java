@@ -6,12 +6,11 @@ package com.habsida.morago.resolver;
 import com.habsida.morago.exceptions.GraphqlExceptionHandler;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
-import com.habsida.morago.service.AppVersionService;
+import com.habsida.morago.serviceImpl.AppVersionService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 

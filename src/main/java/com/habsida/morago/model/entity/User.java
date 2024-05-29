@@ -5,6 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.aspectj.weaver.ast.Call;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -40,8 +44,10 @@ public class User implements UserDetails {
     private Double ratings;
     @Column(name="total_ratings")
     private Integer totalRatings;
-    @Column(name="created_at")
+    @CreationTimestamp
+    @Column(name="created_at", updatable = false)
     private LocalDateTime createdAt;
+    @UpdateTimestamp
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
     @Column(name="is_active")
@@ -51,15 +57,15 @@ public class User implements UserDetails {
     @Column(name="on_boarding_status")
     private Integer onBoardingStatus;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="image_id", nullable = false)
+    @JoinColumn(name="image_id")
     private Files image;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="translator_profile_id", nullable = false)
+    @JoinColumn(name="translator_profile_id")
     private TranslatorProfile translatorProfile;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="user_profile_id", nullable = false)
+    @JoinColumn(name="user_profile_id")
     private UserProfile userProfile;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))

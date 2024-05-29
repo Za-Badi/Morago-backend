@@ -1,4 +1,4 @@
-package com.habsida.morago.service;
+package com.habsida.morago.serviceImpl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

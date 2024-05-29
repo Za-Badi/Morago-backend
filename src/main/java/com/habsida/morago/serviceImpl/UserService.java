@@ -1,4 +1,4 @@
-package com.habsida.morago.service;
+package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.UserRepository;
@@ -7,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,21 +20,19 @@ public class UserService {
 
 
 
-//    Kiran
-public Optional<User> getUserById (Long id) {
+    public Optional<User> getUserById (Long id) {
     return repository.findById(id);
 }
 
 
 //   Commented this to remove the error
 
-//    @Autowired
-//    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-//        this.repository = userRepository;
-//    }
-//    public UserService(UserRepository userRepository) {
-//        this.repository = userRepository;
-//    }
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordEncoder passwordEncoder1) {
+        this.repository = userRepository;
+        this.passwordEncoder = passwordEncoder1;
+    }
+
 
     public List<User> allUsers() {
         List<User> users = new ArrayList<>();
@@ -69,6 +65,8 @@ public Optional<User> getUserById (Long id) {
 //        Still to be implemented
         return "Password has been changed";
     }
+
+
 
 
 

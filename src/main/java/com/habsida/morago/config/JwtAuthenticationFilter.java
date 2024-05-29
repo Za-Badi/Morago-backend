@@ -1,6 +1,6 @@
 package com.habsida.morago.config;
 
-import com.habsida.morago.service.JwtService;
+import com.habsida.morago.serviceImpl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
