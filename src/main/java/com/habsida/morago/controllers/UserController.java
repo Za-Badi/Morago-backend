@@ -27,7 +27,7 @@ public class UserController {
     }
     @GetMapping("/all")
     public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.allUsers();
+        List <User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
     @GetMapping("/message")
@@ -40,7 +40,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         currentUser.setPhone(newPhone);
-        userService.saveUser(currentUser);
+        userService.addUser(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body("Phone number updated successfully");
     }
     @PostMapping("/newPhone")
@@ -49,7 +49,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) authentication.getPrincipal();
         currentUser.setPhone(newPhone);
-        userService.saveUser(currentUser);
+        userService.addUser(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body("Phone number updated successfully");
     }
 }

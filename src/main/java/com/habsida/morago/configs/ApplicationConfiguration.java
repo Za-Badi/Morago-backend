@@ -26,7 +26,8 @@ public class ApplicationConfiguration {
     }
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        int strength = 12;
+        return new BCryptPasswordEncoder(strength);
     }
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

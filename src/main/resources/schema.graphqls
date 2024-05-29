@@ -1,0 +1,103 @@
+type User {
+    id: ID!
+    phone: String!
+    password: String
+    firstName: String
+    lastName: String
+    balance: Float
+    fcmToken: String
+    apnToken: String
+    ratings: Float
+    totalRatings: Int
+    isActive: Boolean
+    isDebtor: Boolean
+    onBoardingStatus: Int
+    translatorProfile: TranslatorProfile
+    userProfile: UserProfile
+}
+
+type UserProfile {
+    id: ID!
+    isFreeCallMade: Boolean
+    user: User
+}
+
+type TranslatorProfile {
+    id: ID!
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    levelOfKorean: String
+    languages: [Language]
+    user: User
+}
+
+type Language {
+    id: ID!
+    name: String
+    translatorProfiles: [TranslatorProfile]
+}
+
+type Query {
+    getAllUsers: [User]
+    getUserById(id: ID!): User
+    getAllUserProfiles: [UserProfile]
+    getUserProfileById(id: ID!): UserProfile
+    getAllTranslatorProfiles: [TranslatorProfile]
+    getTranslatorProfileById(id: ID!): TranslatorProfile
+    getAllLanguages: [Language]
+    getLanguageById(id: ID!): Language
+}
+
+type Mutation {
+    addUser(input: UserInput): User
+    updateUser(id: ID!, input: UserInput): User
+    deleteUser(id: ID!): Boolean
+    addUserProfile(input: UserProfileInput): UserProfile
+    updateUserProfile(id: ID!, input: UserProfileInput): UserProfile
+    deleteUserProfile(id: ID!): Boolean
+    addTranslatorProfile(input: TranslatorProfileInput): TranslatorProfile
+    updateTranslatorProfile(id: ID!, input: TranslatorProfileInput): TranslatorProfile
+    deleteTranslatorProfile(id: ID!): Boolean
+    addLanguage(input: LanguageInput): Language
+    updateLanguage(id: ID!, input: LanguageInput): Language
+    deleteLanguage(id: ID!): Boolean
+}
+
+input UserInput {
+    phone: String!
+    password: String
+    firstName: String
+    lastName: String
+    balance: Float
+    fcmToken: String
+    apnToken: String
+    ratings: Float
+    totalRatings: Int
+    isActive: Boolean
+    isDebtor: Boolean
+    onBoardingStatus: Int
+    translatorProfile: TranslatorProfileInput
+    userProfile: UserProfileInput
+}
+
+input UserProfileInput {
+    isFreeCallMade: Boolean
+    user: UserInput
+}
+
+input TranslatorProfileInput {
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    levelOfKorean: String
+    languages: [LanguageInput]
+    user: UserInput
+}
+
+input LanguageInput {
+    name: String
+    translatorProfiles: [TranslatorProfileInput]
+}
