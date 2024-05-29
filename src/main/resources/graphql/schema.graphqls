@@ -3,7 +3,7 @@ schema {
     mutation: Mutation
 }
 type Query {
-    getCoins(id:ID): Coins
+    getCoin(id:ID): Coins
     getAllCoins: [Coins]
     getAppVersionByPlatform(platform: EPlatform!):AppVersion
     getAllAppVersions:[AppVersion]
