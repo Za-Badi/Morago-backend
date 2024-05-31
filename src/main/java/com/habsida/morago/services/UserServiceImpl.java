@@ -55,18 +55,6 @@ public class UserServiceImpl implements UserService {
             user.setIsActive(userUpdate.getIsActive());
             user.setIsDebtor(userUpdate.getIsDebtor());
             user.setOnBoardingStatus(userUpdate.getOnBoardingStatus());
-            //user.setImage(userUpdate.getImage());
-            //user.setTranslatorProfile(userUpdate.getTranslatorProfile());
-            //user.setUserProfile(userUpdate.getUserProfile());
-            //user.setRoles(userUpdate.getRoles());
-            //user.setDeposits(userUpdate.getDeposits());
-            //user.setDebtors(userUpdate.getDebtors());
-            //user.setWithdrawals(userUpdate.getWithdrawals());
-            //user.setNotifications(userUpdate.getNotifications());
-            //user.setDeposits(userUpdate.getDeposits());
-            //user.setGivenRatings(userUpdate.getGivenRatings());
-            //user.setReceivedRatings(userUpdate.getReceivedRatings());
-            //user.setRecipientCalls(userUpdate.getCallerCalls());
             return userRepository.save(user);
         } else {
             throw new Exception("User not found for id: " + id);

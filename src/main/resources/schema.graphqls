@@ -1,7 +1,6 @@
 type User {
     id: ID!
     phone: String!
-    password: String
     firstName: String
     lastName: String
     balance: Float
@@ -29,14 +28,12 @@ type TranslatorProfile {
     isAvailable: Boolean
     isOnline: Boolean
     levelOfKorean: String
-    languages: [Language]
     user: User
 }
 
 type Language {
     id: ID!
     name: String
-    translatorProfiles: [TranslatorProfile]
 }
 
 type Query {
@@ -54,8 +51,6 @@ type Mutation {
     addUser(input: UserInput): User
     updateUser(id: ID!, input: UserInput): User
     deleteUser(id: ID!): Boolean
-    addUserProfile(input: UserProfileInput): UserProfile
-    updateUserProfile(id: ID!, input: UserProfileInput): UserProfile
     deleteUserProfile(id: ID!): Boolean
     addTranslatorProfile(input: TranslatorProfileInput): TranslatorProfile
     updateTranslatorProfile(id: ID!, input: TranslatorProfileInput): TranslatorProfile
@@ -70,21 +65,6 @@ input UserInput {
     password: String
     firstName: String
     lastName: String
-    balance: Float
-    fcmToken: String
-    apnToken: String
-    ratings: Float
-    totalRatings: Int
-    isActive: Boolean
-    isDebtor: Boolean
-    onBoardingStatus: Int
-    translatorProfile: TranslatorProfileInput
-    userProfile: UserProfileInput
-}
-
-input UserProfileInput {
-    isFreeCallMade: Boolean
-    user: UserInput
 }
 
 input TranslatorProfileInput {
@@ -93,11 +73,10 @@ input TranslatorProfileInput {
     isAvailable: Boolean
     isOnline: Boolean
     levelOfKorean: String
-    languages: [LanguageInput]
-    user: UserInput
+    languages: [ID]
+    user: ID
 }
 
 input LanguageInput {
     name: String
-    translatorProfiles: [TranslatorProfileInput]
 }
