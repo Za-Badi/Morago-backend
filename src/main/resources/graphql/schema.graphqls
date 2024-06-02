@@ -38,26 +38,25 @@ type Language {
 
 type Query {
     getAllUsers: [User]
-    getUserById(id: ID!): User
+    getUserById(id: ID): User
     getAllUserProfiles: [UserProfile]
-    getUserProfileById(id: ID!): UserProfile
+    getUserProfileById(id: ID): UserProfile
     getAllTranslatorProfiles: [TranslatorProfile]
-    getTranslatorProfileById(id: ID!): TranslatorProfile
+    getTranslatorProfileById(id: ID): TranslatorProfile
     getAllLanguages: [Language]
-    getLanguageById(id: ID!): Language
+    getLanguageById(id: ID): Language
 }
 
 type Mutation {
-    addUser(input: UserInput): User
-    updateUser(id: ID!, input: UserInput): User
-    deleteUser(id: ID!): Boolean
-    deleteUserProfile(id: ID!): Boolean
-    addTranslatorProfile(input: TranslatorProfileInput): TranslatorProfile
-    updateTranslatorProfile(id: ID!, input: TranslatorProfileInput): TranslatorProfile
-    deleteTranslatorProfile(id: ID!): Boolean
-    addLanguage(input: LanguageInput): Language
-    updateLanguage(id: ID!, input: LanguageInput): Language
-    deleteLanguage(id: ID!): Boolean
+    addUser(userDto: UserInput): User
+    updateUser(id: ID, userDto: UserInput): User
+    deleteUser(id: ID): Boolean
+    addTranslatorProfile(translatorProfileDto: TranslatorProfileInput): TranslatorProfile
+    updateTranslatorProfile(id: ID, translatorProfileDto: TranslatorProfileInput): TranslatorProfile
+    deleteTranslatorProfile(id: ID): Boolean
+    addLanguage(languageDto: LanguageInput): Language
+    updateLanguage(id: ID, languageDto: LanguageInput): Language
+    deleteLanguage(id: ID): Boolean
 }
 
 input UserInput {

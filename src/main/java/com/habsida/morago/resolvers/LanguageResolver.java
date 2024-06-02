@@ -1,17 +1,18 @@
 package com.habsida.morago.resolvers;
 
+import com.habsida.morago.dtos.LanguageInput;
+import com.habsida.morago.dtos.UserInput;
 import com.habsida.morago.model.entity.Language;
+import com.habsida.morago.model.entity.User;
 import com.habsida.morago.services.LanguageService;
-import graphql.kickstart.tools.GraphQLMutationResolver;
-import graphql.kickstart.tools.GraphQLQueryResolver;
+import com.habsida.morago.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
-public class LanguageResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
+public class LanguageResolver {
     private final LanguageService languageService;
     @Autowired
     public LanguageResolver(LanguageService languageService) {
@@ -20,14 +21,14 @@ public class LanguageResolver implements GraphQLQueryResolver, GraphQLMutationRe
     public List<Language> getAllLanguages() {
         return languageService.getAllLanguages();
     }
-    public Optional<Language> getLanguageById(Long id) throws Exception {
+    public Language getLanguageById(Long id) throws Exception {
         return languageService.getLanguageById(id);
     }
-    public Language addLanguage(Language language) {
-        return languageService.addLanguage(language);
+    public Language addLanguage(LanguageInput languageDto) {
+        return languageService.addLanguage(languageDto);
     }
-    public Language updateLanguage(Long id, Language languageUpdate) throws Exception {
-        return languageService.updateLanguage(id, languageUpdate);
+    public Language updateLanguage(Long id, LanguageInput languageDto) throws Exception {
+        return languageService.updateLanguage(id, languageDto);
     }
     public Boolean deleteLanguage(Long id) throws Exception {
         languageService.deleteLanguage(id);

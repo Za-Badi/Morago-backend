@@ -1,5 +1,6 @@
 package com.habsida.morago.services;
 
+import com.habsida.morago.dtos.UserInput;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +8,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,50 +24,33 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(String id) throws Exception {
-        Long userId = Long.parseLong(id);
-        Optional<User> optionalUserProfile = userRepository.findById(userId);
-        if (optionalUserProfile.isPresent()) {
-            return userRepository.findById(userId);
-        } else {
-            throw new Exception("User not found for id: " + id);
-        }
+    public User getUserById(Long id) throws Exception {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
     }
 
-    public User addUser(User user) {
+    public User addUser(UserInput userDto) {
+        User user = new User();
+        user.setPhone(userDto.getPhone());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
         return userRepository.save(user);
     }
 
-    public User updateUser(String id, User userUpdate) throws Exception {
-        Long userId = Long.parseLong(id);
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setPhone(userUpdate.getPhone());
-            user.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
-            user.setFirstName(userUpdate.getFirstName());
-            user.setLastName(userUpdate.getLastName());
-            user.setBalance(userUpdate.getBalance());
-            user.setFcmToken(userUpdate.getFcmToken());
-            user.setApnToken(userUpdate.getApnToken());
-            user.setRatings(userUpdate.getRatings());
-            user.setTotalRatings(userUpdate.getTotalRatings());
-            user.setIsActive(userUpdate.getIsActive());
-            user.setIsDebtor(userUpdate.getIsDebtor());
-            user.setOnBoardingStatus(userUpdate.getOnBoardingStatus());
-            return userRepository.save(user);
-        } else {
-            throw new Exception("User not found for id: " + id);
-        }
+    public User updateUser(Long id, UserInput userDto) throws Exception {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new Exception("User not found with id: " + id));
+        if (userDto.getPhone() != null) { user.setPhone(userDto.getPhone()); }
+        if (userDto.getPassword() != null) { user.setPassword(passwordEncoder.encode(userDto.getPassword())); }
+        if (userDto.getFirstName() != null) { user.setFirstName(userDto.getFirstName()); }
+        if (userDto.getLastName() != null) { user.setLastName(userDto.getLastName()); }
+        return userRepository.save(user);
     }
 
-    public void deleteUser(String id) throws Exception {
-        Long userId = Long.parseLong(id);
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            userRepository.deleteById(userId);
-        } else {
-            throw new Exception("User not found for id: " + id);
-        }
+    public void deleteUser(Long id) throws Exception {
+        userRepository.findById(id)
+            .orElseThrow(() -> new Exception("User not found with id: " + id));
+        userRepository.deleteById(id);
     }
 }

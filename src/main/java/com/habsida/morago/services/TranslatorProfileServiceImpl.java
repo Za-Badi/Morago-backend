@@ -1,12 +1,12 @@
 package com.habsida.morago.services;
 
+import com.habsida.morago.dtos.TranslatorProfileInput;
 import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.repository.TranslatorProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TranslatorProfileServiceImpl implements TranslatorProfileService{
@@ -21,42 +21,39 @@ public class TranslatorProfileServiceImpl implements TranslatorProfileService{
         return translatorProfileRepository.findAll();
     }
 
-    public Optional<TranslatorProfile> getTranslatorProfileById(Long id) throws Exception {
-        Optional<TranslatorProfile> optionalTranslatorProfile = translatorProfileRepository.findById(id);
-        if (optionalTranslatorProfile.isPresent()) {
-            return translatorProfileRepository.findById(id);
-        } else {
-            throw new Exception("Translator Profile not found for id: " + id);
-        }
+    public TranslatorProfile getTranslatorProfileById(Long id) throws Exception {
+        return translatorProfileRepository.findById(id)
+                .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
     }
 
-    public TranslatorProfile addTranslatorProfile(TranslatorProfile translatorProfile) {
+    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileDto) {
+        TranslatorProfile translatorProfile = new TranslatorProfile();
+        translatorProfile.setDateOfBirth(translatorProfileDto.getDateOfBirth());
+        translatorProfile.setEmail(translatorProfileDto.getEmail());
+        translatorProfile.setIsAvailable(translatorProfileDto.getIsAvailable());
+        translatorProfile.setIsOnline(translatorProfileDto.getIsOnline());
+        translatorProfile.setLevelOfKorean(translatorProfileDto.getLevelOfKorean());
+        translatorProfile.setLanguages(translatorProfileDto.getLanguages());
+        translatorProfile.setUser(translatorProfileDto.getUser());
         return translatorProfileRepository.save(translatorProfile);
     }
 
-    public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfile translatorProfileUpdate) throws Exception {
-        Optional<TranslatorProfile> optionalTranslatorProfile = translatorProfileRepository.findById(id);
-        if (optionalTranslatorProfile.isPresent()) {
-            TranslatorProfile translatorProfile = optionalTranslatorProfile.get();
-            translatorProfile.setDateOfBirth(translatorProfileUpdate.getDateOfBirth());
-            translatorProfile.setEmail(translatorProfileUpdate.getEmail());
-            translatorProfile.setIsAvailable(translatorProfileUpdate.getIsAvailable());
-            translatorProfile.setIsOnline(translatorProfileUpdate.getIsOnline());
-            translatorProfile.setLevelOfKorean(translatorProfileUpdate.getLevelOfKorean());
-            translatorProfile.setLanguages(translatorProfileUpdate.getLanguages());
-            translatorProfile.setUser(translatorProfileUpdate.getUser());
-            return translatorProfileRepository.save(translatorProfile);
-        } else {
-            throw new Exception("Translator Profile not found for id: " + id);
-        }
+    public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileDto) throws Exception {
+        TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
+                .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
+        if (translatorProfileDto.getDateOfBirth() != null) {translatorProfile.setDateOfBirth(translatorProfileDto.getDateOfBirth());}
+        if (translatorProfileDto.getEmail() != null) {translatorProfile.setEmail(translatorProfileDto.getEmail());}
+        if (translatorProfileDto.getIsAvailable() != null) {translatorProfile.setIsAvailable(translatorProfileDto.getIsAvailable());}
+        if (translatorProfileDto.getIsOnline() != null) {translatorProfile.setIsOnline(translatorProfileDto.getIsOnline());}
+        if (translatorProfileDto.getLevelOfKorean() != null) {translatorProfile.setLevelOfKorean(translatorProfileDto.getLevelOfKorean());}
+        if (translatorProfileDto.getLanguages() != null) {translatorProfile.setLanguages(translatorProfileDto.getLanguages());}
+        if (translatorProfileDto.getUser() != null) {translatorProfile.setUser(translatorProfileDto.getUser());}
+        return translatorProfileRepository.save(translatorProfile);
     }
 
     public void deleteTranslatorProfile(Long id) throws Exception {
-        Optional<TranslatorProfile> optionalTranslatorProfile = translatorProfileRepository.findById(id);
-        if (optionalTranslatorProfile.isPresent()) {
-            translatorProfileRepository.deleteById(id);
-        } else {
-            throw new Exception("Translator Profile not found for id: " + id);
-        }
+        translatorProfileRepository.findById(id)
+                .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
+        translatorProfileRepository.deleteById(id);
     }
 }

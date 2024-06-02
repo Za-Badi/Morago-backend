@@ -21,36 +21,8 @@ public class UserProfileServiceImpl implements UserProfileService {
         return userProfileRepository.findAll();
     }
 
-    public Optional<UserProfile> getUserProfileById(Long id) throws Exception {
-        Optional<UserProfile> optionalUserProfile = userProfileRepository.findById(id);
-        if (optionalUserProfile.isPresent()) {
-            return userProfileRepository.findById(id);
-        } else {
-            throw new Exception("User Profile not found for id: " + id);
-        }
-    }
-
-    public UserProfile addUserProfile(UserProfile userProfile) {
-        return userProfileRepository.save(userProfile);
-    }
-
-    public UserProfile updateUserProfile(Long id, UserProfile userProfileUpdate) throws Exception {
-        Optional<UserProfile> optionalUserProfile = userProfileRepository.findById(id);
-        if (optionalUserProfile.isPresent()) {
-            UserProfile userProfile = optionalUserProfile.get();
-            userProfile.setIsFreeCallMade(userProfileUpdate.getIsFreeCallMade());
-            return userProfileRepository.save(userProfile);
-        } else {
-            throw new Exception("User Profile not found for id: " + id);
-        }
-    }
-
-    public void deleteUserProfile(Long id) throws Exception {
-        Optional<UserProfile> optionalUserProfile = userProfileRepository.findById(id);
-        if (optionalUserProfile.isPresent()) {
-            userProfileRepository.deleteById(id);
-        } else {
-            throw new Exception("User Profile not found for id: " + id);
-        }
+    public UserProfile getUserProfileById(Long id) throws Exception {
+        return userProfileRepository.findById(id)
+                .orElseThrow(() -> new Exception("User Profile not found with id: " + id));
     }
 }

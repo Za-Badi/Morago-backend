@@ -1,55 +1,40 @@
 package com.habsida.morago.controllers;
 
+import com.habsida.morago.dtos.UserInput;
 import com.habsida.morago.model.entity.User;
-import com.habsida.morago.services.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import com.habsida.morago.resolvers.UserResolver;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
-import java.util.Map;
 
-@RequestMapping("/users")
-@RestController
+
+@Controller
 public class UserController {
-    private final UserService userService;
-    public UserController(UserService userService) {
-        this.userService = userService;
+    private final UserResolver userResolver;
+    public UserController(UserResolver userResolver) {
+        this.userResolver = userResolver;
     }
-
-    @GetMapping("/me")
-    public ResponseEntity<User> authenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(currentUser);
+    @QueryMapping
+    public List<User> getAllUsers() {
+        return userResolver.getAllUsers();
     }
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    @QueryMapping
+    public User getUserById(@Argument Long id) throws Exception {
+        return userResolver.getUserById(id);
     }
-    @GetMapping("/message")
-    public ResponseEntity<String> defaultMessage() {
-        return ResponseEntity.ok("This is Rixio");
+    @MutationMapping
+    public User addUser(@Argument UserInput userDto) {
+        return userResolver.addUser(userDto);
     }
-
-    @PostMapping("/phone")
-    public ResponseEntity<String> changePhoneNumber(@RequestParam String newPhone) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        currentUser.setPhone(newPhone);
-        userService.addUser(currentUser);
-        return ResponseEntity.status(HttpStatus.OK).body("Phone number updated successfully");
+    @MutationMapping
+    public User updateUser(@Argument Long id, @Argument UserInput userDto) throws Exception {
+        return userResolver.updateUser(id, userDto);
     }
-    @PostMapping("/newPhone")
-    public ResponseEntity<String> changePhoneNumber(@RequestBody Map<String, String> requestBody) {
-        String newPhone = requestBody.get("newPhone");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        currentUser.setPhone(newPhone);
-        userService.addUser(currentUser);
-        return ResponseEntity.status(HttpStatus.OK).body("Phone number updated successfully");
+    @MutationMapping
+    public Boolean deleteUser(@Argument Long id) throws Exception {
+        return userResolver.deleteUser(id);
     }
 }
