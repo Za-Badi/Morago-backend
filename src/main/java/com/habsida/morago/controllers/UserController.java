@@ -3,6 +3,7 @@ package com.habsida.morago.controllers;
 import com.habsida.morago.dtos.UserInput;
 import com.habsida.morago.model.entity.User;
 
+import com.habsida.morago.resolver.UserResolver;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
