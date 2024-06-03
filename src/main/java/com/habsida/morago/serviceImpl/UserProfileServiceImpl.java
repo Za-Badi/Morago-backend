@@ -26,4 +26,5 @@ public class UserProfileServiceImpl implements UserProfileService {
         return userProfileRepository.findById(id)
                 .orElseThrow(() -> new Exception("User Profile not found with id: " + id));
     }
+
 }
