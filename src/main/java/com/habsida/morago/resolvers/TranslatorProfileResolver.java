@@ -19,7 +19,7 @@ public class TranslatorProfileResolver {
     public TranslatorProfile getTranslatorProfileById(Long id) throws Exception {
         return translatorProfileService.getTranslatorProfileById(id);
     }
-    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileDto) {
+    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileDto) throws Exception {
         return translatorProfileService.addTranslatorProfile(translatorProfileDto);
     }
     public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileDto) throws Exception {

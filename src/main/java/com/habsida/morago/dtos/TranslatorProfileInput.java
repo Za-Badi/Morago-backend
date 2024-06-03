@@ -15,6 +15,6 @@ public class TranslatorProfileInput {
     private Boolean isAvailable;
     private Boolean isOnline;
     private String levelOfKorean;
-    private List<Language> languages;
-    private User user;
+    private List<Long> languages;
+    private Long user;
 }

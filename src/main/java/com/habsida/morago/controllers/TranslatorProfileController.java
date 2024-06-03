@@ -21,7 +21,7 @@ public class TranslatorProfileController {
         return translatorProfileResolver.getTranslatorProfileById(id);
     }
     @MutationMapping
-    public TranslatorProfile addTranslatorProfile(@Argument TranslatorProfileInput translatorProfileDto) {
+    public TranslatorProfile addTranslatorProfile(@Argument TranslatorProfileInput translatorProfileDto) throws Exception {
         return translatorProfileResolver.addTranslatorProfile(translatorProfileDto);
     }
     @MutationMapping

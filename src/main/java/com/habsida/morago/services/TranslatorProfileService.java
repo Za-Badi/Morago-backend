@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface TranslatorProfileService {
     public List<TranslatorProfile> getAllTranslatorProfiles();
     public TranslatorProfile getTranslatorProfileById(Long id) throws Exception;
-    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileDto);
+    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileDto) throws Exception;
     public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileDto) throws Exception;
     public void deleteTranslatorProfile(Long id) throws Exception;
 }
