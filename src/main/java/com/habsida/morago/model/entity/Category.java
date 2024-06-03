@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -19,7 +20,9 @@ import java.util.Set;
 @AllArgsConstructor
 @Setter
 @Getter
-public class Categories {
+@EntityListeners(AuditingEntityListener.class)
+
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,13 +37,17 @@ public class Categories {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "categories")
-    private Set<Themes> categories = new HashSet<>();
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
+    private Set<Theme> themes = new HashSet<>();
+    public void addTheme(Theme theme) {
+        themes.add(theme);
+        theme.setCategory(this);
+    }
 
 
     @Override
     public String toString() {
-        return "Categories{" +
+        return "Category {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", is_active=" + is_active +

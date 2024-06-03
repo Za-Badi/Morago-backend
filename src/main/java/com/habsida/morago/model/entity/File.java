@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class Files {
+public class File {
 
 
     @Id
@@ -29,6 +29,6 @@ public class Files {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    @OneToOne(mappedBy = "image", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "image", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 }

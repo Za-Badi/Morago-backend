@@ -43,6 +43,6 @@ public class Ratings {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
-    private Files file;
+    private File file;
 
 }

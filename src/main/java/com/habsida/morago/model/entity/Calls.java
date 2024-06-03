@@ -2,6 +2,7 @@ package com.habsida.morago.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
+@EntityListeners(AuditingEntityListener.class)
 public class Calls {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,11 +50,11 @@ public class Calls {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
-    private Files file;
+    private File file;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theme_id")
-    private Themes theme;
+    private Theme theme;
 }
 
 

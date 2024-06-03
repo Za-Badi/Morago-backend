@@ -1,6 +1,5 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.model.enums.QuestionsCategories;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -17,7 +18,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Setter
 @Getter
-public class Themes {
+@EntityListeners(AuditingEntityListener.class)
+
+@NamedEntityGraph(name = "theme.field",
+        attributeNodes = {@NamedAttributeNode("category")})
+
+
+public class Theme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +32,15 @@ public class Themes {
     private String name;
     private String korean_title;
     private BigDecimal price;
-    private BigDecimal night_price;
+    private BigDecimal nightPrice;
     private String description;
-    private  Boolean is_popular;
-    private  Boolean is_active;
-    private Long category_id;
+    private  Boolean isPopular;
+    private  Boolean isActive;
 
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon_id")
-    private Files icon_id;
+    private File icon_id;
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -43,21 +49,22 @@ public class Themes {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Categories categories;
+    @JoinColumn(name = "categories_id")
+    private Category category;
 
     @Override
     public String toString() {
-        return "Themes{" +
+        return "Theme {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
-                ", night_price=" + night_price + '\'' +
+                ", night_price=" + nightPrice + '\'' +
                 ", korean_title=" + korean_title +
                 ", description='" + description + '\'' +
-                ", is_popular=" + is_popular +
-                ", is_active=" + is_active +
+                ", is_popular=" + isPopular +
+                ", is_active=" + isActive +
                 ", icon_id=" + icon_id +
-                ", category_id=" +category_id+ '\''+
+                ", category_id=" +category.getId()+ '\''+
                 ", createdAt=" + createdAt +
                 ", updatedAt=" +updatedAt+
                 '}';

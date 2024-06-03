@@ -3,21 +3,49 @@ schema {
     mutation: Mutation
 }
 type Query {
-    getCoin(id:ID): Coins
-    getAllCoins: [Coins]
-    getAppVersionByPlatform(platform: EPlatform!):AppVersion
+    getCoinById(id: ID): Coin
+    getAllCoins: [Coin]
+    getAppVersionByPlatform(platform: EPlatform!): AppVersion
     getAllAppVersions:[AppVersion]
-    test(t:String): String
+    getAllCategories: [Category]
+    getCategoryById(id: ID): Category
+    getCategoryByName(name: String): Category
+    getAllThemes:[Theme]
+    getThemeById(id: ID): Theme
+    getAllUsers: [User]
+    getUserById(id: ID): User
+    getAllUserProfiles: [UserProfile]
+    getUserProfileById(id: ID): UserProfile
+    getAllTranslatorProfiles: [TranslatorProfile]
+    getTranslatorProfileById(id: ID): TranslatorProfile
+    getAllLanguages: [Language]
+    getLanguageById(id: ID): Language
 }
 
 type Mutation {
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
-    updateAppVersion(platform: EPlatform!, min: String, latest: String):AppVersion
+    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
     deleteAppVersion(platform: EPlatform!): Boolean
-    createCoins(coin: Float!, won: Float!): Coins
-    updateCoins(id:ID,coin: Float!, won: Float!): Coins
-    deleteCoins(id: ID!): Boolean
+    createCoin(input: CreateCoinInput!): Coin
+    updateCoin(input: UpdateCoinInput!): Coin
+    deleteCoin(id: ID!): Boolean
+    createCategory(input: CreateCategoryInput): Category
+    updateCategory(input: UpdateCategoryInput): Category
+    deleteCategoryById(id: ID!): Boolean
+    createTheme(input: CreateThemeInput): Theme
+    updateThemeById(input: UpdateThemeInput): Theme
+    deleteThemeById(id: ID!): Boolean
+    addUser(userDto: UserInput): User
+    updateUser(id: ID, userDto: UserInput): User
+    deleteUser(id: ID): Boolean
+    addTranslatorProfile(translatorProfileDto: TranslatorProfileInput): TranslatorProfile
+    updateTranslatorProfile(id: ID, translatorProfileDto: TranslatorProfileInput): TranslatorProfile
+    deleteTranslatorProfile(id: ID): Boolean
+    addLanguage(languageDto: LanguageInput): Language
+    updateLanguage(id: ID, languageDto: LanguageInput): Language
+    deleteLanguage(id: ID): Boolean
 }
+
 
 type AppVersion {
     platform: EPlatform
@@ -26,15 +54,149 @@ type AppVersion {
     createdAt: String
     updatedAt: String
 }
-type Coins {
+
+type Coin {
+    id: ID
     coin: String
     won: String
     createdAt: String
     updatedAt: String
 }
+type File {
+    id: ID
+    path: String
+    type: String
+    originalTitle: String
+    createdAt: String
+    updatedAt: String
+}
+type Category {
+    id: ID
+    name: String
+    is_active: Boolean
+}
+type Theme {
+    id: ID
+    name: String
+    korean_title: String
+    price: Float
+    nightPrice: Float
+    description: String
+    isPopular: Boolean
+    isActive: Boolean
+    category: Category
+    createdAt: String
+    updatedAt: String
+
+}
+
+
+type Language {
+    id: ID!
+    name: String
+}
+type User {
+    id: ID!
+    phone: String!
+    firstName: String
+    lastName: String
+    balance: Float
+    fcmToken: String
+    apnToken: String
+    ratings: Float
+    totalRatings: Int
+    isActive: Boolean
+    isDebtor: Boolean
+    onBoardingStatus: Int
+    translatorProfile: TranslatorProfile
+    userProfile: UserProfile
+}
+
+type UserProfile {
+    id: ID!
+    isFreeCallMade: Boolean
+    user: User
+}
+
+type TranslatorProfile {
+    id: ID!
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    levelOfKorean: String
+    user: User
+}
+
+
+input CreateCategoryInput {
+    name: String
+    is_active: Boolean
+}
+input UpdateCategoryInput {
+    id: ID
+    name: String
+    is_active: Boolean
+}
+input CreateCoinInput {
+    coin: Float
+    won: Float
+}
+input UpdateCoinInput {
+    id: ID
+    coin: Float
+    won: Float
+}
+
+input CreateThemeInput{
+    name: String
+    korean_title: String
+    price: Float
+    nightPrice: Float
+    description: String
+    isPopular: Boolean
+    isActive: Boolean
+    categoryId: ID
+}
+input UpdateThemeInput{
+    id: ID
+    name: String
+    korean_title: String
+    price: Float
+    nightPrice: Float
+    description: String
+    isPopular: Boolean
+    isActive: Boolean
+    categoryId: ID
+}
+
+
+
+input UserInput {
+    phone: String!
+    password: String
+    firstName: String
+    lastName: String
+}
+
+input TranslatorProfileInput {
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    levelOfKorean: String
+    languages: [ID]
+    user: ID
+}
+
+input LanguageInput {
+    name: String
+}
+
 
 enum EPlatform {
     IOS
     ANDROID
 }
 
+scalar Upload

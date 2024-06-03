@@ -4,15 +4,10 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.aspectj.weaver.ast.Call;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import javax.management.relation.Role;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -58,7 +53,7 @@ public class User implements UserDetails {
     private Integer onBoardingStatus;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="image_id")
-    private Files image;
+    private File image;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="translator_profile_id")
     private TranslatorProfile translatorProfile;

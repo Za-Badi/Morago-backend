@@ -1,5 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.dtos.UserInput;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,35 +14,34 @@ import java.util.Optional;
 
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-
-
-
-    public Optional<User> getUserById (Long id) {
-    return repository.findById(id);
-}
-
-
-//   Commented this to remove the error
-
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PasswordEncoder passwordEncoder1) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.repository = userRepository;
-        this.passwordEncoder = passwordEncoder1;
+        this.passwordEncoder = passwordEncoder;
+    }
+    public List<User> getAllUsers() {
+        return repository.findAll();
+    }
+
+    public User getUserById(Long id) throws Exception {
+        return repository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
     }
 
 
-    public List<User> allUsers() {
-        List<User> users = new ArrayList<>();
-        repository.findAll().forEach(users::add);
-        return users;
-    }
-    public User saveUser(User user) {
+
+    public User addUser(UserInput userDto) {
+        User user = new User();
+        user.setPhone(userDto.getPhone());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
         return repository.save(user);
     }
+
     @Transactional
     public User updatePassword(String originalPassword, String newPassword ){
         User user = getCurrentUser();
@@ -51,6 +51,21 @@ public class UserService {
 //            throw new Exception());
         }
         return user;
+    }
+    public User updateUser(Long id, UserInput userDto) throws Exception {
+        User user = repository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
+        if (userDto.getPhone() != null) { user.setPhone(userDto.getPhone()); }
+        if (userDto.getPassword() != null) { user.setPassword(passwordEncoder.encode(userDto.getPassword())); }
+        if (userDto.getFirstName() != null) { user.setFirstName(userDto.getFirstName()); }
+        if (userDto.getLastName() != null) { user.setLastName(userDto.getLastName()); }
+        return repository.save(user);
+    }
+
+    public void deleteUser(Long id) throws Exception {
+        repository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
+        repository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
