@@ -2,8 +2,6 @@ package com.habsida.morago.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
 
@@ -12,8 +10,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-public class Calls {
+
+public class Call {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +27,7 @@ public class Calls {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+
     @Column(name = "duration")
     private Integer duration;
 
@@ -41,10 +40,10 @@ public class Calls {
     @Column(name = "commission")
     private Double commission;
 
-//    @Column(name = "translator_has_rated", columnDefinition = "bit(1)")
+    //    @Column(name = "translator_has_rated", columnDefinition = "bit(1)")
     @Column(name = "translator_has_rated")
     private Boolean translatorHasRated;
-//    @Column(name = "user_has_rated", columnDefinition = "bit(1)")
+    //    @Column(name = "user_has_rated", columnDefinition = "bit(1)")
     @Column(name = "user_has_rated")
     private Boolean userHasRated;
 
@@ -55,6 +54,7 @@ public class Calls {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theme_id")
     private Theme theme;
+
+
+
 }
-
-

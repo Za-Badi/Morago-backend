@@ -1,19 +1,17 @@
 package com.habsida.morago.service;
-
+import com.habsida.morago.dtos.DebtorInput;
 import com.habsida.morago.model.entity.Debtor;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DebtorService {
+    public List<Debtor> getAllDebtors();
 
-    List<Debtor> getAllDebtors();
-    Optional<Debtor> getDebtorById(Long id);
+    public Debtor getDebtorById(Long id) throws Exception;
 
-    List<Debtor> getDebtorsByUserId(Long userId);
+    public Debtor addDebtor(DebtorInput debtorInput);
 
-    Debtor saveDebtor(Debtor debtor);
+    public Debtor updateDebtor(Long id, DebtorInput debtorInput) throws Exception;
 
-    Debtor updateDebtor(Long id, Debtor debtor);
-    void deleteDebtor(Long id);
+    public void deleteDebtor(Long id) throws Exception;
 }

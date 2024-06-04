@@ -1,15 +1,17 @@
+
 package com.habsida.morago.resolver;
 
+import com.habsida.morago.dtos.DepositsInput;
 import com.habsida.morago.model.entity.Deposits;
-import com.habsida.morago.service.DepositsService;
+import com.habsida.morago.services.DepositsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class DepositsResolver {
+
     private final DepositsService depositsService;
 
     @Autowired
@@ -21,20 +23,20 @@ public class DepositsResolver {
         return depositsService.getAllDeposits();
     }
 
-    public Optional<Deposits> getDepositById(Long id) throws Exception {
+    public Deposits getDepositById(Long id) throws Exception {
         return depositsService.getDepositById(id);
     }
 
-//    public Deposits addDeposit(Deposits deposit) {
-//        return depositsService.addDeposit(deposit);
-//    }
+    public Deposits addDeposit(DepositsInput input) {
+        return depositsService.addDeposit(input);
+    }
 
-//    public Deposits updateDeposit(Long id, Deposits depositUpdate) throws Exception {
-//        return depositsService.updateDeposit(id, depositUpdate);
-//    }
+    public Deposits updateDeposit(Long id, DepositsInput input) throws Exception {
+        return depositsService.updateDeposit(id, input);
+    }
 
     public Boolean deleteDeposit(Long id) throws Exception {
-        depositsService.deleteDeposits(id);
+        depositsService.deleteDeposit(id);
         return true;
     }
 }

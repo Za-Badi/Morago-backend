@@ -20,6 +20,13 @@ type Query {
     getTranslatorProfileById(id: ID): TranslatorProfile
     getAllLanguages: [Language]
     getLanguageById(id: ID): Language
+    getAllDeposits: [Deposits]
+    getDepositById(id: ID!): Deposits
+
+    getAllDebtors: [Debtor]
+    getDebtorById(id: ID!): Debtor
+    getCallByID(id: ID!): Call
+    getAllCalls: [Call]
 }
 
 type Mutation {
@@ -44,6 +51,45 @@ type Mutation {
     addLanguage(languageDto: LanguageInput): Language
     updateLanguage(id: ID, languageDto: LanguageInput): Language
     deleteLanguage(id: ID): Boolean
+    addDeposit(depositsDto: DepositsInput): Deposits
+    updateDeposit(id: ID!, depositsDto: DepositsInput): Deposits
+    deleteDeposit(id: ID!): Boolean
+    addDebtor(debtorDto: DebtorInput): Debtor
+    updateDebtor(id: ID!, debtorDto: DebtorInput): Debtor
+    deleteDebtor(id: ID!): Boolean
+    createCall(
+        caller : ID!,
+        recipient: ID!,
+        theme: ID!
+    ): Call
+
+    updateCall(
+        id: ID!,
+        duration: Int,
+        status: String,
+        commission: Float,
+    ): Call
+
+    deleteCall(id: ID!): Boolean
+
+    createRating(
+        #        add call id
+        callId : ID!
+        id : ID!
+        whoUserId: ID!,
+        toWhomUserId: ID!,
+        grade: Float!
+    ): Rating
+
+    updateRating(
+        id: ID!,
+        grade : Float
+        #receive grade
+
+    ): Rating
+
+    deleteRating(id: ID!): Boolean
+
 }
 
 
@@ -128,6 +174,30 @@ type TranslatorProfile {
     user: User
 }
 
+type Call {
+    id: ID
+    caller: User
+    recipient: User
+    createdAt: String
+    duration: Int
+    status: String
+    sum: Float
+    commission: Float
+    translatorHasRated: Boolean
+    userHasRated: Boolean
+    file: File
+    theme: Theme
+}
+type Rating {
+    id: ID!
+    whoUser: User!
+    toWhomUser: User!
+    grade: Float
+    createdAt: String
+    updatedAt: String
+    ratings: Float
+    totalRatings: Int
+}
 
 input CreateCategoryInput {
     name: String
@@ -192,7 +262,43 @@ input TranslatorProfileInput {
 input LanguageInput {
     name: String
 }
+type Debtor {
+    id: ID!
+    accountHolder: String
+    nameOfBank: String
+    isPaid: Boolean
+    createdAt: String
+    updatedAt: String
+    user: User
+}
 
+input DebtorInput {
+    accountHolder: String
+    nameOfBank: String
+    isPaid: Boolean
+    userId: ID!
+}
+
+type Deposits {
+    id: ID!
+    accountHolder: String
+    nameOfBank: String
+    coin: Float
+    won: Float
+    status: String
+    createdAt: String
+    updatedAt: String
+    user: User
+}
+
+input DepositsInput {
+    accountHolder: String
+    nameOfBank: String
+    coin: Float
+    won: Float
+    status: String
+    userId: ID!
+}
 
 enum EPlatform {
     IOS

@@ -64,7 +64,7 @@ public class User implements UserDetails {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Roles> roles;
+    private List<Role> roles;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Deposits> deposits;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -74,15 +74,22 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Notification> notifications;
     @OneToMany(mappedBy = "whoUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Ratings> givenRatings;
+    private List<Rating> givenRatings;
     @OneToMany(mappedBy = "toWhomUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Ratings> receivedRatings;
-    @OneToMany(mappedBy = "recipient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Calls> recipientCalls;
-    @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Calls> callerCalls;
+    private List<Rating> receivedRatings;
+
+
+
+    //    @OneToMany(mappedBy = "recipient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<Call> recipientCalls;
+//    @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private List<Call> callerCalls;
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {return roles;}
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {return roles;}
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
     @Override
     public String getPassword() {return password;}
     @Override

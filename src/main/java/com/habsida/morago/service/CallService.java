@@ -1,18 +1,20 @@
 package com.habsida.morago.service;
 
-import com.habsida.morago.model.entity.Calls;
+import com.habsida.morago.model.entity.Call;
+import com.habsida.morago.model.entity.Theme;
+import com.habsida.morago.model.entity.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CallService {
-    List<Calls> getAllCalls();
+    List<Call> getAllCalls();
 
-    public Optional<Calls> getCallsById(Long id);
+    public Call getCallsById(Long id);
 
-   public Calls createCalls(Calls calls);
+    public Call createCall(Call call);
 
-    public Calls updateCalls(Long id, Calls callDetails);
+    public Call updateCalls(Long id, Call callDetails);
 
     public void deleteCall(Long id);
 

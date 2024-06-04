@@ -1,23 +1,15 @@
-package com.habsida.morago.service;
+package com.habsida.morago.services;
 
+
+import com.habsida.morago.dtos.DepositsInput;
 import com.habsida.morago.model.entity.Deposits;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
 
 public interface DepositsService {
-
-    List<Deposits> getAllDeposits();
-    Optional<Deposits> getDepositById(Long id);
-
-    List<Deposits> getDepositsByUserId(Long userId);
-
-    Deposits saveDeposit(Deposits deposits);
-
-    Deposits updateDeposits(Long id, Deposits deposits);
-
-    void deleteDeposits(Long id);
-
+    public List<Deposits> getAllDeposits();
+    public Deposits getDepositById(Long id) throws Exception;
+    public Deposits addDeposit(DepositsInput depositDto);
+    public Deposits updateDeposit(Long id, DepositsInput depositDto) throws Exception;
+    public void deleteDeposit(Long id) throws Exception;
 }
