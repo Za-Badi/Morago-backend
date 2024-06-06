@@ -1,8 +1,8 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.dtos.LoginResponse;
-import com.habsida.morago.dtos.LoginUserDto;
-import com.habsida.morago.dtos.RegisterUserDto;
+import com.habsida.morago.model.inputs.LoginResponse;
+import com.habsida.morago.model.inputs.LoginUserDto;
+import com.habsida.morago.model.inputs.RegisterUserDto;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.serviceImpl.AuthenticationService;
 import com.habsida.morago.serviceImpl.JwtService;
@@ -24,7 +24,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
+    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) throws Exception {
         User registeredUser = authenticationService.signup(registerUserDto);
         return ResponseEntity.ok(registeredUser);
     }

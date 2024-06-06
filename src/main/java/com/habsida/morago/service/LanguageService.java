@@ -1,10 +1,9 @@
 package com.habsida.morago.service;
 
-import com.habsida.morago.dtos.LanguageInput;
+import com.habsida.morago.model.inputs.LanguageInput;
 import com.habsida.morago.model.entity.Language;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface LanguageService {
     public List<Language> getAllLanguages();

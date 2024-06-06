@@ -34,30 +34,16 @@ public class SecurityConfiguration {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/graphql").permitAll()
-                        .requestMatchers("/graphiql").permitAll()
+                        .requestMatchers("/isTranslator").hasAuthority("ROLE_TRANSLATOR")
+                        .requestMatchers("/isUser").hasAuthority("ROLE_USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagementCustomizer -> sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(corsCustomizer->corsCustomizer.disable());
-//                .cors(corsCustomizer-> corsCustomizer.configurationSource(corsConfigurationSource()));
-
+                .cors(AbstractHttpConfigurer::disable);
         return http.build();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET","POST"));
-        configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",configuration);
-        return source;
     }
 }

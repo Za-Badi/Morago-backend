@@ -1,7 +1,7 @@
 
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.dtos.DepositsInput;
+import com.habsida.morago.model.inputs.DepositsInput;
 import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.DepositsRepository;

@@ -1,6 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.dtos.TranslatorProfileInput;
+import com.habsida.morago.model.inputs.TranslatorProfileInput;
 import com.habsida.morago.model.entity.Language;
 import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.model.entity.User;
@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 @Service
-public class TranslatorProfileServiceImpl implements TranslatorProfileService {
+public class TranslatorProfileServiceImpl implements TranslatorProfileService{
     private final TranslatorProfileRepository translatorProfileRepository;
     private final LanguageRepository languageRepository;
     private final UserRepository userRepository;
@@ -60,11 +62,11 @@ public class TranslatorProfileServiceImpl implements TranslatorProfileService {
     public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileDto) throws Exception {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
-        if (translatorProfileDto.getDateOfBirth() != null) {translatorProfile.setDateOfBirth(translatorProfileDto.getDateOfBirth());}
-        if (translatorProfileDto.getEmail() != null) {translatorProfile.setEmail(translatorProfileDto.getEmail());}
+        if (translatorProfileDto.getDateOfBirth() != null && !translatorProfileDto.getDateOfBirth().trim().isEmpty()) {translatorProfile.setDateOfBirth(translatorProfileDto.getDateOfBirth());}
+        if (translatorProfileDto.getEmail() != null && !translatorProfileDto.getEmail().trim().isEmpty()) {translatorProfile.setEmail(translatorProfileDto.getEmail());}
         if (translatorProfileDto.getIsAvailable() != null) {translatorProfile.setIsAvailable(translatorProfileDto.getIsAvailable());}
         if (translatorProfileDto.getIsOnline() != null) {translatorProfile.setIsOnline(translatorProfileDto.getIsOnline());}
-        if (translatorProfileDto.getLevelOfKorean() != null) {translatorProfile.setLevelOfKorean(translatorProfileDto.getLevelOfKorean());}
+        if (translatorProfileDto.getLevelOfKorean() != null && !translatorProfileDto.getLevelOfKorean().trim().isEmpty()) {translatorProfile.setLevelOfKorean(translatorProfileDto.getLevelOfKorean());}
         if (translatorProfileDto.getLanguages() != null) {
             List<Language> languages = new ArrayList<>();
             for (Long languageId : translatorProfileDto.getLanguages()) {
@@ -73,12 +75,6 @@ public class TranslatorProfileServiceImpl implements TranslatorProfileService {
                 languages.add(language);
             }
             translatorProfile.setLanguages(languages);
-        }
-        if (translatorProfileDto.getUser() != null) {
-            Long userId = translatorProfileDto.getUser();
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new Exception("User not found with id: " + userId));
-            user.setTranslatorProfile(translatorProfile);
         }
         return translatorProfileRepository.save(translatorProfile);
     }

@@ -1,11 +1,12 @@
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.dtos.UserInput;
+import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.serviceImpl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
+
 
 @Component
 public class UserResolver {
@@ -19,6 +20,12 @@ public class UserResolver {
     }
     public User getUserById(Long id) throws Exception {
         return userService.getUserById(id);
+    }
+    public User getUserByPhone(String phone) throws Exception {
+        return userService.getUserByPhone(phone);
+    }
+    public User getCurrentUser() {
+        return userService.getCurrentUser();
     }
     public User addUser(UserInput userDto) {
         return userService.addUser(userDto);

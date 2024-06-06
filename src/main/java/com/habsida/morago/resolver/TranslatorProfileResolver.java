@@ -1,6 +1,6 @@
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.dtos.TranslatorProfileInput;
+import com.habsida.morago.model.inputs.TranslatorProfileInput;
 import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.service.TranslatorProfileService;
 import org.springframework.beans.factory.annotation.Autowired;

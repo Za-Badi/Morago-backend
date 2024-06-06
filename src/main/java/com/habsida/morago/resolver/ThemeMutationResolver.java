@@ -11,8 +11,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-
-import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class ThemeMutationResolver {
         return themeService.removeThemeById(id);
     }
         @QueryMapping
-    public List<Theme> getAllThemes() {
+    public Set<Theme> getAllThemes() {
         return themeService.getAllThemes();
     }
 
@@ -40,4 +39,14 @@ public class ThemeMutationResolver {
     public Theme getThemeById(@Argument Long id) {
         return themeService.getThemeById(id);
     }
+
+    @QueryMapping
+    public Set<Theme> getThemesByCategoriesId(@Argument Long id) {
+        return themeService.getThemesByCategoryId(id);
+    }
+    @QueryMapping
+    public Theme getThemesByName(@Argument String name) {
+        return themeService.getThemeByName(name);
+    }
+
 }

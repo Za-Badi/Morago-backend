@@ -1,12 +1,9 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.dtos.DebtorInput;
-import com.habsida.morago.dtos.DepositsInput;
+import com.habsida.morago.model.inputs.DebtorInput;
 import com.habsida.morago.model.entity.Debtor;
-import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.DebtorRepository;
-import com.habsida.morago.repository.DepositsRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;

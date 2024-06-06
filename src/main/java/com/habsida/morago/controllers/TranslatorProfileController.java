@@ -1,6 +1,6 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.dtos.TranslatorProfileInput;
+import com.habsida.morago.model.inputs.TranslatorProfileInput;
 import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.resolver.TranslatorProfileResolver;
 import org.springframework.graphql.data.method.annotation.Argument;

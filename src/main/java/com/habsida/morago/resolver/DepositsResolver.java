@@ -1,7 +1,7 @@
 
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.dtos.DepositsInput;
+import com.habsida.morago.model.inputs.DepositsInput;
 import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.services.DepositsService;
 import org.springframework.beans.factory.annotation.Autowired;

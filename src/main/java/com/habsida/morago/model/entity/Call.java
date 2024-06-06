@@ -2,6 +2,7 @@ package com.habsida.morago.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 
@@ -27,7 +28,6 @@ public class Call {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-
     @Column(name = "duration")
     private Integer duration;
 
@@ -52,9 +52,6 @@ public class Call {
     private File file;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theme_id")
+    @JoinColumn(name = "theme_id", nullable = true)
     private Theme theme;
-
-
-
 }

@@ -1,8 +1,9 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.dtos.UserInput;
-import com.habsida.morago.model.entity.User;
 
+
+import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.resolver.UserResolver;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Controller
 public class UserController {
-    private final UserResolver userResolver ;
+    private final UserResolver userResolver;
     public UserController(UserResolver userResolver) {
         this.userResolver = userResolver;
     }
@@ -25,6 +26,14 @@ public class UserController {
     @QueryMapping
     public User getUserById(@Argument Long id) throws Exception {
         return userResolver.getUserById(id);
+    }
+    @QueryMapping
+    public User getUserByPhone(@Argument String phone) throws Exception {
+        return userResolver.getUserByPhone(phone);
+    }
+    @QueryMapping
+    public User getCurrentUser() {
+        return userResolver.getCurrentUser();
     }
     @MutationMapping
     public User addUser(@Argument UserInput userDto) {

@@ -1,10 +1,9 @@
 package com.habsida.morago.service;
 
-import com.habsida.morago.dtos.TranslatorProfileInput;
+import com.habsida.morago.model.inputs.TranslatorProfileInput;
 import com.habsida.morago.model.entity.TranslatorProfile;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TranslatorProfileService {
     public List<TranslatorProfile> getAllTranslatorProfiles();

@@ -1,9 +1,8 @@
 package com.habsida.morago.model.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
-
+import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,9 +19,11 @@ public class Notification {
     @Column(name = "text", length = 100)
     private String text;
 
+    @CreationTimestamp
     @Column(name = "date")
     private LocalDateTime date;
 
+    @CreationTimestamp
     @Column(name = "time")
     private LocalDateTime time;
 

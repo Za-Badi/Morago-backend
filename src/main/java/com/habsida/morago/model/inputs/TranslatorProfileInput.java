@@ -1,4 +1,4 @@
-package com.habsida.morago.dtos;
+package com.habsida.morago.model.inputs;
 
 import com.habsida.morago.model.entity.Language;
 import com.habsida.morago.model.entity.User;

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 
-@NamedEntityGraph(name = "theme.field",
+@NamedEntityGraph(name = "themes.field",
         attributeNodes = {@NamedAttributeNode("category")})
 
 
@@ -29,6 +29,7 @@ public class Theme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+//    @Column( name ="name")
     private String name;
     private String korean_title;
     private BigDecimal price;
@@ -36,6 +37,7 @@ public class Theme {
     private String description;
     private  Boolean isPopular;
     private  Boolean isActive;
+
 
 
     @OneToOne(fetch = FetchType.LAZY)

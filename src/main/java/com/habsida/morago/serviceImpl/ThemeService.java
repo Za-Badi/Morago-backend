@@ -1,6 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.model.entity.Category;
+
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.inputs.CreateThemeInput;
 import com.habsida.morago.model.inputs.UpdateThemeInput;
@@ -11,8 +11,9 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -34,10 +35,10 @@ public class ThemeService {
         return repository.save(theme);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public Theme updateTheme(UpdateThemeInput input) {
         Theme theme = new Theme();
-        System.out.println("category "+input.getCategoryId());
-        if (input.getCategoryId() != null ) {
+        if (input.getCategoryId() != null && input.getCategoryId() !=0) {
             theme.setCategory(categoryRepository.getReferenceById(input.getCategoryId()));
         }
         if (input.getDescription() != null && !input.getDescription().isEmpty()) {
@@ -76,9 +77,16 @@ public class ThemeService {
 
 
     }
-    public List<Theme> getAllThemes(){
-        return repository.findAll();
-
+    public Set<Theme> getAllThemes(){
+        return new HashSet<>(repository.findAll());
     }
+    public Set<Theme> getThemesByCategoryId(Long id) {
+        return repository.findThemesByCategoryId(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public Theme getThemeByName(String name) {
+        return repository.findByName(name).orElseThrow(EntityNotFoundException::new);
+    }
+
 
 }

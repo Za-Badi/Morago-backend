@@ -1,9 +1,7 @@
 package com.habsida.morago.resolvers;
 
-import com.habsida.morago.dtos.LanguageInput;
-import com.habsida.morago.dtos.UserInput;
+import com.habsida.morago.model.inputs.LanguageInput;
 import com.habsida.morago.model.entity.Language;
-import com.habsida.morago.model.entity.User;
 import com.habsida.morago.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.dtos.LanguageInput;
+import com.habsida.morago.model.inputs.LanguageInput;
 import com.habsida.morago.model.entity.Language;
 import com.habsida.morago.resolvers.LanguageResolver;
 import org.springframework.graphql.data.method.annotation.Argument;

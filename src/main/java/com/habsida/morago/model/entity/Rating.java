@@ -1,9 +1,8 @@
 package com.habsida.morago.model.entity;
 
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -26,14 +25,8 @@ public class Rating {
     @JoinColumn(name = "to_whom_user_id", nullable = false)
     private User toWhomUser;
 
-    @Column(name = "grade")
-    private Double grade;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Column(name = "ratings")
     private Double ratings;
@@ -44,5 +37,4 @@ public class Rating {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")
     private File file;
-
 }

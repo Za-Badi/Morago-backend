@@ -8,6 +8,7 @@ import com.habsida.morago.repository.CoinRespository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class CoinService {
         return repository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public Coin updateCoin(UpdateCoinInput input) {
         Coin coins = getByID(input.getId());
         if (input.getCoin() != null && input.getCoin()> 0) {

@@ -1,19 +1,18 @@
 package com.habsida.morago.service;
 
 import com.habsida.morago.model.entity.Withdrawals;
+import com.habsida.morago.model.inputs.WithdrawalInput;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface WithdrawalService {
-    List<Withdrawals> getAllWithdrawals();
-    Optional<Withdrawals> getWithdrawalsById(Long id);
 
-    List<Withdrawals> getWithdrawalsByUserId(Long userId);
+    public List<Withdrawals> getAllWithdrawals();
+    public Withdrawals getWithdrawalById(Long id) throws Exception;
 
-    Withdrawals saveWithdrawals(Withdrawals withdrawals);
+    public Withdrawals addWithdrawal(WithdrawalInput withdrawalDto);
+    public Withdrawals updateWithdrawal(Long id, WithdrawalInput withdrawalDto) throws Exception;
 
-    Withdrawals updateWithdrawals(Long id, Withdrawals withdrawals);
-
-    void deleteWithdrawals(Long id);
+    public void deleteWithdrawal(Long id) throws Exception;
 }

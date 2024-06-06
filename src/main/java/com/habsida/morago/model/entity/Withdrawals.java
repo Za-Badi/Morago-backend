@@ -22,7 +22,7 @@ public class Withdrawals {
 
 
     @Column(name = "sum")
-    private Double sum;
+    private Float sum;
 
     @Column(name = "status", length = 50)
     private String status;

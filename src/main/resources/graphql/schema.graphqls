@@ -12,8 +12,12 @@ type Query {
     getCategoryByName(name: String): Category
     getAllThemes:[Theme]
     getThemeById(id: ID): Theme
+    getThemesByCategoriesId(id: ID): [Theme]
+    getThemesByName(name: String): Theme
     getAllUsers: [User]
     getUserById(id: ID): User
+    getUserByPhone(phone: String): User
+    getCurrentUser: [User]
     getAllUserProfiles: [UserProfile]
     getUserProfileById(id: ID): UserProfile
     getAllTranslatorProfiles: [TranslatorProfile]
@@ -25,8 +29,13 @@ type Query {
 
     getAllDebtors: [Debtor]
     getDebtorById(id: ID!): Debtor
-    getCallByID(id: ID!): Call
+    getAllNotification: [Notification]
+    getNotificationById(id: ID!): Notification
+
+    getAllWithdrawals: [Withdrawals]
+    getWithdrawalById(id: ID!): Withdrawals
     getAllCalls: [Call]
+    getCallById(id: ID!): Call
 }
 
 type Mutation {
@@ -57,37 +66,17 @@ type Mutation {
     addDebtor(debtorDto: DebtorInput): Debtor
     updateDebtor(id: ID!, debtorDto: DebtorInput): Debtor
     deleteDebtor(id: ID!): Boolean
-    createCall(
-        caller : ID!,
-        recipient: ID!,
-        theme: ID!
-    ): Call
-
-    updateCall(
-        id: ID!,
-        duration: Int,
-        status: String,
-        commission: Float,
-    ): Call
-
+    addNotification(notificationDto: NotificationInput): Notification
+    updateNotification(id:ID!, notificationDto: NotificationInput):Notification
+    deleteNotification(id:ID!): Notification
+    addWithdrawal(withdrawalDto: WithdrawalsInput): Withdrawals
+    updateWithdrawal(id: ID!, withdrawalDto: WithdrawalsInput): Withdrawals
+    deleteWithdrawal(id: ID!): Boolean
+    createCall(CallDto : CallInput) : Call
+    updateCall(id : ID!, CallDto : CallUpdateInput):Call
     deleteCall(id: ID!): Boolean
-
-    createRating(
-        #        add call id
-        callId : ID!
-        id : ID!
-        whoUserId: ID!,
-        toWhomUserId: ID!,
-        grade: Float!
-    ): Rating
-
-    updateRating(
-        id: ID!,
-        grade : Float
-        #receive grade
-
-    ): Rating
-
+    createRating(RatingDto: RatingInput) : Rating
+    updateRating(id: ID!, grade: Float): Rating
     deleteRating(id: ID!): Boolean
 
 }
@@ -135,8 +124,6 @@ type Theme {
     updatedAt: String
 
 }
-
-
 type Language {
     id: ID!
     name: String
@@ -173,7 +160,6 @@ type TranslatorProfile {
     levelOfKorean: String
     user: User
 }
-
 type Call {
     id: ID
     caller: User
@@ -197,6 +183,46 @@ type Rating {
     updatedAt: String
     ratings: Float
     totalRatings: Int
+}
+
+type Debtor {
+    id: ID!
+    accountHolder: String
+    nameOfBank: String
+    isPaid: Boolean
+    createdAt: String
+    updatedAt: String
+    user: User
+}
+type Deposits {
+    id: ID!
+    accountHolder: String
+    nameOfBank: String
+    coin: Float
+    won: Float
+    status: String
+    createdAt: String
+    updatedAt: String
+    user: User
+}
+
+type Notification {
+    id: ID!
+    title: String
+    text: String
+    date: String
+    time: String
+    user: User
+}
+type Withdrawals {
+    id: ID!
+    accountNumber: String
+    accountHolder: String
+    sum: Float
+    status: String
+    createdAt: String
+    updatedAt: String
+    user: User
 }
 
 input CreateCategoryInput {
@@ -262,15 +288,6 @@ input TranslatorProfileInput {
 input LanguageInput {
     name: String
 }
-type Debtor {
-    id: ID!
-    accountHolder: String
-    nameOfBank: String
-    isPaid: Boolean
-    createdAt: String
-    updatedAt: String
-    user: User
-}
 
 input DebtorInput {
     accountHolder: String
@@ -279,23 +296,39 @@ input DebtorInput {
     userId: ID!
 }
 
-type Deposits {
-    id: ID!
-    accountHolder: String
-    nameOfBank: String
-    coin: Float
-    won: Float
-    status: String
-    createdAt: String
-    updatedAt: String
-    user: User
-}
-
 input DepositsInput {
     accountHolder: String
     nameOfBank: String
     coin: Float
     won: Float
+    status: String
+    userId: ID!
+}
+
+input CallInput {
+    caller: ID!
+    recipient : ID!
+}
+input CallUpdateInput {
+    duration: Int
+    status: String
+    commission: Float
+}
+input RatingInput {
+    callId: ID!
+    whoUserId: ID!
+    toWhomUserId: ID!
+    grade: Float!
+}
+input NotificationInput {
+    title: String
+    text: String
+    userId: ID!
+}
+input WithdrawalsInput {
+    accountNumber: String
+    accountHolder: String
+    sum: Float
     status: String
     userId: ID!
 }

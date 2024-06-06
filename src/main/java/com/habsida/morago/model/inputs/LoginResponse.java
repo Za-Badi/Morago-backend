@@ -1,4 +1,4 @@
-package com.habsida.morago.dtos;
+package com.habsida.morago.model.inputs;
 
 import lombok.Getter;
 import lombok.Setter;

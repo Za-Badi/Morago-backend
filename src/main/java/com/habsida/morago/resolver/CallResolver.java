@@ -3,54 +3,56 @@ package com.habsida.morago.resolver;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.inputs.CallInput;
+import com.habsida.morago.model.inputs.CallUpdateInput;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.CallService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @Controller
-@RequiredArgsConstructor
 public class CallResolver {
     private final CallService callService;
-    private final UserRepository userRepository;
 
-
-    @QueryMapping(name = "getCallByID")
-    public Call getCall(@Argument Long id) {
-        return callService.getCallsById(id);
+    @Autowired
+    public CallResolver(CallService callService) {
+        this.callService = callService;
     }
-
-    @QueryMapping(name = "getAllCalls")
+    @QueryMapping
     public List<Call> getAllCalls() {
         return callService.getAllCalls();
     }
 
-    @MutationMapping(name = "updateCall")
-    public Call updateCall(@Argument Long id, @Argument Integer duration, @Argument String status, @Argument Double commission) {
-        Call callDetails = new Call();
-        callDetails.setDuration(duration);
-        callDetails.setStatus(status);
-        callDetails.setCommission(commission);
-        return callService.updateCalls(id, callDetails);
+    @QueryMapping
+    public Optional<Call> getCallById(@Argument Long id) {
+        return callService.getCallById(id);
+    }
+    @MutationMapping
+    public Call createCall(@Argument Long caller, @Argument Long recipient, @Argument Long theme) throws Exception {
+        CallInput callInput = new CallInput();
+        callInput.setCallerId(caller);
+        callInput.setRecipientId(recipient);
+        callInput.setThemeId(theme);
+
+        return callService.createCall(callInput);
     }
 
-    @MutationMapping(name = "createCall")
-    public Call createCall(@Argument("caller") User callerId, @Argument("recipient") User recipientId, @Argument("theme") Theme themeId) {
-        Call call = new Call();
-        call.setCaller(callerId);
-        call.setRecipient(recipientId);
-        call.setTheme(themeId);
-        return callService.createCall(call);
+    @MutationMapping
+    public Call updateCall(@Argument Long id, @Argument CallUpdateInput callDto) throws Exception {
+        return callService.updateCall(id, callDto);
     }
 
 
-    @MutationMapping(name = "deleteCall")
-    public Boolean deleteCall(@Argument Long id) {
+    @MutationMapping
+    public Boolean deleteCall(@Argument Long id) throws Exception{
         callService.deleteCall(id);
         return true;
     }

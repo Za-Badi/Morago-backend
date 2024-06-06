@@ -1,6 +1,6 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.dtos.DepositsInput;
+import com.habsida.morago.model.inputs.DepositsInput;
 import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.resolver.DepositsResolver;
 import org.springframework.graphql.data.method.annotation.Argument;

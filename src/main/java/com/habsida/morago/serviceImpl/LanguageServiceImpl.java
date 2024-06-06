@@ -1,8 +1,7 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.dtos.LanguageInput;
+import com.habsida.morago.model.inputs.LanguageInput;
 import com.habsida.morago.model.entity.Language;
-import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.LanguageRepository;
 import com.habsida.morago.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class LanguageServiceImpl implements LanguageService {
     public Language updateLanguage(Long id, LanguageInput languageDto) throws Exception {
         Language language = languageRepository.findById(id)
                 .orElseThrow(() -> new Exception("Language not found with id: " + id));
-        if (languageDto.getName() != null) { language.setName(languageDto.getName()); }
+        if (languageDto.getName() != null && !languageDto.getName().trim().isEmpty()) { language.setName(languageDto.getName()); }
         return languageRepository.save(language);
     }
 
