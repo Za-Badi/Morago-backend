@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,9 +19,10 @@ public class CategoryResolver {
 
 
     @MutationMapping
-    public Category createCategory(@Argument CreateCategoryInput input){
+    public Category createCategory(@Argument CreateCategoryInput input) {
         return categoryService.createCategory(input);
     }
+
     @MutationMapping
     public Category updateCategory(@Argument UpdateCategoryInput input) {
         return categoryService.updateCategory(input);
@@ -34,7 +34,7 @@ public class CategoryResolver {
     }
 
     @QueryMapping
-    public List<Category> getAllCategories() {
+    public Set<Category> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
@@ -42,10 +42,14 @@ public class CategoryResolver {
     public Category getCategoryById(@Argument Long id) {
         return categoryService.getCategoryById(id);
     }
+
     @QueryMapping
     public Category getCategoryByName(@Argument String name) {
         return categoryService.getCategoryByName(name);
     }
 
-
+    @QueryMapping
+    public Set<Category> getCategoryByStatus(@Argument Boolean status) {
+        return categoryService.getCategoryByStatus(status);
+    }
 }

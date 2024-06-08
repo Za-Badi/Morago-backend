@@ -1,7 +1,5 @@
 package com.habsida.morago.resolver;
 
-
-import com.habsida.morago.exceptions.GraphqlExceptionHandler;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.inputs.CreateThemeInput;
 import com.habsida.morago.model.inputs.UpdateThemeInput;
@@ -19,15 +17,15 @@ public class ThemeMutationResolver {
     private final ThemeService themeService;
 
     @MutationMapping
-    public Theme createTheme(@Argument CreateThemeInput input) throws GraphqlExceptionHandler {
+    public Theme createTheme(@Argument CreateThemeInput input) {
         return themeService.createTheme(input);
     }
         @MutationMapping
-    public Theme updateThemeById(@Argument UpdateThemeInput input) throws GraphqlExceptionHandler {
+    public Theme updateThemeById(@Argument UpdateThemeInput input) {
         return themeService.updateTheme(input);
     }
     @MutationMapping
-    public Boolean deleteThemeById(@Argument Long id) throws GraphqlExceptionHandler {
+    public Boolean deleteThemeById(@Argument Long id) {
         return themeService.removeThemeById(id);
     }
         @QueryMapping
@@ -36,7 +34,7 @@ public class ThemeMutationResolver {
     }
 
     @QueryMapping
-    public Theme getThemeById(@Argument Long id) {
+    public Theme getThemeById(@Argument Long id){
         return themeService.getThemeById(id);
     }
 

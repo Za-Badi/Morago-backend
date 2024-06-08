@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class CreateThemeInput {
 
     private String name = "";
-    private String korean_title = "";
+    private String koreanTitle = "";
     private BigDecimal price;
     private BigDecimal nightPrice;
     private String description = "";
