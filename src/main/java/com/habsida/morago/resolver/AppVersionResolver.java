@@ -1,7 +1,7 @@
 package com.habsida.morago.resolver;
 
 
-import com.habsida.morago.exceptions.GraphqlExceptionHandler;
+//import com.habsida.morago.exceptions.GraphqlExceptionHandler;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
 import com.habsida.morago.serviceImpl.AppVersionService;
@@ -22,7 +22,7 @@ public class AppVersionResolver {
     private final AppVersionService appVersionService;
 
     @MutationMapping
-    public AppVersion createAppVersion(@Argument EPlatform platform, @Argument  String min, @Argument  String latest) throws GraphqlExceptionHandler {
+    public AppVersion createAppVersion(@Argument EPlatform platform, @Argument  String min, @Argument  String latest)  {
         return appVersionService.create(platform, min, latest);
     }
     @MutationMapping

@@ -26,9 +26,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-    private  Boolean is_active;
+    private  Boolean isActive;
 
     @CreatedDate
     @Column(updatable = false)
@@ -50,7 +49,7 @@ public class Category {
         return "Category {" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", is_active=" + is_active +
+                ", is_active=" + isActive +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" +updatedAt+
                 '}';

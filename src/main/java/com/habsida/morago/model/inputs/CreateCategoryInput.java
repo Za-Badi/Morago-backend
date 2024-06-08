@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class CreateCategoryInput {
     private String name="";
-    private Boolean is_active;
+    private Boolean isActive = false;
 }

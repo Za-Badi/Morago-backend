@@ -1,46 +1,49 @@
 package com.habsida.morago.exceptions;
 
+import com.oembedler.moon.graphql.boot.error.ThrowableGraphQLError;
+import graphql.*;
+import graphql.execution.NonNullableValueCoercedAsNullException;
+import graphql.schema.CoercingParseLiteralException;
+import graphql.schema.CoercingParseValueException;
+import graphql.schema.CoercingSerializeException;
+import graphql.schema.DataFetchingEnvironment;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+import java.io.IOException;
+
+//@RestControllerAdvice
+
+@ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(Exception.class)
-    public ProblemDetail handleSecurityException(Exception exception) {
-        ProblemDetail errorDetail = null;
-        exception.printStackTrace();
-        if (exception instanceof BadCredentialsException) {
-            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(401), exception.getMessage());
-            errorDetail.setProperty("description", "The username or password is incorrect");
-            return errorDetail;
-        }
-        if (exception instanceof AccountStatusException) {
-            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "The account is locked");
-        }
-        if (exception instanceof AccessDeniedException) {
-            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "You are not authorized to access this resource");
-        }
-        if (exception instanceof SignatureException) {
-            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "The JWT signature is invalid");
-        }
-        if (exception instanceof ExpiredJwtException) {
-            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(403), exception.getMessage());
-            errorDetail.setProperty("description", "The JWT token has expired");
-        }
-        if (errorDetail == null) {
-            errorDetail = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(500), exception.getMessage());
-            errorDetail.setProperty("description", "Unknown internal server error.");
-        }
-        return errorDetail;
+    @GraphQlExceptionHandler
+    public GraphQLError handle(EntityNotFoundException ex, DataFetchingEnvironment env ){
+        return GraphQLError.newError()
+                .errorType(ErrorType.DataFetchingException)
+                .message("Internal Server Error")
+                .errorType(ErrorType.DataFetchingException)
+//                .path(env.getExecutionStepInfo().getPath())
+//                .location(env.getField().getSourceLocation())
+                .build();
+    }
+    @GraphQlExceptionHandler
+    public GraphQLError handle(RuntimeException ex){
+        return GraphQLError.newError()
+                .errorType(ErrorType.DataFetchingException)
+                .message("Internal Server Error")
+                .errorType(ErrorType.DataFetchingException)
+                .build();
     }
 }
