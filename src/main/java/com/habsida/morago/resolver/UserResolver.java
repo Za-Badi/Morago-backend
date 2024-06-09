@@ -27,11 +27,11 @@ public class UserResolver {
     public User getCurrentUser() {
         return userService.getCurrentUser();
     }
-    public User addUser(UserInput userDto) {
-        return userService.addUser(userDto);
+    public User addUser(UserInput userInput) throws Exception {
+        return userService.addUser(userInput);
     }
-    public User updateUser(Long id, UserInput userDto) throws Exception {
-        return userService.updateUser(id, userDto);
+    public User updateUser(Long id, UserInput userInput) throws Exception {
+        return userService.updateUser(id, userInput);
     }
     public Boolean deleteUser(Long id) throws Exception {
         userService.deleteUser(id);

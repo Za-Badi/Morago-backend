@@ -36,12 +36,12 @@ public class UserController {
         return userResolver.getCurrentUser();
     }
     @MutationMapping
-    public User addUser(@Argument UserInput userDto) {
-        return userResolver.addUser(userDto);
+    public User addUser(@Argument UserInput userInput) throws Exception{
+        return userResolver.addUser(userInput);
     }
     @MutationMapping
-    public User updateUser(@Argument Long id, @Argument UserInput userDto) throws Exception {
-        return userResolver.updateUser(id, userDto);
+    public User updateUser(@Argument Long id, @Argument UserInput userInput) throws Exception {
+        return userResolver.updateUser(id, userInput);
     }
     @MutationMapping
     public Boolean deleteUser(@Argument Long id) throws Exception {

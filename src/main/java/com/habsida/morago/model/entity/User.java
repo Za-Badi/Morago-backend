@@ -1,11 +1,9 @@
 package com.habsida.morago.model.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
@@ -16,6 +14,8 @@ import java.util.List;
 @Table(name="users")
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode
 public class User implements UserDetails {
     @Id
@@ -39,10 +39,10 @@ public class User implements UserDetails {
     private Double ratings;
     @Column(name="total_ratings")
     private Integer totalRatings;
-    @CreationTimestamp
+    @CreatedDate
     @Column(name="created_at", updatable = false)
     private LocalDateTime createdAt;
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
     @Column(name="is_active")
@@ -60,7 +60,7 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_profile_id")
     private UserProfile userProfile;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -77,18 +77,13 @@ public class User implements UserDetails {
     private List<Rating> givenRatings;
     @OneToMany(mappedBy = "toWhomUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rating> receivedRatings;
-
-
-
     //    @OneToMany(mappedBy = "recipient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private List<Call> recipientCalls;
 //    @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private List<Call> callerCalls;
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {return roles;}
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles;
     }
     @Override
     public String getPassword() {return password;}

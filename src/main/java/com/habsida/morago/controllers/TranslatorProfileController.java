@@ -21,12 +21,12 @@ public class TranslatorProfileController {
         return translatorProfileResolver.getTranslatorProfileById(id);
     }
     @MutationMapping
-    public TranslatorProfile addTranslatorProfile(@Argument TranslatorProfileInput translatorProfileDto) throws Exception {
-        return translatorProfileResolver.addTranslatorProfile(translatorProfileDto);
+    public TranslatorProfile addTranslatorProfile(@Argument TranslatorProfileInput translatorProfileInput) throws Exception {
+        return translatorProfileResolver.addTranslatorProfile(translatorProfileInput);
     }
     @MutationMapping
-    public TranslatorProfile updateTranslatorProfile(@Argument Long id, @Argument TranslatorProfileInput translatorProfileDto) throws Exception {
-        return translatorProfileResolver.updateTranslatorProfile(id, translatorProfileDto);
+    public TranslatorProfile updateTranslatorProfile(@Argument Long id, @Argument TranslatorProfileInput translatorProfileInput) throws Exception {
+        return translatorProfileResolver.updateTranslatorProfile(id, translatorProfileInput);
     }
     @MutationMapping
     public Boolean deleteTranslatorProfile(@Argument Long id) throws Exception {

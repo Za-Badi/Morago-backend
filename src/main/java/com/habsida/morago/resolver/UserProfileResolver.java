@@ -20,4 +20,14 @@ public class UserProfileResolver {
     public UserProfile getUserProfileById(Long id) throws Exception {
         return userProfileService.getUserProfileById(id);
     }
+    public UserProfile addUserProfile(Boolean isFreeCallMade) {
+        return userProfileService.addUserProfile(isFreeCallMade);
+    }
+    public UserProfile updateUserProfile(Long id, Boolean isFreeCallMade) throws Exception {
+        return userProfileService.updateUserProfile(id, isFreeCallMade);
+    }
+    public Boolean deleteUserProfile(Long id) throws Exception {
+        userProfileService.deleteUserProfile(id);
+        return true;
+    }
 }

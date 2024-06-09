@@ -19,11 +19,11 @@ public class TranslatorProfileResolver {
     public TranslatorProfile getTranslatorProfileById(Long id) throws Exception {
         return translatorProfileService.getTranslatorProfileById(id);
     }
-    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileDto) throws Exception {
-        return translatorProfileService.addTranslatorProfile(translatorProfileDto);
+    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileInput) throws Exception {
+        return translatorProfileService.addTranslatorProfile(translatorProfileInput);
     }
-    public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileDto) throws Exception {
-        return translatorProfileService.updateTranslatorProfile(id, translatorProfileDto);
+    public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileInput) throws Exception {
+        return translatorProfileService.updateTranslatorProfile(id, translatorProfileInput);
     }
     public Boolean deleteTranslatorProfile(Long id) throws Exception {
         translatorProfileService.deleteTranslatorProfile(id);

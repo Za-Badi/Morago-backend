@@ -1,40 +1,28 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.model.inputs.LoginResponse;
-import com.habsida.morago.model.inputs.LoginUserDto;
-import com.habsida.morago.model.inputs.RegisterUserDto;
-import com.habsida.morago.model.entity.User;
-import com.habsida.morago.serviceImpl.AuthenticationService;
-import com.habsida.morago.serviceImpl.JwtService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.habsida.morago.model.inputs.UserInput;
+import com.habsida.morago.resolver.AuthenticationResolver;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.stereotype.Controller;
 
-@RequestMapping("/auth")
-@RestController
+@Controller
 public class AuthenticationController {
-    private final JwtService jwtService;
-    private final AuthenticationService authenticationService;
+    private final AuthenticationResolver authenticationResolver;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
-        this.jwtService = jwtService;
-        this.authenticationService = authenticationService;
+    public AuthenticationController(AuthenticationResolver authenticationResolver) {
+        this.authenticationResolver = authenticationResolver;
     }
-
-    @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) throws Exception {
-        User registeredUser = authenticationService.signup(registerUserDto);
-        return ResponseEntity.ok(registeredUser);
+    @MutationMapping
+    public String signUpAsUser(@Argument UserInput userInput) throws Exception {
+        return authenticationResolver.signUpAsUser(userInput);
     }
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
-        String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
-        return ResponseEntity.ok(loginResponse);
+    @MutationMapping
+    public String signUpAsTranslator(@Argument UserInput userInput) throws Exception {
+        return authenticationResolver.signUpAsTranslator(userInput);
+    }
+    @MutationMapping
+    public String authenticate(@Argument UserInput userInput) {
+        return authenticationResolver.authenticate(userInput);
     }
 }

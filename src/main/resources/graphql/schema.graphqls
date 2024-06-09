@@ -39,6 +39,9 @@ type Query {
 }
 
 type Mutation {
+    signUpAsUser(userInput: UserInput): String
+    signUpAsTranslator(userInput: UserInput): String
+    authenticate(userInput: UserInput): String
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
     deleteAppVersion(platform: EPlatform!): Boolean
@@ -51,11 +54,14 @@ type Mutation {
     createTheme(input: CreateThemeInput): Theme
     updateThemeById(input: UpdateThemeInput): Theme
     deleteThemeById(id: ID!): Boolean
-    addUser(userDto: UserInput): User
-    updateUser(id: ID, userDto: UserInput): User
+    addUser(userInput: UserInput): User
+    updateUser(id: ID, userInput: UserInput): User
     deleteUser(id: ID): Boolean
-    addTranslatorProfile(translatorProfileDto: TranslatorProfileInput): TranslatorProfile
-    updateTranslatorProfile(id: ID, translatorProfileDto: TranslatorProfileInput): TranslatorProfile
+    addUserProfile(isFreeCallMade: Boolean): UserProfile
+    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
+    deleteUserProfile(id: ID): Boolean
+    addTranslatorProfile(translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     deleteTranslatorProfile(id: ID): Boolean
     addLanguage(languageDto: LanguageInput): Language
     updateLanguage(id: ID, languageDto: LanguageInput): Language
@@ -78,7 +84,6 @@ type Mutation {
     createRating(RatingDto: RatingInput) : Rating
     updateRating(id: ID!, grade: Float): Rating
     deleteRating(id: ID!): Boolean
-
 }
 
 
@@ -148,7 +153,6 @@ type User {
 type UserProfile {
     id: ID!
     isFreeCallMade: Boolean
-    user: User
 }
 
 type TranslatorProfile {
@@ -158,7 +162,6 @@ type TranslatorProfile {
     isAvailable: Boolean
     isOnline: Boolean
     levelOfKorean: String
-    user: User
 }
 type Call {
     id: ID

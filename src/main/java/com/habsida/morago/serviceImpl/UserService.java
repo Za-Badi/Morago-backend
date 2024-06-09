@@ -18,25 +18,25 @@ import java.util.Set;
 
 @Service
 public class UserService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.repository = userRepository;
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
     public List<User> getAllUsers() {
-        return repository.findAll();
+        return userRepository.findAll();
     }
 
     public User getUserById(Long id) throws Exception {
-        return repository.findById(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User not found with id: " + id));
     }
 
 
     public User getUserByPhone(String phone) throws Exception {
-        return repository.findByPhone(phone)
+        return userRepository.findByPhone(phone)
                 .orElseThrow(() -> new Exception("User not found with phone: " + phone));
     }
 
@@ -44,12 +44,21 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (User) authentication.getPrincipal();
     }
-    public User addUser(UserInput userDto) {
+    public User addUser(UserInput userInput) throws Exception {
+        if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
+            throw new Exception("Phone number is already used: " + userInput.getPhone());
+        }
         User user = new User();
-        user.setPhone(userDto.getPhone());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
+        user.setPhone(userInput.getPhone());
+        user.setPassword(passwordEncoder.encode(userInput.getPassword()));
+        user.setFirstName(userInput.getFirstName());
+        user.setLastName(userInput.getLastName());
+        user.setBalance((double)0);
+        user.setRatings((double)0);
+        user.setTotalRatings(0);
+        user.setIsActive(true);
+        user.setIsDebtor(false);
+        user.setOnBoardingStatus(0);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
@@ -60,9 +69,32 @@ public class UserService {
                 user.setUserProfile(new UserProfile());
             }
         }
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
+    public User updateUser(Long id, UserInput userInput) throws Exception {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
+        if (userInput.getPhone() != null && !userInput.getPhone().trim().isEmpty()) { user.setPhone(userInput.getPhone()); }
+        if (userInput.getPassword() != null && !userInput.getPassword().trim().isEmpty()) { user.setPassword(passwordEncoder.encode(userInput.getPassword())); }
+        if (userInput.getFirstName() != null && !userInput.getFirstName().trim().isEmpty()) { user.setFirstName(userInput.getFirstName()); }
+        if (userInput.getLastName() != null && !userInput.getLastName().trim().isEmpty()) { user.setLastName(userInput.getLastName()); }
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) throws Exception {
+        userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
+        userRepository.deleteById(id);
+    }
+
+    public Boolean validatePassword(String password, String anotherPassword) {
+        return passwordEncoder.matches(anotherPassword, password);
+    }
+    public String resetPassword(String token, String newPassword) {
+//        Still to be implemented
+        return "Password has been changed";
+    }
     @Transactional
     public User updatePassword(String originalPassword, String newPassword ){
         User user = getCurrentUser();
@@ -73,33 +105,5 @@ public class UserService {
         }
         return user;
     }
-    public User updateUser(Long id, UserInput userDto) throws Exception {
-        User user = repository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
-        if (userDto.getPhone() != null && !userDto.getPhone().trim().isEmpty()) { user.setPhone(userDto.getPhone()); }
-        if (userDto.getPassword() != null && !userDto.getPassword().trim().isEmpty()) { user.setPassword(passwordEncoder.encode(userDto.getPassword())); }
-        if (userDto.getFirstName() != null && !userDto.getFirstName().trim().isEmpty()) { user.setFirstName(userDto.getFirstName()); }
-        if (userDto.getLastName() != null && !userDto.getLastName().trim().isEmpty()) { user.setLastName(userDto.getLastName()); }
-        return repository.save(user);
-    }
-
-    public void deleteUser(Long id) throws Exception {
-        repository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
-        repository.deleteById(id);
-    }
-
-    public Boolean validatePassword(String password, String anotherPassword) {
-        return passwordEncoder.matches(anotherPassword, password);
-    }
-    public String resetPassword(String token, String newPassword) {
-//        Still to be implemented
-        return "Password has been changed";
-    }
-
-
-
-
-
 
 }

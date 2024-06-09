@@ -3,7 +3,6 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.model.inputs.LanguageInput;
 import com.habsida.morago.model.entity.Language;
 import com.habsida.morago.repository.LanguageRepository;
-import com.habsida.morago.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LanguageServiceImpl implements LanguageService {
+public class LanguageService implements com.habsida.morago.service.LanguageService {
     private final LanguageRepository languageRepository;
 
     @Autowired
-    public LanguageServiceImpl(LanguageRepository languageRepository) {
+    public LanguageService(LanguageRepository languageRepository) {
         this.languageRepository = languageRepository;
     }
 
