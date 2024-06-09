@@ -24,8 +24,8 @@ public class UserResolver {
     public User getUserByPhone(String phone) throws Exception {
         return userService.getUserByPhone(phone);
     }
-    public User getCurrentUser() {
-        return userService.getCurrentUser();
+    public User getAuthenticatedUser() {
+        return userService.getAuthenticatedUser();
     }
     public User addUser(UserInput userInput) throws Exception {
         return userService.addUser(userInput);

@@ -1,4 +1,4 @@
-package com.habsida.morago.resolvers;
+package com.habsida.morago.resolver;
 
 import com.habsida.morago.model.inputs.LanguageInput;
 import com.habsida.morago.model.entity.Language;
@@ -21,11 +21,11 @@ public class LanguageResolver {
     public Language getLanguageById(Long id) throws Exception {
         return languageService.getLanguageById(id);
     }
-    public Language addLanguage(LanguageInput languageDto) {
-        return languageService.addLanguage(languageDto);
+    public Language addLanguage(LanguageInput languageInput) {
+        return languageService.addLanguage(languageInput);
     }
-    public Language updateLanguage(Long id, LanguageInput languageDto) throws Exception {
-        return languageService.updateLanguage(id, languageDto);
+    public Language updateLanguage(Long id, LanguageInput languageInput) throws Exception {
+        return languageService.updateLanguage(id, languageInput);
     }
     public Boolean deleteLanguage(Long id) throws Exception {
         languageService.deleteLanguage(id);

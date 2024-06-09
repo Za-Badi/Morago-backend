@@ -27,16 +27,16 @@ public class LanguageService implements com.habsida.morago.service.LanguageServi
                 .orElseThrow(() -> new Exception("Language not found with id: " + id));
     }
 
-    public Language addLanguage(LanguageInput languageDto) {
+    public Language addLanguage(LanguageInput languageInput) {
         Language language = new Language();
-        language.setName(languageDto.getName());
+        language.setName(languageInput.getName());
         return languageRepository.save(language);
     }
 
-    public Language updateLanguage(Long id, LanguageInput languageDto) throws Exception {
+    public Language updateLanguage(Long id, LanguageInput languageInput) throws Exception {
         Language language = languageRepository.findById(id)
                 .orElseThrow(() -> new Exception("Language not found with id: " + id));
-        if (languageDto.getName() != null && !languageDto.getName().trim().isEmpty()) { language.setName(languageDto.getName()); }
+        if (languageInput.getName() != null && !languageInput.getName().trim().isEmpty()) { language.setName(languageInput.getName()); }
         return languageRepository.save(language);
     }
 

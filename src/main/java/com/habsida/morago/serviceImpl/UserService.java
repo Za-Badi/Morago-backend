@@ -1,17 +1,22 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.model.entity.Role;
 import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.model.entity.UserProfile;
 import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -20,10 +25,12 @@ import java.util.Set;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -40,10 +47,15 @@ public class UserService {
                 .orElseThrow(() -> new Exception("User not found with phone: " + phone));
     }
 
-    public User getCurrentUser() {
+    public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (User) authentication.getPrincipal();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.UserDetails userDetails) {
+            return userRepository.findByPhone(userDetails.getUsername())
+                            .orElseThrow();
+        }
+        return null;
     }
+
     public User addUser(UserInput userInput) throws Exception {
         if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
             throw new Exception("Phone number is already used: " + userInput.getPhone());
@@ -59,9 +71,13 @@ public class UserService {
         user.setIsActive(true);
         user.setIsDebtor(false);
         user.setOnBoardingStatus(0);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        List<Role> roles = new ArrayList<>();
+        if (userInput.getRoles() != null) {
+            for (String roleName : userInput.getRoles()) {
+                Role role = roleRepository.findByName(roleName)
+                        .orElseThrow(() -> new Exception("Role not found with name: " + roleName));
+                roles.add(role);
+            }
             if (roles.contains("ROLE_TRANSLATOR")) {
                 user.setTranslatorProfile(new TranslatorProfile());
             }
@@ -97,7 +113,7 @@ public class UserService {
     }
     @Transactional
     public User updatePassword(String originalPassword, String newPassword ){
-        User user = getCurrentUser();
+        User user = getAuthenticatedUser();
         if(passwordEncoder.matches(originalPassword, user.getPassword())){
             user.setPassword(passwordEncoder.encode(newPassword));
         } else {
@@ -105,5 +121,4 @@ public class UserService {
         }
         return user;
     }
-
 }

@@ -19,13 +19,11 @@ import java.util.List;
 public class TranslatorProfileService implements com.habsida.morago.service.TranslatorProfileService {
     private final TranslatorProfileRepository translatorProfileRepository;
     private final LanguageRepository languageRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public TranslatorProfileService(TranslatorProfileRepository translatorProfileRepository, LanguageRepository languageRepository, UserRepository userRepository) {
+    public TranslatorProfileService(TranslatorProfileRepository translatorProfileRepository, LanguageRepository languageRepository) {
         this.translatorProfileRepository = translatorProfileRepository;
         this.languageRepository = languageRepository;
-        this.userRepository = userRepository;
     }
 
     public List<TranslatorProfile> getAllTranslatorProfiles() {
@@ -51,10 +49,6 @@ public class TranslatorProfileService implements com.habsida.morago.service.Tran
             languages.add(language);
         }
         translatorProfile.setLanguages(languages);
-        Long userId = translatorProfileInput.getUser();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new Exception("User not found with id: " + userId));
-        user.setTranslatorProfile(translatorProfile);
         return translatorProfileRepository.save(translatorProfile);
     }
 

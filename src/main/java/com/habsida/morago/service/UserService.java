@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface UserService {
     public List<User> getAllUsers();
     public User getUserById(Long id) throws Exception;
+    public User getAuthenticatedUser();
     public User addUser(UserInput userInput) throws Exception;
     public User updateUser(Long id, UserInput userInput) throws Exception;
     public  void deleteUser(Long id) throws Exception;

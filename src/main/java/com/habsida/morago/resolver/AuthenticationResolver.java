@@ -20,16 +20,16 @@ public class AuthenticationResolver {
     }
     public String signUpAsUser(UserInput userInput) throws Exception {
         authenticationService.signUpAsUser(userInput);
-        User authenticatedUser = authenticationService.authenticate(userInput);
+        User authenticatedUser = authenticationService.logIn(userInput);
         return jwtService.generateToken(authenticatedUser);
     }
     public String signUpAsTranslator(UserInput userInput) throws Exception {
         authenticationService.signUpAsTranslator(userInput);
-        User authenticatedUser = authenticationService.authenticate(userInput);
+        User authenticatedUser = authenticationService.logIn(userInput);
         return jwtService.generateToken(authenticatedUser);
     }
-    public String authenticate(UserInput userInput) {
-        User authenticatedUser = authenticationService.authenticate(userInput);
+    public String logIn(UserInput userInput) {
+        User authenticatedUser = authenticationService.logIn(userInput);
         return jwtService.generateToken(authenticatedUser);
     }
 

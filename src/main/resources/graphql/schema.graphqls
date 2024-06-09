@@ -3,6 +3,9 @@ schema {
     mutation: Mutation
 }
 type Query {
+    testUser: [User]
+    testTranslator: [User]
+    testAuthentication: [User]
     getCoinById(id: ID): Coin
     getAllCoins: [Coin]
     getAppVersionByPlatform(platform: EPlatform!): AppVersion
@@ -17,7 +20,7 @@ type Query {
     getAllUsers: [User]
     getUserById(id: ID): User
     getUserByPhone(phone: String): User
-    getCurrentUser: [User]
+    getAuthenticatedUser: User
     getAllUserProfiles: [UserProfile]
     getUserProfileById(id: ID): UserProfile
     getAllTranslatorProfiles: [TranslatorProfile]
@@ -41,7 +44,7 @@ type Query {
 type Mutation {
     signUpAsUser(userInput: UserInput): String
     signUpAsTranslator(userInput: UserInput): String
-    authenticate(userInput: UserInput): String
+    logIn(userInput: UserInput): String
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
     deleteAppVersion(platform: EPlatform!): Boolean
@@ -63,8 +66,8 @@ type Mutation {
     addTranslatorProfile(translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     deleteTranslatorProfile(id: ID): Boolean
-    addLanguage(languageDto: LanguageInput): Language
-    updateLanguage(id: ID, languageDto: LanguageInput): Language
+    addLanguage(languageInput: LanguageInput): Language
+    updateLanguage(id: ID, languageInput: LanguageInput): Language
     deleteLanguage(id: ID): Boolean
     addDeposit(depositsDto: DepositsInput): Deposits
     updateDeposit(id: ID!, depositsDto: DepositsInput): Deposits
@@ -285,7 +288,6 @@ input TranslatorProfileInput {
     isOnline: Boolean
     levelOfKorean: String
     languages: [ID]
-    user: ID
 }
 
 input LanguageInput {

@@ -21,6 +21,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
+
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
@@ -45,15 +46,18 @@ public class AuthenticationService {
         user.setIsActive(true);
         user.setIsDebtor(false);
         user.setOnBoardingStatus(0);
+        List<Role> roles = new ArrayList<>();
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new Exception("Role not found with name: ROLE_USER"));
+        roles.add(userRole);
         if (userInput.getRoles() != null) {
-            List<Role> roles = new ArrayList<>();
-            for (String roleInput : userInput.getRoles()) {
-                Role role = roleRepository.findByName(roleInput)
-                        .orElseThrow(() -> new Exception("Role not found with name: " + roleInput));
+            for (String roleName : userInput.getRoles()) {
+                Role role = roleRepository.findByName(roleName)
+                        .orElseThrow(() -> new Exception("Role not found with name: " + roleName));
                 roles.add(role);
             }
-            user.setRoles(roles);
         }
+        user.setRoles(roles);
         user.setUserProfile(new UserProfile());
         userRepository.save(user);
     }
@@ -70,19 +74,22 @@ public class AuthenticationService {
         user.setIsActive(true);
         user.setIsDebtor(false);
         user.setOnBoardingStatus(0);
+        List<Role> roles = new ArrayList<>();
+        Role translatorRole = roleRepository.findByName("ROLE_TRANSLATOR")
+                .orElseThrow(() -> new Exception("Role not found with name: ROLE_TRANSLATOR"));
+        roles.add(translatorRole);
         if (userInput.getRoles() != null) {
-            List<Role> roles = new ArrayList<>();
-            for (String roleInput : userInput.getRoles()) {
-                Role role = roleRepository.findByName(roleInput)
-                        .orElseThrow(() -> new Exception("Role not found with name: " + roleInput));
+            for (String roleName : userInput.getRoles()) {
+                Role role = roleRepository.findByName(roleName)
+                        .orElseThrow(() -> new Exception("Role not found with name: " + roleName));
                 roles.add(role);
             }
-            user.setRoles(roles);
         }
+        user.setRoles(roles);
         user.setTranslatorProfile(new TranslatorProfile());
         userRepository.save(user);
     }
-    public User authenticate(UserInput userInput) {
+    public User logIn(UserInput userInput) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         userInput.getPhone(),

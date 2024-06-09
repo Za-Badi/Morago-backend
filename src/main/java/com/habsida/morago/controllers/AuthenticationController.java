@@ -22,7 +22,7 @@ public class AuthenticationController {
         return authenticationResolver.signUpAsTranslator(userInput);
     }
     @MutationMapping
-    public String authenticate(@Argument UserInput userInput) {
-        return authenticationResolver.authenticate(userInput);
+    public String logIn(@Argument UserInput userInput) {
+        return authenticationResolver.logIn(userInput);
     }
 }

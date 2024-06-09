@@ -16,5 +16,4 @@ public class TranslatorProfileInput {
     private Boolean isOnline;
     private String levelOfKorean;
     private List<Long> languages;
-    private Long user;
 }
