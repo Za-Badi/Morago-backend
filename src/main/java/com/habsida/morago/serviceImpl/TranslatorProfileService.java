@@ -44,6 +44,17 @@ public class TranslatorProfileService implements com.habsida.morago.service.Tran
         return isOnlineList;
     }
 
+    public List<TranslatorProfile> getTranslatorProfilesByIsOnline(Boolean isOnline) {
+        List<TranslatorProfile> translatorProfileList = translatorProfileRepository.findAll();
+        List<TranslatorProfile> isOnlineList = new ArrayList<>();
+        for (TranslatorProfile translatorProfile : translatorProfileList) {
+            if (translatorProfile.getIsOnline() == isOnline) {
+                isOnlineList.add(translatorProfile);
+            }
+        }
+        return isOnlineList;
+    }
+
     public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileInput) throws Exception {
         TranslatorProfile translatorProfile = new TranslatorProfile();
         translatorProfile.setDateOfBirth(translatorProfileInput.getDateOfBirth());
