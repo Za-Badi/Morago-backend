@@ -33,11 +33,10 @@ public class GraphqlSecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().permitAll()
                         .requestMatchers("/graphql").permitAll()
                         .requestMatchers("/isTranslator").hasAuthority("ROLE_TRANSLATOR")
                         .requestMatchers("/isUser").hasAuthority("ROLE_USER")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(sessionManagementCustomizer -> sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
