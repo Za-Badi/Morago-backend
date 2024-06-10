@@ -40,6 +40,10 @@ public class UserController {
     public Boolean existsUserByPhone(@Argument String phone) {
         return userResolver.existsUserByPhone(phone);
     }
+
+
+
+
     @MutationMapping
     public User addUser(@Argument UserInput userInput) throws Exception{
         return userResolver.addUser(userInput);

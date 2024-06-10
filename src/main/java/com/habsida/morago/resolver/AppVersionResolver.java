@@ -1,8 +1,5 @@
 package com.habsida.morago.resolver;
 
-
-//import com.habsida.morago.exceptions.GraphqlExceptionHandler;
-
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
 import com.habsida.morago.serviceImpl.AppVersionService;
