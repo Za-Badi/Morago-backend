@@ -14,5 +14,7 @@ public interface UserService {
     public User updateUser(Long id, UserInput userInput) throws Exception;
     public  void deleteUser(Long id) throws Exception;
     public String resetPassword(String token, String newPassword);
-   public User updatePassword(String originalPassword,String newPassword);
+    public User updatePassword(String originalPassword,String newPassword);
+    public boolean changeIsActive(Long id);
+    public boolean changeIsDebtor(Long id);
 }

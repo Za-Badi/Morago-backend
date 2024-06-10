@@ -56,6 +56,9 @@ public class UserService {
         }
         return null;
     }
+    public Boolean existsUserByPhone(String phone) {
+        return userRepository.findByPhone(phone).isPresent();
+    }
 
     public User addUser(UserInput userInput) throws Exception {
         if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
@@ -103,6 +106,18 @@ public class UserService {
         userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User not found with id: " + id));
         userRepository.deleteById(id);
+    }
+    public boolean changeIsActive(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow();
+        user.setIsActive(!user.getIsActive());
+        return true;
+    }
+    public boolean changeIsDebtor(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow();
+        user.setIsDebtor(!user.getIsDebtor());
+        return true;
     }
 
     public Boolean validatePassword(String password, String anotherPassword) {

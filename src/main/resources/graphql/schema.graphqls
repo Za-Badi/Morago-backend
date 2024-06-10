@@ -20,11 +20,15 @@ type Query {
     getAllUsers: [User]
     getUserById(id: ID): User
     getUserByPhone(phone: String): User
+    existsUserByPhone(phone: String): Boolean
     getAuthenticatedUser: User
     getAllUserProfiles: [UserProfile]
     getUserProfileById(id: ID): UserProfile
     getAllTranslatorProfiles: [TranslatorProfile]
     getTranslatorProfileById(id: ID): TranslatorProfile
+    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfile]
+    getTranslatorProfilesByThemeName(name: String): [TranslatorProfile]
+    getTranslatorProfilesByIsOnline(isOnline: Boolean): [TranslatorProfile]
     getAllLanguages: [Language]
     getLanguageById(id: ID): Language
     getAllDeposits: [Deposits]
@@ -60,12 +64,21 @@ type Mutation {
     addUser(userInput: UserInput): User
     updateUser(id: ID, userInput: UserInput): User
     deleteUser(id: ID): Boolean
+    changeIsActive(id: ID): Boolean
+    changeIsDebtor(id: ID): Boolean
     addUserProfile(isFreeCallMade: Boolean): UserProfile
     updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
     deleteUserProfile(id: ID): Boolean
+    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
+    changeIsFreeCallMade(id: ID): Boolean
     addTranslatorProfile(translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     deleteTranslatorProfile(id: ID): Boolean
+    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    changeIsAvailable(id: ID): Boolean
+    changeIsOnline(id: ID): Boolean
+    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
+    deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
     addLanguage(languageInput: LanguageInput): Language
     updateLanguage(id: ID, languageInput: LanguageInput): Language
     deleteLanguage(id: ID): Boolean

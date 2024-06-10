@@ -36,6 +36,10 @@ public class UserController {
     public User getAuthenticatedUser() {
         return userResolver.getAuthenticatedUser();
     }
+    @QueryMapping
+    public Boolean existsUserByPhone(@Argument String phone) {
+        return userResolver.existsUserByPhone(phone);
+    }
     @MutationMapping
     public User addUser(@Argument UserInput userInput) throws Exception{
         return userResolver.addUser(userInput);
@@ -47,6 +51,14 @@ public class UserController {
     @MutationMapping
     public Boolean deleteUser(@Argument Long id) throws Exception {
         return userResolver.deleteUser(id);
+    }
+    @MutationMapping
+    public Boolean changeIsActive(@Argument Long id) {
+        return userResolver.changeIsActive(id);
+    }
+    @MutationMapping
+    public Boolean changeIsDebtor(@Argument Long id) {
+        return userResolver.changeIsDebtor(id);
     }
     @PreAuthorize("isAuthenticated()")
     @QueryMapping

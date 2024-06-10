@@ -20,6 +20,10 @@ public class TranslatorProfileController {
     public TranslatorProfile getTranslatorProfileById(@Argument Long id) throws Exception {
         return translatorProfileResolver.getTranslatorProfileById(id);
     }
+    @QueryMapping
+    public List<TranslatorProfile> getTranslatorProfilesByIsOnline(@Argument Boolean isOnline) throws Exception {
+        return translatorProfileResolver.getTranslatorProfilesByIsOnline(isOnline);
+    }
     @MutationMapping
     public TranslatorProfile addTranslatorProfile(@Argument TranslatorProfileInput translatorProfileInput) throws Exception {
         return translatorProfileResolver.addTranslatorProfile(translatorProfileInput);

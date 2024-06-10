@@ -4,6 +4,7 @@ import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.serviceImpl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class UserResolver {
     public User getAuthenticatedUser() {
         return userService.getAuthenticatedUser();
     }
+    public Boolean existsUserByPhone(String phone) {
+        return userService.existsUserByPhone(phone);
+    }
     public User addUser(UserInput userInput) throws Exception {
         return userService.addUser(userInput);
     }
@@ -36,5 +40,11 @@ public class UserResolver {
     public Boolean deleteUser(Long id) throws Exception {
         userService.deleteUser(id);
         return true;
+    }
+    public Boolean changeIsActive(Long id)  {
+        return userService.changeIsActive(id);
+    }
+    public Boolean changeIsDebtor(Long id)  {
+        return userService.changeIsDebtor(id);
     }
 }

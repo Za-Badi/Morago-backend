@@ -19,6 +19,9 @@ public class TranslatorProfileResolver {
     public TranslatorProfile getTranslatorProfileById(Long id) throws Exception {
         return translatorProfileService.getTranslatorProfileById(id);
     }
+    public List<TranslatorProfile> getTranslatorProfilesByIsOnline(Boolean isOnline) {
+        return translatorProfileService.getTranslatorProfilesByIsOnline(isOnline);
+    }
     public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileInput) throws Exception {
         return translatorProfileService.addTranslatorProfile(translatorProfileInput);
     }
