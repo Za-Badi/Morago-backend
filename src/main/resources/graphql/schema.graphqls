@@ -3,19 +3,21 @@ schema {
     mutation: Mutation
 }
 type Query {
-    getCoinById(id: ID): Coin
+    getCoinById(id: ID!): Coin
     getAllCoins: [Coin]
     getAppVersionByPlatform(platform: EPlatform!): AppVersion
     getAllAppVersions:[AppVersion]
     getAllCategories: [Category]
-    getCategoryById(id: ID): Category
-    getCategoryByName(name: String): Category
+    getCategoryById(id: ID!): Category
+    getCategoryByName(name: String!): Category
+    getCategoryByStatus(status: Boolean!): [Category]
     getAllThemes:[Theme]
-    getThemeById(id: ID): Theme
+    getThemeById(id: ID!): Theme
     getThemesByCategoriesId(id: ID): [Theme]
     getThemesByName(name: String): Theme
+    getThemeByStatus(status: Boolean!): [Theme]
     getAllUsers: [User]
-    getUserById(id: ID): User
+    getUserById(id: ID!): User
     getUserByPhone(phone: String): User
     getCurrentUser: [User]
     getAllUserProfiles: [UserProfile]
@@ -42,15 +44,17 @@ type Mutation {
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
     deleteAppVersion(platform: EPlatform!): Boolean
-    createCoin(input: CreateCoinInput!): Coin
-    updateCoin(input: UpdateCoinInput!): Coin
+    createCoin(input: CreateCoinInput): Coin
+    updateCoin(input: UpdateCoinInput): Coin
     deleteCoin(id: ID!): Boolean
     createCategory(input: CreateCategoryInput): Category
     updateCategory(input: UpdateCategoryInput): Category
     deleteCategoryById(id: ID!): Boolean
+    changeCategoryStatus(id: ID!): Boolean
     createTheme(input: CreateThemeInput): Theme
     updateThemeById(input: UpdateThemeInput): Theme
     deleteThemeById(id: ID!): Boolean
+    changeThemeStatus(id: ID!): Boolean
     addUser(userDto: UserInput): User
     updateUser(id: ID, userDto: UserInput): User
     deleteUser(id: ID): Boolean
@@ -78,6 +82,7 @@ type Mutation {
     createRating(RatingDto: RatingInput) : Rating
     updateRating(id: ID!, grade: Float): Rating
     deleteRating(id: ID!): Boolean
+    addFile(file: Upload!): File
 
 }
 
@@ -108,7 +113,7 @@ type File {
 type Category {
     id: ID
     name: String
-    is_active: Boolean
+    isActive: Boolean
 }
 type Theme {
     id: ID
@@ -120,6 +125,7 @@ type Theme {
     isPopular: Boolean
     isActive: Boolean
     category: Category
+    icon: File
     createdAt: String
     updatedAt: String
 
@@ -226,36 +232,37 @@ type Withdrawals {
 }
 
 input CreateCategoryInput {
-    name: String
-    is_active: Boolean
+    name: String!
+    is_active: Boolean!
 }
 input UpdateCategoryInput {
-    id: ID
+    id: ID!
     name: String
     is_active: Boolean
 }
 input CreateCoinInput {
-    coin: Float
-    won: Float
+    coin: Float!
+    won: Float!
 }
 input UpdateCoinInput {
-    id: ID
+    id: ID!
     coin: Float
     won: Float
 }
 
 input CreateThemeInput{
-    name: String
-    korean_title: String
-    price: Float
+    name: String!
+    korean_title: String!
+    price: Float!
     nightPrice: Float
     description: String
     isPopular: Boolean
     isActive: Boolean
-    categoryId: ID
+    categoryId: ID!
+    file: Upload
 }
 input UpdateThemeInput{
-    id: ID
+    id: ID!
     name: String
     korean_title: String
     price: Float
@@ -264,6 +271,7 @@ input UpdateThemeInput{
     isPopular: Boolean
     isActive: Boolean
     categoryId: ID
+    file: Upload
 }
 
 

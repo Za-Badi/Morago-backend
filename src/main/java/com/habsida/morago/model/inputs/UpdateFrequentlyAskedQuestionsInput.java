@@ -9,9 +9,10 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class CreateFrequentlyAskedQuestionsInput {
-    private String question="";
-    private String answer="";
+public class UpdateFrequentlyAskedQuestionsInput {
+    private Long id;
+    private String question = "";
+    private String answer = "";
     @Enumerated(EnumType.STRING)
     private QuestionsCategories Category;
 }

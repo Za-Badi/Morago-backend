@@ -20,5 +20,10 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
     Optional<Theme> findByName(String name);
 
     @Query(value = "SELECT * FROM themes WHERE categories_id = :id", nativeQuery = true)
-    Optional<Set<Theme>> findThemesByCategoryId(Long id);
+    Set<Theme> findThemesByCategoryId(Long id);
+
+    Set<Theme> findThemeByIsActive(Boolean isActive);
+
+
+
 }

@@ -1,9 +1,9 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.exceptions.GraphqlExceptionHandler;
 import com.habsida.morago.model.entity.File;
 import com.habsida.morago.repository.FileRepository;
 import com.habsida.morago.util.FileUtil;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +20,7 @@ public class FileService {
 
     public File uploadFile(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
+
         String type = originalFilename.substring(originalFilename.lastIndexOf(".")+1);
         String filename = fileUtil.getUUID() + "." +type;
 
@@ -32,8 +33,7 @@ public class FileService {
     }
 
     public File getById(Long id) {
-        File file = repository.findById(id).orElseThrow(() -> new GraphqlExceptionHandler("File by ID not found exception"));
-        return file;
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("File by this ID not found exception"));
     }
     public void deleteById(Long id) {
         File file = getById(id);

@@ -42,7 +42,7 @@ public class Theme {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon_id")
-    private File icon_id;
+    private File iconId;
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -65,7 +65,7 @@ public class Theme {
                 ", description='" + description + '\'' +
                 ", is_popular=" + isPopular +
                 ", is_active=" + isActive +
-                ", icon_id=" + icon_id +
+                ", icon_id=" + iconId +
                 ", category_id=" +category.getId()+ '\''+
                 ", createdAt=" + createdAt +
                 ", updatedAt=" +updatedAt+

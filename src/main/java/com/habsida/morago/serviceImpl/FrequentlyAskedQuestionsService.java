@@ -1,54 +1,58 @@
 package com.habsida.morago.serviceImpl;
 
-
-
-import com.habsida.morago.model.entity.FrequentlyAskedQuestions;
+import com.habsida.morago.model.entity.FrequentlyAskedQuestion;
 import com.habsida.morago.model.enums.QuestionsCategories;
-import com.habsida.morago.repository.FrequentlyAskedQuestionsRespository;
+import com.habsida.morago.model.inputs.CreateFrequentlyAskedQuestionsInput;
+import com.habsida.morago.model.inputs.UpdateFrequentlyAskedQuestionsInput;
+import com.habsida.morago.repository.FrequentlyAskedQuestionsRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class FrequentlyAskedQuestionsService {
-    private final FrequentlyAskedQuestionsRespository repository;
+    private final FrequentlyAskedQuestionsRepository repository;
 
-    public FrequentlyAskedQuestions create(String question, String answer, QuestionsCategories category) {
-        FrequentlyAskedQuestions frequentlyAskedQuestions = new FrequentlyAskedQuestions();
-        frequentlyAskedQuestions.setQuestion(question);
-        frequentlyAskedQuestions.setAnswer(answer);
-        frequentlyAskedQuestions.setCategory(category);
-        return repository.save(frequentlyAskedQuestions);
+    public FrequentlyAskedQuestion createFrequentlyAskedQuestion(CreateFrequentlyAskedQuestionsInput input) {
+        FrequentlyAskedQuestion frequentlyAskedQuestion = new FrequentlyAskedQuestion();
+        frequentlyAskedQuestion.setQuestion(input.getQuestion());
+        frequentlyAskedQuestion.setAnswer(input.getAnswer());
+        frequentlyAskedQuestion.setCategory(input.getCategory());
+        return repository.save(frequentlyAskedQuestion);
     }
 
-    public FrequentlyAskedQuestions getByID(Long id) {
+    public FrequentlyAskedQuestion getFrequentlyAskedQuestionByID(Long id) {
         return repository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public FrequentlyAskedQuestions update(Long id, String question, String answer, QuestionsCategories category) {
-        FrequentlyAskedQuestions frequentlyAskedQuestions = getByID(id);
-        if (question != null && !question.isEmpty()) {
-            frequentlyAskedQuestions.setQuestion(question);
+    public FrequentlyAskedQuestion updateFrequentlyAskedQuestion(UpdateFrequentlyAskedQuestionsInput input) {
+        FrequentlyAskedQuestion frequentlyAskedQuestion = repository.findById(input.getId()).orElseThrow(EntityNotFoundException::new);
+        if (input.getQuestion() != null && !input.getQuestion().isEmpty()) {
+            frequentlyAskedQuestion.setQuestion(input.getQuestion());
         }
-        if (answer != null && !answer.isEmpty()) {
-            frequentlyAskedQuestions.setAnswer(answer);
+        if (input.getAnswer() != null && !input.getAnswer().isEmpty()) {
+            frequentlyAskedQuestion.setAnswer(input.getAnswer());
         }
-        if (category != null) {
-            frequentlyAskedQuestions.setCategory(category);
+        if (input.getCategory() != null) {
+            frequentlyAskedQuestion.setCategory(input.getCategory());
         }
-        return repository.save(frequentlyAskedQuestions);
+        return repository.save(frequentlyAskedQuestion);
     }
 
-    public List<FrequentlyAskedQuestions> getAll() {
-        return repository.findAll();
+    public Set<FrequentlyAskedQuestion> getAllFrequentlyAskedQuestions() {
+        return new HashSet<>(repository.findAll());
     }
 
-    public Boolean delete(Long id) {
-        FrequentlyAskedQuestions frequentlyAskedQuestions = getByID(id);
-        repository.delete(frequentlyAskedQuestions);
+    public Boolean deleteFrequentlyAskedQuestionsById(Long id) {
+        FrequentlyAskedQuestion frequentlyAskedQuestion = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        repository.delete(frequentlyAskedQuestion);
         return true;
+    }
+    public Set<FrequentlyAskedQuestion> getFAQByCategory(QuestionsCategories questionsCategories){
+        return repository.findFrequentlyAskedQuestionByCategory(questionsCategories) ;
     }
 }

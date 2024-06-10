@@ -9,7 +9,6 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-
 import java.util.Set;
 
 @Controller
@@ -31,6 +30,11 @@ public class CategoryResolver {
     @MutationMapping
     public Boolean deleteCategoryById(@Argument Long id) {
         return categoryService.deleteCategoryById(id);
+    }
+
+    @MutationMapping
+    public Boolean changeCategoryStatus(@Argument Long id){
+        return categoryService.changeCategoryStatus(id);
     }
 
     @QueryMapping

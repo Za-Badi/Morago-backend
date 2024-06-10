@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import javax.servlet.http.Part;
+import org.springframework.http.codec.multipart.Part;
 import java.math.BigDecimal;
 
 @Getter
