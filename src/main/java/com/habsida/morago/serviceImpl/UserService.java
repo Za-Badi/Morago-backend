@@ -75,20 +75,11 @@ public class UserService {
         user.setIsActive(true);
         user.setIsDebtor(false);
         user.setOnBoardingStatus(0);
+        user.setImage(null);
+        user.setTranslatorProfile(null);
+        user.setUserProfile(null);
         List<Role> roles = new ArrayList<>();
-        if (userInput.getRoles() != null) {
-            for (String roleName : userInput.getRoles()) {
-                Role role = roleRepository.findByName(roleName)
-                        .orElseThrow(() -> new Exception("Role not found with name: " + roleName));
-                roles.add(role);
-            }
-            if (roles.contains("ROLE_TRANSLATOR")) {
-                user.setTranslatorProfile(new TranslatorProfile());
-            }
-            else if (roles.contains("ROLE_USER")) {
-                user.setUserProfile(new UserProfile());
-            }
-        }
+        user.setRoles(roles);
         return userRepository.save(user);
     }
 
@@ -120,8 +111,8 @@ public class UserService {
         return true;
     }
 
-    public Boolean validatePassword(String password, String anotherPassword) {
-        return passwordEncoder.matches(anotherPassword, password);
+    public Boolean validatePassword(String firstPassword, String secondPassword) {
+        return passwordEncoder.matches(firstPassword, secondPassword);
     }
     public String resetPassword(String token, String newPassword) {
 //        Still to be implemented

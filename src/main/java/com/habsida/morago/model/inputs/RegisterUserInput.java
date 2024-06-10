@@ -12,8 +12,8 @@ import java.util.List;
 
 @Setter
 @Getter
-public class RegisterUserDto {
+public class RegisterUserInput {
     private String phone;
-    private String password;
-    private List<String> roles;
+    private String firstPassword;
+    private String secondPassword;
 }
