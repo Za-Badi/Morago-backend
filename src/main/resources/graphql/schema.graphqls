@@ -404,5 +404,4 @@ enum QuestionsCategories {
     ENTERTAINMENT
     GROCERY
 }
-
 scalar Upload
