@@ -3,12 +3,14 @@ package com.habsida.morago.model.entity;
 import com.habsida.morago.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "withdrawals")
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class Withdrawals {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
