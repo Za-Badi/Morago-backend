@@ -7,6 +7,7 @@ import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.LanguageRepository;
 import com.habsida.morago.repository.TranslatorProfileRepository;
 import com.habsida.morago.repository.UserRepository;
+import com.habsida.morago.service.TranslatorProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,12 @@ import java.util.List;
 
 
 @Service
-public class TranslatorProfileService implements com.habsida.morago.service.TranslatorProfileService {
+public class TranslatorProfileServiceImp implements TranslatorProfileService {
     private final TranslatorProfileRepository translatorProfileRepository;
     private final LanguageRepository languageRepository;
 
     @Autowired
-    public TranslatorProfileService(TranslatorProfileRepository translatorProfileRepository, LanguageRepository languageRepository) {
+    public TranslatorProfileServiceImp(TranslatorProfileRepository translatorProfileRepository, LanguageRepository languageRepository) {
         this.translatorProfileRepository = translatorProfileRepository;
         this.languageRepository = languageRepository;
     }
@@ -37,17 +38,6 @@ public class TranslatorProfileService implements com.habsida.morago.service.Tran
         List<TranslatorProfile> translatorProfileList = translatorProfileRepository.findAll();
         List<TranslatorProfile> isOnlineList = new ArrayList<>();
         for (TranslatorProfile translatorProfile: translatorProfileList) {
-            if (translatorProfile.getIsOnline() == isOnline) {
-                isOnlineList.add(translatorProfile);
-            }
-        }
-        return isOnlineList;
-    }
-
-    public List<TranslatorProfile> getTranslatorProfilesByIsOnline(Boolean isOnline) {
-        List<TranslatorProfile> translatorProfileList = translatorProfileRepository.findAll();
-        List<TranslatorProfile> isOnlineList = new ArrayList<>();
-        for (TranslatorProfile translatorProfile : translatorProfileList) {
             if (translatorProfile.getIsOnline() == isOnline) {
                 isOnlineList.add(translatorProfile);
             }
