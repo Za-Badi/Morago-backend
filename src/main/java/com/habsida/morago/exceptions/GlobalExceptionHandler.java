@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     public GraphQLError handle(EntityNotFoundException ex, DataFetchingEnvironment env) {
         return GraphQLError.newError()
                 .errorType(ErrorType.DataFetchingException)
-                .message("Internal Server Error")
+                .message(ex.getMessage())
                 .errorType(ErrorType.DataFetchingException)
 //                .path(env.getExecutionStepInfo().getPath())
 //                .location(env.getField().getSourceLocation())
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     public GraphQLError handle(RuntimeException ex) {
         return GraphQLError.newError()
                 .errorType(ErrorType.DataFetchingException)
-                .message("Internal Server Error")
+                .message(ex.getMessage())
                 .errorType(ErrorType.DataFetchingException)
                 .build();
     }

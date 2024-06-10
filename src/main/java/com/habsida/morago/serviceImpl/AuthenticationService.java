@@ -1,5 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.GlobalException;
 import com.habsida.morago.model.entity.Role;
 import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.model.entity.UserProfile;
@@ -8,6 +9,7 @@ import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.repository.FileRepository;
 import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.repository.UserRepository;
+import graphql.GraphQLException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,7 +44,7 @@ public class AuthenticationService {
 
     public void signUpAsUser(UserInput userInput) throws Exception {
         if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
-            throw new Exception("Phone number is already used: " + userInput.getPhone());
+            throw new GlobalException("Phone number is already used: " + userInput.getPhone());
         }
         User user = new User();
         user.setPhone(userInput.getPhone());
