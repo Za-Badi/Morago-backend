@@ -1,5 +1,5 @@
-
 package com.habsida.morago.model.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

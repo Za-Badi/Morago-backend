@@ -6,9 +6,11 @@ import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Setter
 @Getter
-public class CreateFrequentlyAskedQuestionsInput {
+public class UpdateFrequentlyAskedQuestionsInput {
+    private Long id;
     private String question = "";
     private String answer = "";
     @Enumerated(EnumType.STRING)

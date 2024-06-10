@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface NotificationService {
 
     public List<Notification> getAllNotification();
+
     public Notification getNotificationById(Long id) throws Exception;
+
     public Notification addNotification(NotificationInput notificationDto);
 
     public Notification updateNotification(Long id, NotificationInput notificationDto) throws Exception;

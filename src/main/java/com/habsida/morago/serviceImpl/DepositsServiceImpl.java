@@ -1,18 +1,19 @@
-
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.model.inputs.DepositsInput;
+import com.habsida.morago.model.enums.Status;
+import com.habsida.morago.model.input.DepositsInput;
 import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.DepositsRepository;
 import com.habsida.morago.repository.UserRepository;
+import com.habsida.morago.service.DepositsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DepositsServiceImpl implements com.habsida.morago.services.DepositsService {
+public class DepositsServiceImpl implements DepositsService {
     private final DepositsRepository depositsRepository;
     private final UserRepository userRepository;
 
@@ -30,56 +31,62 @@ public class DepositsServiceImpl implements com.habsida.morago.services.Deposits
 
     public Deposits getDepositById(Long id) throws Exception {
         return depositsRepository.findById(id)
-                .orElseThrow(()-> new Exception("Deposits not found for id: " + id));
+                .orElseThrow(() -> new Exception("Deposits not found for id: " + id));
     }
 
-    public Deposits addDeposit(DepositsInput depositsDto) {
-        User user = userRepository.findById(depositsDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
+    public Deposits addDeposit(DepositsInput depositsInput) throws Exception {
         Deposits deposits = new Deposits();
-        deposits.setAccountHolder(depositsDto.getAccountHolder());
-        deposits.setNameOfBank(depositsDto.getNameOfBank());
-        deposits.setWon(depositsDto.getWon());
-        deposits.setCoin(depositsDto.getCoin());
-        deposits.setStatus(depositsDto.getStatus());
+        deposits.setAccountHolder(deposits.getAccountHolder());
+        deposits.setNameOfBank(deposits.getNameOfBank());
+        deposits.setWon(deposits.getWon());
+        deposits.setCoin(deposits.getCoin());
+        deposits.setStatus(depositsInput.getStatus());
+        User user = userRepository.findById(depositsInput.getUserId())
+                .orElseThrow(() -> new Exception("User not found with id " + depositsInput.getUserId()));
         deposits.setUser(user);
 
         return depositsRepository.save(deposits);
     }
 
-    public Deposits updateDeposit(Long id, DepositsInput depositsDto) throws Exception {
+    public Deposits updateDeposit(Long id, DepositsInput depositsInput) throws Exception {
         Deposits deposits = depositsRepository.findById(id)
                 .orElseThrow(() -> new Exception("Deposits not found for id: " + id));
-        if (depositsDto.getAccountHolder() != null) {
-            deposits.setAccountHolder(depositsDto.getAccountHolder());
+        if (depositsInput.getAccountHolder() != null && !depositsInput.getAccountHolder().isEmpty()) {
+            deposits.setAccountHolder(depositsInput.getAccountHolder());
         }
-        if (depositsDto.getNameOfBank() != null) {
-            deposits.setNameOfBank(depositsDto.getNameOfBank());
+        if (depositsInput.getNameOfBank() != null && !depositsInput.getNameOfBank().isEmpty()) {
+            deposits.setNameOfBank(depositsInput.getNameOfBank());
         }
-        if (depositsDto.getNameOfBank() != null) {
-            deposits.setNameOfBank(depositsDto.getNameOfBank());
+
+        if (depositsInput.getCoin() != null) {
+            deposits.setCoin(depositsInput.getCoin());
         }
-        if (depositsDto.getCoin() != null) {
-            deposits.setCoin(depositsDto.getCoin());
+        if (depositsInput.getWon() != null) {
+            deposits.setWon(depositsInput.getWon());
         }
-        if (depositsDto.getWon() != null) {
-            deposits.setWon(depositsDto.getWon());
-        }if (depositsDto.getStatus() != null) {
-            deposits.setStatus(depositsDto.getStatus());
-        }
-        if (depositsDto.getUserId() != null) {
-            User user = userRepository.findById(depositsDto.getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            deposits.setUser(user);
+        if (depositsInput.getStatus() != null) {
+            deposits.setStatus(depositsInput.getStatus());
         }
 
         return depositsRepository.save(deposits);
     }
 
+    @Override
     public void deleteDeposit(Long id) throws Exception {
-        depositsRepository.findById(id)
-                .orElseThrow(() -> new Exception("Deposits not found for id: " + id));
-        depositsRepository.deleteById(id);
+        Deposits deposit = depositsRepository.findById(id)
+                .orElseThrow(() -> new Exception("Deposit not found with id " + id));
+        depositsRepository.delete(deposit);
+    }
+
+    @Override
+    public List<Deposits> getDepositsByStatus(Status status) {
+        return null;
+    }
+
+    @Override
+    public List<Deposits> getDepositByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+        return depositsRepository.findByUser(user);
     }
 }

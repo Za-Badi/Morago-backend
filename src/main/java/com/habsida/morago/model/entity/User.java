@@ -6,12 +6,13 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -21,44 +22,44 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name="phone", nullable = false, length = 100)
+    @Column(name = "phone", nullable = false, length = 100)
     private String phone;
-    @Column(name="password", length = 255)
+    @Column(name = "password", length = 255)
     private String password;
-    @Column(name="first_name", length = 200)
+    @Column(name = "first_name", length = 200)
     private String firstName;
-    @Column(name="last_name", length = 200)
+    @Column(name = "last_name", length = 200)
     private String lastName;
-    @Column(name="balance")
+    @Column(name = "balance")
     private Double balance;
-    @Column(name="fcm_token", length = 255)
+    @Column(name = "fcm_token", length = 255)
     private String fcmToken;
-    @Column(name="apn_token", length = 255)
+    @Column(name = "apn_token", length = 255)
     private String apnToken;
-    @Column(name="ratings")
+    @Column(name = "ratings")
     private Double ratings;
-    @Column(name="total_ratings")
+    @Column(name = "total_ratings")
     private Integer totalRatings;
     @CreatedDate
-    @Column(name="created_at", updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
     @LastModifiedDate
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-    @Column(name="is_active")
+    @Column(name = "is_active")
     private Boolean isActive;
-    @Column(name="is_debtor")
+    @Column(name = "is_debtor")
     private Boolean isDebtor;
-    @Column(name="on_boarding_status")
+    @Column(name = "on_boarding_status")
     private Integer onBoardingStatus;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="image_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(name = "image_id")
     private File image;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="translator_profile_id")
+    @JoinColumn(name = "translator_profile_id")
     private TranslatorProfile translatorProfile;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="user_profile_id")
+    @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
@@ -77,6 +78,7 @@ public class User implements UserDetails {
     private List<Rating> givenRatings;
     @OneToMany(mappedBy = "toWhomUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Rating> receivedRatings;
+
     //    @OneToMany(mappedBy = "recipient", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private List<Call> recipientCalls;
 //    @OneToMany(mappedBy = "caller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -85,16 +87,34 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
+
     @Override
-    public String getPassword() {return password;}
+    public String getPassword() {
+        return password;
+    }
+
     @Override
-    public String getUsername() {return phone;}
+    public String getUsername() {
+        return phone;
+    }
+
     @Override
-    public boolean isAccountNonExpired() {return true;}
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
     @Override
-    public boolean isAccountNonLocked() {return true;}
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
     @Override
-    public boolean isCredentialsNonExpired() {return true;}
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
     @Override
-    public boolean isEnabled() {return true;}
+    public boolean isEnabled() {
+        return true;
+    }
 }

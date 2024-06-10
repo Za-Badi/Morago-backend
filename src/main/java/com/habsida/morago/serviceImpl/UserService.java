@@ -52,7 +52,7 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails userDetails) {
             return userRepository.findByPhone(userDetails.getUsername())
-                            .orElseThrow();
+                    .orElseThrow();
         }
         return null;
     }

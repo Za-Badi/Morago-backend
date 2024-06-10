@@ -36,7 +36,9 @@ public class LanguageService implements com.habsida.morago.service.LanguageServi
     public Language updateLanguage(Long id, LanguageInput languageInput) throws Exception {
         Language language = languageRepository.findById(id)
                 .orElseThrow(() -> new Exception("Language not found with id: " + id));
-        if (languageInput.getName() != null && !languageInput.getName().trim().isEmpty()) { language.setName(languageInput.getName()); }
+        if (languageInput.getName() != null && !languageInput.getName().trim().isEmpty()) {
+            language.setName(languageInput.getName());
+        }
         return languageRepository.save(language);
     }
 

@@ -1,5 +1,6 @@
 package com.habsida.morago.model.entity;
 
+import com.habsida.morago.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,8 +28,9 @@ public class Deposits {
     @Column(name = "won")
     private Double won;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private String status;
+    private Status status;
 
     @CreationTimestamp
     @Column(name = "created_at")

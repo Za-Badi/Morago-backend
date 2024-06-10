@@ -1,6 +1,5 @@
 package com.habsida.morago.model.inputs;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +11,5 @@ public class NotificationInput {
 
     private String title;
     private String text;
-
     private Long userId;
 }

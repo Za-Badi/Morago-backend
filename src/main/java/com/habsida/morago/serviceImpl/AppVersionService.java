@@ -15,7 +15,7 @@ import java.util.List;
 public class AppVersionService {
     private final AppVersionRespository repository;
 
-    public AppVersion create(EPlatform platform, String min, String latest) {
+    public AppVersion createAppVersion(EPlatform platform, String min, String latest) {
         AppVersion appVersion = new AppVersion();
         appVersion.setPlatform(platform);
         appVersion.setMin(min);
@@ -23,12 +23,12 @@ public class AppVersionService {
         return repository.save(appVersion);
     }
 
-    public AppVersion getByPlatform(EPlatform platform) {
+    public AppVersion getAppVersionByPlatform(EPlatform platform) {
         return repository.findByPlatform(platform).orElseThrow(EntityNotFoundException::new);
     }
 
-    public AppVersion update(EPlatform platform, String min, String latest) {
-        AppVersion appVersion = getByPlatform(platform);
+    public AppVersion updateAppVersion(EPlatform platform, String min, String latest) {
+        AppVersion appVersion = getAppVersionByPlatform(platform);
         if (min != null && !min.isEmpty()) {
             appVersion.setMin(min);
         }
@@ -43,7 +43,7 @@ public class AppVersionService {
     }
 
     public Boolean delete(EPlatform platform) {
-        AppVersion appVersion = getByPlatform(platform);
+        AppVersion appVersion = getAppVersionByPlatform(platform);
         repository.delete(appVersion);
         return true;
     }

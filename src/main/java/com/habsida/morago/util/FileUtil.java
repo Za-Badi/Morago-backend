@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class FileUtil {
         //UUID without dashed
         return UUID.randomUUID().toString().replace("-", "");
     }
+
     public String getLocalPath(String pathFromDB) {
         return localPath + pathFromDB;
     }
@@ -44,6 +46,7 @@ public class FileUtil {
         }
         return hashFilename;
     }
+
     public void deleteLocalFile(String path) {
         try {
             Files.delete(Paths.get(path));
@@ -51,7 +54,6 @@ public class FileUtil {
             ex.printStackTrace();
         }
     }
-
 
 
 }

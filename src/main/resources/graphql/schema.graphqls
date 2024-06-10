@@ -6,19 +6,23 @@ type Query {
     testUser: [User]
     testTranslator: [User]
     testAuthentication: [User]
-    getCoinById(id: ID): Coin
+    getCoinById(id: ID!): Coin
     getAllCoins: [Coin]
     getAppVersionByPlatform(platform: EPlatform!): AppVersion
     getAllAppVersions:[AppVersion]
     getAllCategories: [Category]
-    getCategoryById(id: ID): Category
-    getCategoryByName(name: String): Category
+    getCategoryById(id: ID!): Category
+    getCategoryByName(name: String!): Category
+    getCategoryByStatus(status: Boolean!): [Category]
     getAllThemes:[Theme]
-    getThemeById(id: ID): Theme
+    getThemeById(id: ID!): Theme
     getThemesByCategoriesId(id: ID): [Theme]
     getThemesByName(name: String): Theme
+    getThemeByStatus(status: Boolean!): [Theme]
+    getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
+    getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
     getAllUsers: [User]
-    getUserById(id: ID): User
+    getUserById(id: ID!): User
     getUserByPhone(phone: String): User
     existsUserByPhone(phone: String): Boolean
     getAuthenticatedUser: User
@@ -31,16 +35,21 @@ type Query {
     getTranslatorProfilesByIsOnline(isOnline: Boolean): [TranslatorProfile]
     getAllLanguages: [Language]
     getLanguageById(id: ID): Language
+
     getAllDeposits: [Deposits]
     getDepositById(id: ID!): Deposits
+    getDepositsByStatus(status: Status!):[Deposits]
+    getDepositsByUserId(userId: ID!): User
 
     getAllDebtors: [Debtor]
     getDebtorById(id: ID!): Debtor
+
     getAllNotification: [Notification]
     getNotificationById(id: ID!): Notification
 
     getAllWithdrawals: [Withdrawals]
     getWithdrawalById(id: ID!): Withdrawals
+
     getAllCalls: [Call]
     getCallById(id: ID!): Call
 }
@@ -52,15 +61,21 @@ type Mutation {
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
     deleteAppVersion(platform: EPlatform!): Boolean
-    createCoin(input: CreateCoinInput!): Coin
-    updateCoin(input: UpdateCoinInput!): Coin
+    createCoin(input: CreateCoinInput): Coin
+    updateCoin(input: UpdateCoinInput): Coin
     deleteCoin(id: ID!): Boolean
     createCategory(input: CreateCategoryInput): Category
     updateCategory(input: UpdateCategoryInput): Category
     deleteCategoryById(id: ID!): Boolean
+    changeCategoryStatus(id: ID!): Boolean
     createTheme(input: CreateThemeInput): Theme
     updateThemeById(input: UpdateThemeInput): Theme
     deleteThemeById(id: ID!): Boolean
+    changeThemeStatus(id: ID!): Boolean
+    changeThemePopularity(id: ID): Boolean
+    createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
+    updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
+    deleteFrequentlyAskedQuestionById(id: ID!): Boolean
     addUser(userInput: UserInput): User
     updateUser(id: ID, userInput: UserInput): User
     deleteUser(id: ID): Boolean
@@ -82,24 +97,32 @@ type Mutation {
     addLanguage(languageInput: LanguageInput): Language
     updateLanguage(id: ID, languageInput: LanguageInput): Language
     deleteLanguage(id: ID): Boolean
+
+
     addDeposit(depositsDto: DepositsInput): Deposits
     updateDeposit(id: ID!, depositsDto: DepositsInput): Deposits
     deleteDeposit(id: ID!): Boolean
+
     addDebtor(debtorDto: DebtorInput): Debtor
     updateDebtor(id: ID!, debtorDto: DebtorInput): Debtor
     deleteDebtor(id: ID!): Boolean
+
     addNotification(notificationDto: NotificationInput): Notification
     updateNotification(id:ID!, notificationDto: NotificationInput):Notification
     deleteNotification(id:ID!): Notification
+
     addWithdrawal(withdrawalDto: WithdrawalsInput): Withdrawals
     updateWithdrawal(id: ID!, withdrawalDto: WithdrawalsInput): Withdrawals
     deleteWithdrawal(id: ID!): Boolean
+
     createCall(CallDto : CallInput) : Call
     updateCall(id : ID!, CallDto : CallUpdateInput):Call
     deleteCall(id: ID!): Boolean
     createRating(RatingDto: RatingInput) : Rating
     updateRating(id: ID!, grade: Float): Rating
     deleteRating(id: ID!): Boolean
+    addFile(file: Upload!): File
+
 }
 
 
@@ -110,7 +133,6 @@ type AppVersion {
     createdAt: String
     updatedAt: String
 }
-
 type Coin {
     id: ID
     coin: String
@@ -129,7 +151,7 @@ type File {
 type Category {
     id: ID
     name: String
-    is_active: Boolean
+    isActive: Boolean
 }
 type Theme {
     id: ID
@@ -141,9 +163,14 @@ type Theme {
     isPopular: Boolean
     isActive: Boolean
     category: Category
+    icon: File
     createdAt: String
     updatedAt: String
-
+}
+type FrequentlyAskedQuestionsInput{
+    question: String
+    answer: String
+    Category: QuestionsCategories
 }
 type Language {
     id: ID!
@@ -165,12 +192,10 @@ type User {
     translatorProfile: TranslatorProfile
     userProfile: UserProfile
 }
-
 type UserProfile {
     id: ID!
     isFreeCallMade: Boolean
 }
-
 type TranslatorProfile {
     id: ID!
     dateOfBirth: String
@@ -206,9 +231,9 @@ type Rating {
 
 type Debtor {
     id: ID!
-    accountHolder: String
-    nameOfBank: String
-    isPaid: Boolean
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
     createdAt: String
     updatedAt: String
     user: User
@@ -219,7 +244,7 @@ type Deposits {
     nameOfBank: String
     coin: Float
     won: Float
-    status: String
+    status: String!
     createdAt: String
     updatedAt: String
     user: User
@@ -235,46 +260,47 @@ type Notification {
 }
 type Withdrawals {
     id: ID!
-    accountNumber: String
-    accountHolder: String
-    sum: Float
-    status: String
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float!
+    status: String!
     createdAt: String
     updatedAt: String
     user: User
 }
 
 input CreateCategoryInput {
-    name: String
-    is_active: Boolean
+    name: String!
+    is_active: Boolean!
 }
 input UpdateCategoryInput {
-    id: ID
+    id: ID!
     name: String
     is_active: Boolean
 }
 input CreateCoinInput {
-    coin: Float
-    won: Float
+    coin: Float!
+    won: Float!
 }
 input UpdateCoinInput {
-    id: ID
+    id: ID!
     coin: Float
     won: Float
 }
 
 input CreateThemeInput{
-    name: String
-    korean_title: String
-    price: Float
+    name: String!
+    korean_title: String!
+    price: Float!
     nightPrice: Float
     description: String
     isPopular: Boolean
     isActive: Boolean
-    categoryId: ID
+    categoryId: ID!
+    file: Upload
 }
 input UpdateThemeInput{
-    id: ID
+    id: ID!
     name: String
     korean_title: String
     price: Float
@@ -283,6 +309,18 @@ input UpdateThemeInput{
     isPopular: Boolean
     isActive: Boolean
     categoryId: ID
+    file: Upload
+}
+input CreateFrequentlyAskedQuestionsInput {
+    question: String!
+    answer: String!
+    Category: QuestionsCategories!
+}
+input updateFrequentlyAskedQuestionsInput {
+    id: ID!
+    question: String
+    answer: String
+    Category: QuestionsCategories
 }
 
 
@@ -344,16 +382,27 @@ input NotificationInput {
     userId: ID!
 }
 input WithdrawalsInput {
-    accountNumber: String
-    accountHolder: String
+    accountNumber: String!
+    accountHolder: String!
     sum: Float
-    status: String
+    status: Status
     userId: ID!
 }
 
 enum EPlatform {
     IOS
     ANDROID
+}
+enum Status {
+    PENDING
+    COMPLETED
+    CANCELED
+}
+enum QuestionsCategories {
+    Restaurant
+    Law
+    ENTERTAINMENT
+    GROCERY
 }
 
 scalar Upload

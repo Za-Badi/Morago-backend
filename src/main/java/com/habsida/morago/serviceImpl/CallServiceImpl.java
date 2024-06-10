@@ -1,5 +1,6 @@
 
 package com.habsida.morago.serviceImpl;
+
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Rating;
 import com.habsida.morago.model.entity.Theme;
@@ -45,9 +46,8 @@ public class CallServiceImpl implements CallService {
     }
 
 
-
     @Override
-    public Call createCall(CallInput callInput) throws Exception{
+    public Call createCall(CallInput callInput) throws Exception {
 
         User caller = userService.getUserById(callInput.getCallerId());
         if (caller == null) {

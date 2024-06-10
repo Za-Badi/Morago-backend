@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,5 +60,12 @@ public class CategoryService {
 
     public Set<Category> getCategoryByStatus(Boolean status) {
         return repository.findByIsActive(status);
+    }
+
+    public Boolean changeCategoryStatus(Long categoryId) {
+        Category category = repository.findById(categoryId).orElseThrow(EntityNotFoundException::new);
+        category.setIsActive(!category.getIsActive());
+        repository.save(category);
+        return true;
     }
 }

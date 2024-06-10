@@ -14,13 +14,15 @@ import java.util.List;
 @Service
 public class WithdrawalServiceImpl implements WithdrawalService {
 
-    private WithdrawalRepository withdrawalRepository;;
+    private WithdrawalRepository withdrawalRepository;
+    ;
     private UserRepository userRepository;
 
-    public WithdrawalServiceImpl(WithdrawalRepository withdrawalRepository, UserRepository userRepository){
+    public WithdrawalServiceImpl(WithdrawalRepository withdrawalRepository, UserRepository userRepository) {
         this.withdrawalRepository = withdrawalRepository;
         this.userRepository = userRepository;
     }
+
     @Override
     public List<Withdrawals> getAllWithdrawals() {
         return withdrawalRepository.findAll();
@@ -53,19 +55,19 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         Withdrawals withdrawals = withdrawalRepository.findById(withdrawalDto.getUserId())
                 .orElseThrow(() -> new Exception("Withdrawals not found for id: " + id));
 
-        if(withdrawalDto.getAccountNumber() != null) {
+        if (withdrawalDto.getAccountNumber() != null) {
             withdrawals.setAccountNumber(withdrawalDto.getAccountNumber());
         }
-        if(withdrawalDto.getAccountNumber() != null) {
+        if (withdrawalDto.getAccountNumber() != null) {
             withdrawals.setAccountNumber(withdrawalDto.getAccountNumber());
         }
-        if(withdrawalDto.getSum() != null) {
+        if (withdrawalDto.getSum() != null) {
             withdrawals.setSum(withdrawalDto.getSum());
         }
-        if(withdrawalDto.getStatus() != null) {
+        if (withdrawalDto.getStatus() != null) {
             withdrawals.setStatus(withdrawalDto.getStatus());
         }
-        if(withdrawalDto.getUserId() != null){
+        if (withdrawalDto.getUserId() != null) {
             User user = userRepository.findById(withdrawalDto.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
             withdrawals.setUser(user);

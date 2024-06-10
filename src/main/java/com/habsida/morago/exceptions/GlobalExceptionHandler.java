@@ -1,6 +1,5 @@
 package com.habsida.morago.exceptions;
 
-import com.oembedler.moon.graphql.boot.error.ThrowableGraphQLError;
 import graphql.*;
 import graphql.execution.NonNullableValueCoercedAsNullException;
 import graphql.schema.CoercingParseLiteralException;
@@ -29,7 +28,7 @@ import java.io.IOException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @GraphQlExceptionHandler
-    public GraphQLError handle(EntityNotFoundException ex, DataFetchingEnvironment env ){
+    public GraphQLError handle(EntityNotFoundException ex, DataFetchingEnvironment env) {
         return GraphQLError.newError()
                 .errorType(ErrorType.DataFetchingException)
                 .message("Internal Server Error")
@@ -38,11 +37,12 @@ public class GlobalExceptionHandler {
 //                .location(env.getField().getSourceLocation())
                 .build();
     }
+
     @GraphQlExceptionHandler
-    public GraphQLError handle(RuntimeException ex){
+    public GraphQLError handle(GraphqlException ex) {
         return GraphQLError.newError()
                 .errorType(ErrorType.DataFetchingException)
-                .message("Internal Server Error")
+                .message(ex.getMessage())
                 .errorType(ErrorType.DataFetchingException)
                 .build();
     }

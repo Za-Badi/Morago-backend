@@ -13,14 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 
-
 @Service
-public class NotificationServiceImpl implements NotificationService{
+public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, UserRepository userRepository){
+    public NotificationServiceImpl(NotificationRepository notificationRepository, UserRepository userRepository) {
         this.notificationRepository = notificationRepository;
         this.userRepository = userRepository;
     }
@@ -32,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService{
 
     @Override
     public Notification getNotificationById(Long id) throws Exception {
-        return notificationRepository.findById(id).orElseThrow(() -> new Exception("Notification not found for id: " + id)) ;
+        return notificationRepository.findById(id).orElseThrow(() -> new Exception("Notification not found for id: " + id));
     }
 
     @Override
@@ -53,14 +52,14 @@ public class NotificationServiceImpl implements NotificationService{
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new Exception("Notification not found for this id: " + id));
 
-        if(notificationDto.getText() != null){
+        if (notificationDto.getText() != null) {
             notification.setText(notificationDto.getText());
         }
-        if(notificationDto.getTitle() != null){
+        if (notificationDto.getTitle() != null) {
             notification.setTitle(notificationDto.getTitle());
         }
 
-        if(notificationDto.getUserId() != null){
+        if (notificationDto.getUserId() != null) {
             User user = userRepository.findById(notificationDto.getUserId())
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
             notification.setUser(user);

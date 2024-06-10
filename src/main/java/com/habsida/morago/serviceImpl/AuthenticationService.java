@@ -5,6 +5,7 @@ import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.model.entity.UserProfile;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.UserInput;
+import com.habsida.morago.repository.FileRepository;
 import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,18 +23,23 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
+    private final FileRepository fileRepository;
+
 
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
             PasswordEncoder passwordEncoder,
-            RoleRepository roleRepository
+            RoleRepository roleRepository,
+            FileRepository fileRepository
     ) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.fileRepository = fileRepository;
     }
+
     public void signUpAsUser(UserInput userInput) throws Exception {
         if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
             throw new Exception("Phone number is already used: " + userInput.getPhone());
@@ -40,8 +47,8 @@ public class AuthenticationService {
         User user = new User();
         user.setPhone(userInput.getPhone());
         user.setPassword(passwordEncoder.encode(userInput.getPassword()));
-        user.setBalance((double)0);
-        user.setRatings((double)0);
+        user.setBalance((double) 0);
+        user.setRatings((double) 0);
         user.setTotalRatings(0);
         user.setIsActive(true);
         user.setIsDebtor(false);
@@ -61,6 +68,7 @@ public class AuthenticationService {
         user.setUserProfile(new UserProfile());
         userRepository.save(user);
     }
+
     public void signUpAsTranslator(UserInput userInput) throws Exception {
         if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
             throw new Exception("Phone number is already used: " + userInput.getPhone());
@@ -68,8 +76,8 @@ public class AuthenticationService {
         User user = new User();
         user.setPhone(userInput.getPhone());
         user.setPassword(passwordEncoder.encode(userInput.getPassword()));
-        user.setBalance((double)0);
-        user.setRatings((double)0);
+        user.setBalance((double) 0);
+        user.setRatings((double) 0);
         user.setTotalRatings(0);
         user.setIsActive(true);
         user.setIsDebtor(false);
@@ -89,6 +97,7 @@ public class AuthenticationService {
         user.setTranslatorProfile(new TranslatorProfile());
         userRepository.save(user);
     }
+
     public User logIn(UserInput userInput) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

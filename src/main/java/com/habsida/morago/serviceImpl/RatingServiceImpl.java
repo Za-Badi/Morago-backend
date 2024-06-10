@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +52,6 @@ public class RatingServiceImpl implements RatingService {
     }
 
 
-
     @Override
     public Rating updateRating(Long id, RatingInput ratingInput) {
         Rating existingRating = ratingRepository.findById(id)
@@ -88,7 +86,6 @@ public class RatingServiceImpl implements RatingService {
 
         return ratingRepository.save(existingRating);
     }
-
 
 
     @Override

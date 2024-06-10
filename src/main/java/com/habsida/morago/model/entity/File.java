@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "files")
 @EntityListeners(AuditingEntityListener.class)
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class File {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -33,6 +33,11 @@ public class CategoryResolver {
         return categoryService.deleteCategoryById(id);
     }
 
+    @MutationMapping
+    public Boolean changeCategoryStatus(@Argument Long id) {
+        return categoryService.changeCategoryStatus(id);
+    }
+
     @QueryMapping
     public Set<Category> getAllCategories() {
         return categoryService.getAllCategories();

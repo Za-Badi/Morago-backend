@@ -10,7 +10,7 @@ import lombok.Setter;
 public class UpdateCategoryInput {
     private Long id;
     private String name = "";
-    private Boolean isActive =false;
+    private Boolean isActive = false;
 
 
 }

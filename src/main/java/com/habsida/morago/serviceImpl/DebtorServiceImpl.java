@@ -1,6 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.model.inputs.DebtorInput;
+import com.habsida.morago.model.input.DebtorInput;
 import com.habsida.morago.model.entity.Debtor;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.DebtorRepository;
@@ -17,7 +17,7 @@ public class DebtorServiceImpl implements DebtorService {
     private final UserRepository userRepository;
 
     @Autowired
-    public DebtorServiceImpl(DebtorRepository debtorRepository, UserRepository userRepository){
+    public DebtorServiceImpl(DebtorRepository debtorRepository, UserRepository userRepository) {
         this.debtorRepository = debtorRepository;
         this.userRepository = userRepository;
     }
@@ -29,7 +29,7 @@ public class DebtorServiceImpl implements DebtorService {
 
     @Override
     public Debtor getDebtorById(Long id) throws Exception {
-        return  debtorRepository.findById(id)
+        return debtorRepository.findById(id)
                 .orElseThrow(() -> new Exception("Debtor not found for id: " + id));
     }
 

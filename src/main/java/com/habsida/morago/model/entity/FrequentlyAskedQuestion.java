@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Setter
 @Getter
-public class FrequentlyAskedQuestions {
+public class FrequentlyAskedQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class FrequentlyAskedQuestions {
     private String question;
     private String answer;
     @Enumerated(EnumType.STRING)
-    private QuestionsCategories Category;
+    private QuestionsCategories category;
 
     @CreatedDate
     @Column(updatable = false)

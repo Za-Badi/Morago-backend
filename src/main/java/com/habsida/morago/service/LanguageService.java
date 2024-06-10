@@ -7,8 +7,12 @@ import java.util.List;
 
 public interface LanguageService {
     public List<Language> getAllLanguages();
+
     public Language getLanguageById(Long id) throws Exception;
+
     public Language addLanguage(LanguageInput languageDto);
+
     public Language updateLanguage(Long id, LanguageInput languageDto) throws Exception;
+
     public void deleteLanguage(Long id) throws Exception;
 }

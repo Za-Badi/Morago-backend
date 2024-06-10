@@ -13,14 +13,17 @@ public class AuthenticationController {
     public AuthenticationController(AuthenticationResolver authenticationResolver) {
         this.authenticationResolver = authenticationResolver;
     }
+
     @MutationMapping
     public String signUpAsUser(@Argument UserInput userInput) throws Exception {
         return authenticationResolver.signUpAsUser(userInput);
     }
+
     @MutationMapping
     public String signUpAsTranslator(@Argument UserInput userInput) throws Exception {
         return authenticationResolver.signUpAsTranslator(userInput);
     }
+
     @MutationMapping
     public String logIn(@Argument UserInput userInput) {
         return authenticationResolver.logIn(userInput);

@@ -2,10 +2,9 @@ package com.habsida.morago.model.inputs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.codec.multipart.Part;
 
-import javax.servlet.http.Part;
 import java.math.BigDecimal;
 
 @Getter
@@ -17,8 +16,8 @@ public class CreateThemeInput {
     private BigDecimal price;
     private BigDecimal nightPrice;
     private String description = "";
-    private  Boolean isPopular =false;
-    private  Boolean isActive = false;
+    private Boolean isPopular = false;
+    private Boolean isActive = false;
     private Long categoryId;
 
     @Setter

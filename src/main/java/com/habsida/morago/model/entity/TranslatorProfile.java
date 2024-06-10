@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name="translator_profiles")
+@Table(name = "translator_profiles")
 @Setter
 @Getter
 @AllArgsConstructor
@@ -20,20 +20,20 @@ public class TranslatorProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @CreatedDate
-    @Column(name="created_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
-    @Column(name="date_of_birth", length = 50)
+    @Column(name = "date_of_birth", length = 50)
     private String dateOfBirth;
-    @Column(name="email", length = 255)
+    @Column(name = "email", length = 255)
     private String email;
-    @Column(name="is_available")
+    @Column(name = "is_available")
     private Boolean isAvailable;
-    @Column(name="is_online")
+    @Column(name = "is_online")
     private Boolean isOnline;
-    @Column(name="level_of_korean", length = 200)
+    @Column(name = "level_of_korean", length = 200)
     private String levelOfKorean;
     @LastModifiedDate
-    @Column(name="updated_at")
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "translator_languages",

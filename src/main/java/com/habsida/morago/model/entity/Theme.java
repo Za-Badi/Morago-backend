@@ -29,20 +29,18 @@ public class Theme {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-//    @Column( name ="name")
     private String name;
     private String korean_title;
     private BigDecimal price;
     private BigDecimal nightPrice;
     private String description;
-    private  Boolean isPopular;
-    private  Boolean isActive;
-
+    private Boolean isPopular;
+    private Boolean isActive;
 
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon_id")
-    private File icon_id;
+    private File iconId;
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -65,10 +63,10 @@ public class Theme {
                 ", description='" + description + '\'' +
                 ", is_popular=" + isPopular +
                 ", is_active=" + isActive +
-                ", icon_id=" + icon_id +
-                ", category_id=" +category.getId()+ '\''+
+                ", icon_id=" + iconId +
+                ", category_id=" + category.getId() + '\'' +
                 ", createdAt=" + createdAt +
-                ", updatedAt=" +updatedAt+
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

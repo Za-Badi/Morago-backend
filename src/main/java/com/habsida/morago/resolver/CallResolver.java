@@ -26,6 +26,7 @@ public class CallResolver {
     public CallResolver(CallService callService) {
         this.callService = callService;
     }
+
     @QueryMapping
     public List<Call> getAllCalls() {
         return callService.getAllCalls();
@@ -35,6 +36,7 @@ public class CallResolver {
     public Optional<Call> getCallById(@Argument Long id) {
         return callService.getCallById(id);
     }
+
     @MutationMapping
     public Call createCall(@Argument Long caller, @Argument Long recipient, @Argument Long theme) throws Exception {
         CallInput callInput = new CallInput();
@@ -52,7 +54,7 @@ public class CallResolver {
 
 
     @MutationMapping
-    public Boolean deleteCall(@Argument Long id) throws Exception{
+    public Boolean deleteCall(@Argument Long id) throws Exception {
         callService.deleteCall(id);
         return true;
     }

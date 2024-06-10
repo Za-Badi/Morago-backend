@@ -1,6 +1,8 @@
 package com.habsida.morago.model.enums;
 
+import lombok.Getter;
 
+@Getter
 public enum QuestionsCategories {
 
     Restaurant("Ресторан"),
@@ -8,7 +10,7 @@ public enum QuestionsCategories {
     ENTERTAINMENT("Развлечения"),
     GROCERY("Сотовая связь");
 
-    private String name;
+    private final String name;
 
     QuestionsCategories(String name) {
         this.name = name;

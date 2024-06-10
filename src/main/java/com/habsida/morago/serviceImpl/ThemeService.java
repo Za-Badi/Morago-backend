@@ -1,15 +1,17 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.model.entity.File;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.inputs.CreateThemeInput;
 import com.habsida.morago.model.inputs.UpdateThemeInput;
 import com.habsida.morago.repository.CategoryRepository;
 import com.habsida.morago.repository.ThemeRepository;
-import graphql.GraphQLException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,9 +21,10 @@ public class ThemeService {
 
     private final ThemeRepository repository;
     private final CategoryRepository categoryRepository;
+    private final FileService fileService;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public Theme createTheme(CreateThemeInput input) {
+    public Theme createTheme(CreateThemeInput input, MultipartFile file) {
         Theme theme = new Theme();
         theme.setCategory(categoryRepository.getReferenceById(input.getCategoryId()));
         theme.setDescription(input.getDescription());
@@ -31,12 +34,18 @@ public class ThemeService {
         theme.setNightPrice(input.getNightPrice());
         theme.setIsPopular(input.getIsPopular());
         theme.setIsActive(input.getIsActive());
+        if (file != null) {
+            File icon = fileService.uploadFile(file);
+            theme.setIconId(icon);
+        } else {
+            theme.setIconId(null);
+        }
         return repository.save(theme);
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
     public Theme updateTheme(UpdateThemeInput input) {
-        Theme theme = new Theme();
+        Theme theme = repository.findById(input.getId()).orElseThrow(EntityNotFoundException::new);
         if (input.getCategoryId() != null && input.getCategoryId() != 0) {
             theme.setCategory(categoryRepository.getReferenceById(input.getCategoryId()));
         }
@@ -66,7 +75,7 @@ public class ThemeService {
 
     public Theme getThemeById(Long id) {
         return repository.findById(id)
-                .orElseThrow(()->new EntityNotFoundException("Entity Not Found with ID "+id));
+                .orElseThrow(() -> new EntityNotFoundException("Entity Not Found with ID " + id));
     }
 
     public Boolean removeThemeById(Long id) {
@@ -75,8 +84,6 @@ public class ThemeService {
             return true;
         }
         throw new EntityNotFoundException();
-
-
     }
 
     public Set<Theme> getAllThemes() {
@@ -84,12 +91,28 @@ public class ThemeService {
     }
 
     public Set<Theme> getThemesByCategoryId(Long id) {
-        return repository.findThemesByCategoryId(id).orElseThrow(GraphQLException::new);
+        return repository.findThemesByCategoryId(id);
     }
 
     public Theme getThemeByName(String name) {
-        return repository.findByName(name).orElseThrow(EntityNotFoundException::new);
+        return repository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Entity Not Found with name " + name));
     }
 
+    public Set<Theme> getThemeByStatus(Boolean status) {
+        return repository.findThemeByIsActive(status);
+    }
 
+    public Boolean changeThemeStatus(Long themeId) {
+        Theme theme = repository.findById(themeId).orElseThrow(EntityNotFoundException::new);
+        theme.setIsActive(!theme.getIsActive());
+        repository.save(theme);
+        return true;
+    }
+
+    public Boolean changeThemePopularity(Long themeId) {
+        Theme theme = repository.findById(themeId).orElseThrow(EntityNotFoundException::new);
+        theme.setIsActive(!theme.getIsPopular());
+        repository.save(theme);
+        return true;
+    }
 }

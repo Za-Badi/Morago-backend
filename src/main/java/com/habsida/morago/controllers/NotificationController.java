@@ -1,8 +1,7 @@
 package com.habsida.morago.controllers;
 
-
-import com.habsida.morago.model.entity.Notification;
 import com.habsida.morago.model.inputs.NotificationInput;
+import com.habsida.morago.model.entity.Notification;
 import com.habsida.morago.resolver.NotificationResolver;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -15,12 +14,12 @@ import java.util.List;
 public class NotificationController {
     private NotificationResolver notificationResolver;
 
-    public NotificationController(NotificationResolver notificationResolver){
+    public NotificationController(NotificationResolver notificationResolver) {
         this.notificationResolver = notificationResolver;
     }
 
     @QueryMapping
-    public List<Notification> getAllNotification(){
+    public List<Notification> getAllNotification() {
         return notificationResolver.getAllNotification();
     }
 
@@ -30,12 +29,12 @@ public class NotificationController {
     }
 
     @MutationMapping
-    public Notification addNotification(@Argument NotificationInput notificationDto){
+    public Notification addNotification(@Argument NotificationInput notificationDto) {
         return notificationResolver.addNotification(notificationDto);
     }
 
     @MutationMapping
-    public  Notification updateNotification (@Argument Long id, @Argument NotificationInput notificationDto) throws Exception{
+    public Notification updateNotification(@Argument Long id, @Argument NotificationInput notificationDto) throws Exception {
         return notificationResolver.updateNotification(id, notificationDto);
     }
 

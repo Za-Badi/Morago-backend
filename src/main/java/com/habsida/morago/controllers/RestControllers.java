@@ -15,6 +15,7 @@ import java.util.Map;
 @RestController
 public class RestControllers {
     private final UserService userService;
+
     public RestControllers(UserService userService) {
         this.userService = userService;
     }
@@ -25,11 +26,13 @@ public class RestControllers {
         User currentUser = (User) authentication.getPrincipal();
         return ResponseEntity.ok(currentUser);
     }
+
     @GetMapping("/all")
     public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.getAllUsers();
+        List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
+
     @GetMapping("/message")
     public ResponseEntity<String> defaultMessage() {
         return ResponseEntity.ok("This is Rixio");

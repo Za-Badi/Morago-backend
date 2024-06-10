@@ -1,6 +1,7 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.model.inputs.DepositsInput;
+import com.habsida.morago.model.enums.Status;
+import com.habsida.morago.model.input.DepositsInput;
 import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.resolver.DepositsResolver;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -13,15 +14,26 @@ import java.util.List;
 @Controller
 public class DepositsController {
 
-    private  final DepositsResolver depositsResolver;
+    private final DepositsResolver depositsResolver;
 
-    public DepositsController(DepositsResolver depositsResolver){
+    public DepositsController(DepositsResolver depositsResolver) {
         this.depositsResolver = depositsResolver;
     }
 
     @QueryMapping
-    public List<Deposits> getAllDeposits() throws Exception{
+    public List<Deposits> getAllDeposits() throws Exception {
         return depositsResolver.getAllDeposits();
+    }
+
+    @QueryMapping
+    public List<Deposits> getDepositsByStatus(@Argument Status status) {
+        return depositsResolver.getDepositsByStatus(status);
+    }
+
+
+    @QueryMapping
+    public List<Deposits> getDepositsByUserId(@Argument Long userId) {
+        return depositsResolver.getDepositByUserId(userId);
     }
 
     @QueryMapping
@@ -30,17 +42,17 @@ public class DepositsController {
     }
 
     @MutationMapping
-    public Deposits addDeposit(@Argument DepositsInput depositsDto) {
+    public Deposits addDeposit(@Argument DepositsInput depositsDto) throws Exception {
         return depositsResolver.addDeposit(depositsDto);
     }
 
     @MutationMapping
-    public Deposits updateDeposit(@Argument Long id, @Argument DepositsInput depositsDto) throws Exception{
-        return depositsResolver.updateDeposit(id,depositsDto);
+    public Deposits updateDeposit(@Argument Long id, @Argument DepositsInput depositsDto) throws Exception {
+        return depositsResolver.updateDeposit(id, depositsDto);
     }
 
     @MutationMapping
-    public Boolean deleteDeposit(@Argument Long id) throws Exception{
+    public Boolean deleteDeposit(@Argument Long id) throws Exception {
         return depositsResolver.deleteDeposit(id);
     }
 

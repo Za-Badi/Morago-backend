@@ -1,6 +1,6 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.model.inputs.DebtorInput;
+import com.habsida.morago.model.input.DebtorInput;
 import com.habsida.morago.model.entity.Debtor;
 import com.habsida.morago.resolver.DebtorResolver;
 import org.springframework.beans.factory.annotation.Autowired;

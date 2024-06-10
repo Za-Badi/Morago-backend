@@ -1,5 +1,6 @@
 package com.habsida.morago.service;
-import com.habsida.morago.model.inputs.DebtorInput;
+
+import com.habsida.morago.model.input.DebtorInput;
 import com.habsida.morago.model.entity.Debtor;
 
 import java.util.List;

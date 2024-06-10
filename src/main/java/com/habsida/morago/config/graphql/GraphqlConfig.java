@@ -20,37 +20,90 @@ package com.habsida.morago.config.graphql;
 //}
 
 
-
-import graphql.GraphQLContext;
-import graphql.execution.CoercedVariables;
-import graphql.language.StringValue;
-import graphql.language.Value;
-import graphql.schema.Coercing;
-import graphql.schema.CoercingParseLiteralException;
-import graphql.schema.CoercingParseValueException;
-import graphql.schema.CoercingSerializeException;
+import graphql.kickstart.servlet.apollo.ApolloScalars;
 import graphql.schema.GraphQLScalarType;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+
 
 @Configuration
 public class GraphqlConfig {
 
-    public static final GraphQLScalarType DateScalar = GraphQLScalarType.newScalar()
-            .name("Upload")
-            .description("A custom scalar that handles Date")
-            .coercing(new Coercing() {} )
-            .build();
+//    @Bean
+//    public GraphQLScalarType uploadScalarDefine() {
+//        return ApolloScalars.Upload;
+//
+//    }
+//public  final GraphQLScalarType Upload =
+//        new GraphQLScalarType("Upload",
+//                "A file part in a multipart request",
+//                new Coercing<Part, Void>() {
+//                    @Override
+//                    public Void serialize(Object dataFetcherResult) {
+//                        throw new CoercingSerializeException("Upload is an input-only type");
+//                    }
+//
+//                    @Override
+//                    public Part parseValue(Object input) {
+//                        if (input instanceof Part) {
+//                            return (Part) input;
+//                        } else if (null == input) {
+//                            return null;
+//                        } else {
+//                            throw new CoercingParseValueException("Expected type " +
+//                                    Part.class.getName() +
+//                                    " but was " +
+//                                    input.getClass().getName());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public Part parseLiteral(Object input) {
+//                        throw new CoercingParseLiteralException(
+//                                "Must use variables to specify Upload values");
+//                    }
+//                });
+
+
+//    xxxxxxxxxxxxxx
+
+//    public  final GraphQLScalarType DateScalar = GraphQLScalarType.newScalar()
+//            .name("Upload")
+//            .description("A custom scalar that handles Date")
+//            .coercing(
+//                    new Coercing<Part, Void>() {
+//                        @Override
+//                        public Void serialize(Object dataFetcherResult) {
+//                            throw new CoercingSerializeException("Upload is an input-only type");
+//                        }
+//
+//                        @Override
+//                        public Part parseValue(Object input) {
+//                            if (input instanceof Part) {
+//                                return (Part) input;
+//                            } else if (null == input) {
+//                                return null;
+//                            } else {
+//                                throw new CoercingParseValueException("Expected type " +
+//                                        Part.class.getName() +
+//                                        " but was " +
+//                                        input.getClass().getName());
+//                            }
+//                        }
+//
+//                        @Override
+//                        public Part parseLiteral(Object input) {
+//                            throw new CoercingParseLiteralException(
+//                                    "Must use variables to specify Upload values");
+//                        }
+//                    }
+//            )
+//            .build();
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
-        return builder -> builder.scalar(DateScalar);
+        return builder -> builder.scalar(ApolloScalars.Upload);
     }
+
 }

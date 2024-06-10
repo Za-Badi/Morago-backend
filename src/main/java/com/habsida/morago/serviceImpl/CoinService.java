@@ -19,7 +19,7 @@ import java.util.List;
 public class CoinService {
     private final CoinRespository repository;
 
-    public Coin createCoin( CreateCoinInput input) {
+    public Coin createCoin(CreateCoinInput input) {
         Coin coins = new Coin();
         coins.setCoin(input.getCoin());
         coins.setWon(input.getWon());
@@ -33,10 +33,10 @@ public class CoinService {
     @Transactional(rollbackFor = RuntimeException.class)
     public Coin updateCoin(UpdateCoinInput input) {
         Coin coins = getByID(input.getId());
-        if (input.getCoin() != null && input.getCoin()> 0) {
+        if (input.getCoin() != null && input.getCoin() > 0) {
             coins.setCoin(input.getCoin());
         }
-        if (input.getWon() != null && input.getWon()>0) {
+        if (input.getWon() != null && input.getWon() > 0) {
             coins.setWon(input.getWon());
         }
         return repository.save(coins);

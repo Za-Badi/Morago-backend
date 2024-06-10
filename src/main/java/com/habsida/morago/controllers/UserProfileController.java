@@ -12,25 +12,31 @@ import java.util.List;
 @Controller
 public class UserProfileController {
     private final UserProfileResolver userProfileResolver;
+
     public UserProfileController(UserProfileResolver userProfileResolver) {
         this.userProfileResolver = userProfileResolver;
     }
+
     @QueryMapping
     public List<UserProfile> getAllUserProfiles() {
         return userProfileResolver.getAllUserProfiles();
     }
+
     @QueryMapping
     public UserProfile getUserProfileById(@Argument Long id) throws Exception {
         return userProfileResolver.getUserProfileById(id);
     }
+
     @MutationMapping
     public UserProfile addUserProfile(@Argument Boolean isFreeCallMade) {
         return userProfileResolver.addUserProfile(isFreeCallMade);
     }
+
     @MutationMapping
     public UserProfile updateUserProfile(@Argument Long id, @Argument Boolean isFreeCallMade) throws Exception {
         return userProfileResolver.updateUserProfile(id, isFreeCallMade);
     }
+
     @MutationMapping
     public Boolean deleteUserProfile(@Argument Long id) throws Exception {
         return userProfileResolver.deleteUserProfile(id);

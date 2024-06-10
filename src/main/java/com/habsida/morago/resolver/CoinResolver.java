@@ -18,18 +18,22 @@ import java.util.List;
 public class CoinResolver {
 
     private final CoinService coinService;
+
     @MutationMapping
     public Coin createCoin(@Argument CreateCoinInput input) {
         return coinService.createCoin(input);
     }
+
     @MutationMapping
     public Coin updateCoin(@Argument UpdateCoinInput input) {
         return coinService.updateCoin(input);
     }
+
     @MutationMapping
     public Boolean deleteCoin(@Argument Long id) {
         return coinService.deleteCoin(id);
     }
+
     @QueryMapping
     public Coin getCoinById(@Argument Long id) {
         return coinService.getByID(id);

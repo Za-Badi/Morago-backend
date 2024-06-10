@@ -1,5 +1,6 @@
 package com.habsida.morago.model.entity;
 
+import com.habsida.morago.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,12 +21,12 @@ public class Withdrawals {
     private String accountHolder;
 
 
-
     @Column(name = "sum")
     private Float sum;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private String status;
+    private Status status;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

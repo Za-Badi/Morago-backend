@@ -1,6 +1,5 @@
 package com.habsida.morago.controllers;
 
-
 import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.inputs.WithdrawalInput;
 import com.habsida.morago.resolver.WithdrawalsResolver;
@@ -16,12 +15,12 @@ public class WithdrawalController {
 
     private WithdrawalsResolver withdrawalsResolver;
 
-    public WithdrawalController(WithdrawalsResolver withdrawalsResolver){
+    public WithdrawalController(WithdrawalsResolver withdrawalsResolver) {
         this.withdrawalsResolver = withdrawalsResolver;
     }
 
     @QueryMapping
-    public List<Withdrawals> getAllWithdrawals(){
+    public List<Withdrawals> getAllWithdrawals() {
         return withdrawalsResolver.getAllWithdrawals();
     }
 
@@ -31,12 +30,12 @@ public class WithdrawalController {
     }
 
     @MutationMapping
-    public Withdrawals addWithdrawal(@Argument WithdrawalInput withdrawalDto){
+    public Withdrawals addWithdrawal(@Argument WithdrawalInput withdrawalDto) {
         return withdrawalsResolver.addWithdrawal(withdrawalDto);
     }
 
     @MutationMapping
-    public  Withdrawals updateWithdrawal (@Argument Long id, @Argument WithdrawalInput withdrawalDto) throws Exception{
+    public Withdrawals updateWithdrawal(@Argument Long id, @Argument WithdrawalInput withdrawalDto) throws Exception {
         return withdrawalsResolver.updateWithdrawal(id, withdrawalDto);
     }
 
@@ -46,4 +45,3 @@ public class WithdrawalController {
     }
 
 }
-
