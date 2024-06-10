@@ -55,6 +55,8 @@ public class AuthenticationService {
         user.setIsActive(true);
         user.setIsDebtor(false);
         user.setOnBoardingStatus(0);
+        user.setImage(null);
+        user.setTranslatorProfile(null);
         List<Role> roles = new ArrayList<>();
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new Exception("Role not found with name: ROLE_USER"));
