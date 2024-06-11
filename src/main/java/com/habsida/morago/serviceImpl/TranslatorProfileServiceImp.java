@@ -19,11 +19,13 @@ import java.util.List;
 public class TranslatorProfileServiceImp implements TranslatorProfileService {
     private final TranslatorProfileRepository translatorProfileRepository;
     private final LanguageRepository languageRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TranslatorProfileServiceImp(TranslatorProfileRepository translatorProfileRepository, LanguageRepository languageRepository) {
+    public TranslatorProfileServiceImp(TranslatorProfileRepository translatorProfileRepository, LanguageRepository languageRepository, UserRepository userRepository) {
         this.translatorProfileRepository = translatorProfileRepository;
         this.languageRepository = languageRepository;
+        this.userRepository = userRepository;
     }
 
     public List<TranslatorProfile> getAllTranslatorProfiles() {
@@ -81,6 +83,7 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
             translatorProfile.setLevelOfKorean(translatorProfileInput.getLevelOfKorean());
         }
         if (translatorProfileInput.getLanguages() != null) {
+            translatorProfile.getLanguages().clear();
             List<Language> languages = new ArrayList<>();
             for (Long languageId : translatorProfileInput.getLanguages()) {
                 Language language = languageRepository.findById(languageId)
@@ -93,10 +96,16 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
     }
 
     public void deleteTranslatorProfile(Long id) throws Exception {
-        translatorProfileRepository.findById(id)
+        TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
+        if (translatorProfile.getUser() != null){
+            User user = translatorProfile.getUser();
+            user.setTranslatorProfile(null);
+            translatorProfile.setUser(null);
+            userRepository.save(user);
+        }
+        translatorProfile.getLanguages().clear();
+        translatorProfileRepository.save(translatorProfile);
         translatorProfileRepository.deleteById(id);
     }
-
-
 }

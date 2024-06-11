@@ -1,17 +1,12 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.model.entity.Role;
-import com.habsida.morago.model.entity.TranslatorProfile;
-import com.habsida.morago.model.entity.UserProfile;
 import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.model.entity.User;
-import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,19 +14,16 @@ import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
     }
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -94,8 +86,10 @@ public class UserService {
     }
 
     public void deleteUser(Long id) throws Exception {
-        userRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User not found with id: " + id));
+        user.getRoles().clear();
+        userRepository.save(user);
         userRepository.deleteById(id);
     }
     public boolean changeIsActive(Long id) {

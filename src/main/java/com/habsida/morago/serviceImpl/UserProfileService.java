@@ -1,7 +1,9 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.entity.UserProfile;
 import com.habsida.morago.repository.UserProfileRepository;
+import com.habsida.morago.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +12,12 @@ import java.util.List;
 @Service
 public class UserProfileService implements com.habsida.morago.service.UserProfileService {
     private final UserProfileRepository userProfileRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserProfileService(UserProfileRepository userProfileRepository) {
+    public UserProfileService(UserProfileRepository userProfileRepository, UserRepository userRepository) {
         this.userProfileRepository = userProfileRepository;
+        this.userRepository = userRepository;
     }
 
     public List<UserProfile> getAllUserProfiles() {
@@ -39,8 +43,14 @@ public class UserProfileService implements com.habsida.morago.service.UserProfil
     }
 
     public void deleteUserProfile(Long id) throws Exception {
-        userProfileRepository.findById(id)
+        UserProfile userProfile = userProfileRepository.findById(id)
                 .orElseThrow(() -> new Exception("UserProfile not found with id: " + id));
+        if (userProfile.getUser() != null){
+            User user = userProfile.getUser();
+            user.setUserProfile(null);
+            userProfile.setUser(null);
+            userRepository.save(user);
+        }
         userProfileRepository.deleteById(id);
     }
 }
