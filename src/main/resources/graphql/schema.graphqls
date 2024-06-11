@@ -55,9 +55,9 @@ type Query {
 }
 
 type Mutation {
-    signUpAsUser(userInput: UserInput): String
-    signUpAsTranslator(userInput: UserInput): String
-    logIn(userInput: UserInput): String
+    signUpAsUser(registerUserInput: RegisterUserInput): String
+    signUpAsTranslator(registerUserInput: RegisterUserInput): String
+    logIn(loginUserInput: LoginUserInput): String
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
     deleteAppVersion(platform: EPlatform!): Boolean
@@ -344,6 +344,18 @@ input TranslatorProfileInput {
 input LanguageInput {
     name: String
 }
+
+input RegisterUserInput {
+    phone: String
+    firstPassword: String
+    secondPassword: String
+}
+
+input LoginUserInput {
+    phone: String
+    password: String
+}
+
 
 input DebtorInput {
     accountHolder: String

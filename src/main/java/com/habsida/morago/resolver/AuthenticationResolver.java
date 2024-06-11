@@ -1,6 +1,8 @@
 package com.habsida.morago.resolver;
 
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.inputs.LoginUserInput;
+import com.habsida.morago.model.inputs.RegisterUserInput;
 import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.serviceImpl.AuthenticationService;
 import com.habsida.morago.serviceImpl.JwtService;
@@ -18,20 +20,26 @@ public class AuthenticationResolver {
         this.jwtService = jwtService;
     }
 
-    public String signUpAsUser(UserInput userInput) throws Exception {
-        authenticationService.signUpAsUser(userInput);
-        User authenticatedUser = authenticationService.logIn(userInput);
+    public String signUpAsUser(RegisterUserInput registerUserInput) throws Exception {
+        authenticationService.signUpAsUser(registerUserInput);
+        LoginUserInput loginUserInput = new LoginUserInput();
+        loginUserInput.setPhone(registerUserInput.getPhone());
+        loginUserInput.setPassword(registerUserInput.getFirstPassword());
+        User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
 
-    public String signUpAsTranslator(UserInput userInput) throws Exception {
-        authenticationService.signUpAsTranslator(userInput);
-        User authenticatedUser = authenticationService.logIn(userInput);
+    public String signUpAsTranslator(RegisterUserInput registerUserInput) throws Exception {
+        authenticationService.signUpAsTranslator(registerUserInput);
+        LoginUserInput loginUserInput = new LoginUserInput();
+        loginUserInput.setPhone(registerUserInput.getPhone());
+        loginUserInput.setPassword(registerUserInput.getFirstPassword());
+        User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
 
-    public String logIn(UserInput userInput) {
-        User authenticatedUser = authenticationService.logIn(userInput);
+    public String logIn(LoginUserInput loginUserInput) {
+        User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
 
