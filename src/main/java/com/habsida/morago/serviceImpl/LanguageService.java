@@ -1,8 +1,10 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.model.entity.TranslatorProfile;
 import com.habsida.morago.model.inputs.LanguageInput;
 import com.habsida.morago.model.entity.Language;
 import com.habsida.morago.repository.LanguageRepository;
+import com.habsida.morago.repository.TranslatorProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +14,12 @@ import java.util.Optional;
 @Service
 public class LanguageService implements com.habsida.morago.service.LanguageService {
     private final LanguageRepository languageRepository;
+    private final TranslatorProfileRepository translatorProfileRepository;
 
     @Autowired
-    public LanguageService(LanguageRepository languageRepository) {
+    public LanguageService(LanguageRepository languageRepository, TranslatorProfileRepository translatorProfileRepository) {
         this.languageRepository = languageRepository;
+        this.translatorProfileRepository = translatorProfileRepository;
     }
 
     public List<Language> getAllLanguages() {
@@ -43,11 +47,16 @@ public class LanguageService implements com.habsida.morago.service.LanguageServi
     }
 
     public void deleteLanguage(Long id) throws Exception {
-        Optional<Language> optionalLanguage = languageRepository.findById(id);
-        if (optionalLanguage.isPresent()) {
-            languageRepository.deleteById(id);
-        } else {
-            throw new Exception("Language not found for id: " + id);
+        Language language = languageRepository.findById(id)
+                .orElseThrow(() -> new Exception("Language not found with id: " + id));
+        if (language.getTranslatorProfiles() != null) {
+            for (TranslatorProfile translatorProfile : language.getTranslatorProfiles()) {
+                translatorProfile.getLanguages().remove(language);
+                translatorProfileRepository.save(translatorProfile);
+            }
+            language.getTranslatorProfiles().clear();
         }
+        languageRepository.save(language);
+        languageRepository.deleteById(id);
     }
 }

@@ -327,9 +327,9 @@ input updateFrequentlyAskedQuestionsInput {
 
 input UserInput {
     phone: String!
-    password: String
-    firstName: String
-    lastName: String
+    password: String!
+    firstName: String!
+    lastName: String!
 }
 
 input TranslatorProfileInput {
@@ -338,22 +338,22 @@ input TranslatorProfileInput {
     isAvailable: Boolean
     isOnline: Boolean
     levelOfKorean: String
-    languages: [ID]
+    languages: [ID]!
 }
 
 input LanguageInput {
-    name: String
+    name: String!
 }
 
 input RegisterUserInput {
-    phone: String
-    firstPassword: String
-    secondPassword: String
+    phone: String!
+    firstPassword: String!
+    secondPassword: String!
 }
 
 input LoginUserInput {
-    phone: String
-    password: String
+    phone: String!
+    password: String!
 }
 
 
