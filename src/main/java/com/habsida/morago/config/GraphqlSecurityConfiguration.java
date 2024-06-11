@@ -34,6 +34,7 @@ public class GraphqlSecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/graphql").permitAll()
+                        .requestMatchers("/graphiql").permitAll()
                         .requestMatchers("/isTranslator").hasAuthority("ROLE_TRANSLATOR")
                         .requestMatchers("/isUser").hasAuthority("ROLE_USER")
                         .anyRequest().permitAll()

@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @Service
 @RequiredArgsConstructor
 public class FileService {
@@ -21,7 +20,6 @@ public class FileService {
 
         String type = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         String filename = fileUtil.getUUID() + "." + type;
-
         String path = fileUtil.uploadFileLocal(file, filename);
         File fileDB = new File();
         fileDB.setPath(path);
@@ -37,10 +35,8 @@ public class FileService {
     public void deleteById(Long id) {
         File file = getById(id);
         System.out.println(file.toString());
-
-//        fileUtil.deleteLocalFile(file.getPath());
-//        //       fileUtil.deleteFileFromS3Bucket(file.getPath());
-//        repository.deleteById(id);
+        fileUtil.deleteLocalFile(file.getPath());
+        repository.deleteById(id);
     }
 
 }

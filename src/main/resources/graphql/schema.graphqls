@@ -122,8 +122,8 @@ type Mutation {
     updateRating(id: ID!, grade: Float): Rating
     deleteRating(id: ID!): Boolean
     addFile(file: Upload!): File
-
 }
+
 
 
 type AppVersion {
@@ -297,7 +297,7 @@ input CreateThemeInput{
     isPopular: Boolean
     isActive: Boolean
     categoryId: ID!
-    file: Upload
+#    file: FileUpload
 }
 input UpdateThemeInput{
     id: ID!
@@ -309,7 +309,7 @@ input UpdateThemeInput{
     isPopular: Boolean
     isActive: Boolean
     categoryId: ID
-    file: Upload
+#    file: Upload
 }
 input CreateFrequentlyAskedQuestionsInput {
     question: String!
@@ -417,3 +417,4 @@ enum QuestionsCategories {
     GROCERY
 }
 scalar Upload
+#scalar FileUpload

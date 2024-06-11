@@ -1,9 +1,9 @@
 package com.habsida.morago.resolver;
 
+import com.habsida.morago.exceptions.GlobalException;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.inputs.CreateThemeInput;
 import com.habsida.morago.model.inputs.UpdateThemeInput;
-import com.habsida.morago.serviceImpl.FileService;
 import com.habsida.morago.serviceImpl.ThemeService;
 import graphql.schema.DataFetchingEnvironment;
 import lombok.RequiredArgsConstructor;
@@ -23,20 +23,19 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ThemeMutationResolver {
     private final ThemeService themeService;
-    private final FileService fileService;
 
     @MutationMapping
     public Theme createTheme(@Argument CreateThemeInput input, DataFetchingEnvironment env) {
         MultipartFile mFile = null;
         try {
             LinkedHashMap<String, Object> envInput = env.getArgument("input");
-            Part part = (Part) envInput.get("image");
+            Part part = (Part) envInput.get("icon");
             if (part == null) {
                 return themeService.createTheme(input, mFile);
             }
             mFile = new MockMultipartFile(part.getSubmittedFileName(), part.getSubmittedFileName(), part.getContentType(), part.getInputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new GlobalException("Error");
         }
         return themeService.createTheme(input, mFile);
     }
@@ -85,15 +84,4 @@ public class ThemeMutationResolver {
     public Set<Theme> getThemeByStatus(@Argument Boolean status) {
         return themeService.getThemeByStatus(status);
     }
-
-
-//    public File addFile(Part part1, DataFetchingEnvironment environment) throws IOException {
-//
-//        Part part = environment.getArgument("file");
-//        MultipartFile mfile = new MockMultipartFile(part.getSubmittedFileName(), part.getSubmittedFileName(), part.getContentType(), part.getInputStream());
-//
-//        File file = fileService.uploadFile(mfile);
-//        return file;
-//    }
-
 }
