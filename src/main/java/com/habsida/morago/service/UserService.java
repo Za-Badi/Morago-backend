@@ -17,4 +17,8 @@ public interface UserService {
     public User updatePassword(String originalPassword,String newPassword);
     public boolean changeIsActive(Long id);
     public boolean changeIsDebtor(Long id);
+    public User addFcmToken(String fcmToken, Long id) throws Exception;
+    public void deleteFcmToken(Long id) throws Exception;
+    public User addApnToken(String apnToken, Long id) throws Exception;
+    public void deleteApnToken(Long id) throws Exception;
 }

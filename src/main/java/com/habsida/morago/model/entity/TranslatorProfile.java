@@ -42,6 +42,11 @@ public class TranslatorProfile {
             joinColumns = @JoinColumn(name = "translator_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     private List<Language> languages;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "translator_themes",
+            joinColumns = @JoinColumn(name = "translator_id"),
+            inverseJoinColumns = @JoinColumn(name = "theme_id"))
+    private List<Theme> themes;
     @OneToOne(mappedBy = "translatorProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 }

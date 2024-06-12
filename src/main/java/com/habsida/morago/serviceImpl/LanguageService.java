@@ -55,8 +55,8 @@ public class LanguageService implements com.habsida.morago.service.LanguageServi
                 translatorProfileRepository.save(translatorProfile);
             }
             language.getTranslatorProfiles().clear();
+            languageRepository.save(language);
         }
-        languageRepository.save(language);
         languageRepository.deleteById(id);
     }
 }

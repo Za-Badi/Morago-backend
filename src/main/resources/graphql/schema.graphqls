@@ -22,8 +22,10 @@ type Query {
     getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
     getAllUsers: [User]
+    getAllUsersPaged(page: Int!): UserPage
     getUserById(id: ID!): User
     getUserByPhone(phone: String): User
+
     existsUserByPhone(phone: String): Boolean
     getAuthenticatedUser: User
     getAllUserProfiles: [UserProfile]
@@ -81,17 +83,23 @@ type Mutation {
     deleteUser(id: ID): Boolean
     changeIsActive(id: ID): Boolean
     changeIsDebtor(id: ID): Boolean
+    addFcmToken(fcmToken: String, id: ID): User
+    deleteFcmToken(id: ID): User
+    addApnToken(apnToken: String, id: ID): User
+    deleteApnToken(id: ID): User
     addUserProfile(isFreeCallMade: Boolean): UserProfile
     updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
     deleteUserProfile(id: ID): Boolean
     updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
     changeIsFreeCallMade(id: ID): Boolean
+    changeBalanceByUserProfileId(id: ID, balance: Float): User
     addTranslatorProfile(translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     deleteTranslatorProfile(id: ID): Boolean
     updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     changeIsAvailable(id: ID): Boolean
     changeIsOnline(id: ID): Boolean
+    changeBalanceForTranslatorProfileId(id: ID, balance: Float): TranslatorProfile
     addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
     deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
     addLanguage(languageInput: LanguageInput): Language
@@ -191,6 +199,13 @@ type User {
     onBoardingStatus: Int
     translatorProfile: TranslatorProfile
     userProfile: UserProfile
+}
+type UserPage {
+    content: [User]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
 }
 type UserProfile {
     id: ID!

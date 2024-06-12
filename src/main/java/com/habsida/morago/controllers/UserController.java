@@ -4,6 +4,7 @@ package com.habsida.morago.controllers;
 
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.UserInput;
+import com.habsida.morago.model.inputs.UserPage;
 import com.habsida.morago.resolver.UserResolver;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -25,6 +26,10 @@ public class UserController {
         return userResolver.getAllUsers();
     }
     @QueryMapping
+    public UserPage getAllUsersPaged(@Argument Integer page) {
+        return userResolver.getAllUsersPaged(page);
+    }
+    @QueryMapping
     public User getUserById(@Argument Long id) throws Exception {
         return userResolver.getUserById(id);
     }
@@ -40,10 +45,6 @@ public class UserController {
     public Boolean existsUserByPhone(@Argument String phone) {
         return userResolver.existsUserByPhone(phone);
     }
-
-
-
-
     @MutationMapping
     public User addUser(@Argument UserInput userInput) throws Exception{
         return userResolver.addUser(userInput);
@@ -57,11 +58,11 @@ public class UserController {
         return userResolver.deleteUser(id);
     }
     @MutationMapping
-    public Boolean changeIsActive(@Argument Long id) {
+    public Boolean changeIsActive(@Argument Long id) throws Exception {
         return userResolver.changeIsActive(id);
     }
     @MutationMapping
-    public Boolean changeIsDebtor(@Argument Long id) {
+    public Boolean changeIsDebtor(@Argument Long id) throws Exception {
         return userResolver.changeIsDebtor(id);
     }
     @PreAuthorize("isAuthenticated()")
@@ -78,5 +79,21 @@ public class UserController {
     @QueryMapping
     public List<User> testTranslator() {
         return userResolver.getAllUsers();
+    }
+    @MutationMapping
+    public User addFcmToken(@Argument String fcmToken, @Argument Long id) throws Exception {
+        return userResolver.addFcmToken(fcmToken, id);
+    }
+    @MutationMapping
+    public Boolean deleteFcmToken(@Argument Long id) throws Exception {
+        return userResolver.deleteFcmToken(id);
+    }
+    @MutationMapping
+    public User addApnToken(@Argument String apnToken, @Argument Long id) throws Exception {
+        return userResolver.addApnToken(apnToken, id);
+    }
+    @MutationMapping
+    public Boolean deleteApnToken(@Argument Long id) throws Exception {
+        return userResolver.deleteApnToken(id);
     }
 }

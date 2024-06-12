@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "themes")
@@ -47,6 +48,9 @@ public class Theme {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categories_id")
     private Category category;
+
+    @ManyToMany(mappedBy = "themes")
+    private List<TranslatorProfile> translatorProfiles;
 
     @Override
     public String toString() {

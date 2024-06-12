@@ -5,6 +5,7 @@ import com.habsida.morago.model.entity.UserProfile;
 import com.habsida.morago.repository.UserProfileRepository;
 import com.habsida.morago.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,5 +53,28 @@ public class UserProfileService implements com.habsida.morago.service.UserProfil
             userRepository.save(user);
         }
         userProfileRepository.deleteById(id);
+    }
+
+    public UserProfile updateUserProfileByUserId(Long id, Boolean isFreeCallMade) throws Exception {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
+        UserProfile userProfile = user.getUserProfile();
+        userProfile.setIsFreeCallMade(isFreeCallMade);
+        return userProfileRepository.save(userProfile);
+    }
+    public Boolean changeIsFreeCallMade(Long id) throws Exception {
+        UserProfile userProfile = userProfileRepository.findById(id)
+                .orElseThrow(() -> new Exception("UserProfile not found with id: " + id));
+        userProfile.setIsFreeCallMade(!userProfile.getIsFreeCallMade());
+        return true;
+    }
+    public User changeBalanceByUserProfileId(Long id, Float balance) throws Exception {
+        UserProfile userProfile = userProfileRepository.findById(id)
+                .orElseThrow(() -> new Exception("UserProfile not found with id: " + id));
+        User user = userRepository.findById(userProfile.getUser().getId())
+                .orElseThrow(() -> new Exception("User not found with id: " + id));
+        Double newBalance = balance.doubleValue();
+        user.setBalance(newBalance);
+        return userRepository.save(user);
     }
 }
