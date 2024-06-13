@@ -1,10 +1,7 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GlobalException;
-import com.habsida.morago.model.entity.Role;
-import com.habsida.morago.model.entity.TranslatorProfile;
-import com.habsida.morago.model.entity.UserProfile;
-import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.entity.*;
 import com.habsida.morago.model.inputs.LoginUserInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
 import com.habsida.morago.model.inputs.UserInput;
@@ -98,7 +95,12 @@ public class AuthenticationService {
                 .orElseThrow(() -> new Exception("Role not found with name: ROLE_TRANSLATOR"));
         roles.add(translatorRole);
         user.setRoles(roles);
-        user.setTranslatorProfile(new TranslatorProfile());
+        List<Language> languages = new ArrayList<>();
+        List<Theme> themes = new ArrayList<>();
+        TranslatorProfile translatorProfile = new TranslatorProfile();
+        translatorProfile.setLanguages(languages);
+        translatorProfile.setThemes(themes);
+        user.setTranslatorProfile(translatorProfile);
         userRepository.save(user);
     }
 

@@ -78,10 +78,12 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
         translatorProfile.setIsOnline(translatorProfileInput.getIsOnline());
         translatorProfile.setLevelOfKorean(translatorProfileInput.getLevelOfKorean());
         List<Language> languages = new ArrayList<>();
-        for (Long languageId : translatorProfileInput.getLanguages()) {
-            Language language = languageRepository.findById(languageId)
-                    .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
-            languages.add(language);
+        if (translatorProfileInput.getLanguages() != null) {
+            for (Long languageId : translatorProfileInput.getLanguages()) {
+                Language language = languageRepository.findById(languageId)
+                        .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
+                languages.add(language);
+            }
         }
         translatorProfile.setLanguages(languages);
         List<Theme> themes = new ArrayList<>();
@@ -174,12 +176,14 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new Exception("Translator Profile not found with id: " + id));
         translatorProfile.setIsAvailable(!translatorProfile.getIsAvailable());
+        translatorProfileRepository.save(translatorProfile);
         return true;
     }
     public boolean changeIsOnline(Long id) throws Exception {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new Exception("Translator Profile not found with id: " + id));
         translatorProfile.setIsOnline(!translatorProfile.getIsOnline());
+        translatorProfileRepository.save(translatorProfile);
         return true;
     }
     public TranslatorProfile addLanguageToTranslatorProfile(Long languageId, Long translatorProfileId) throws Exception {
@@ -187,7 +191,11 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
                 .orElseThrow(() -> new Exception("Translator Profile not found with id: " + translatorProfileId));
         Language language = languageRepository.findById(languageId)
                 .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
-        translatorProfile.getLanguages().add(language);
+        if(!translatorProfile.getLanguages().contains(language)) {
+            translatorProfile.getLanguages().add(language);
+        } else {
+            throw new Exception("User already has this language");
+        }
         translatorProfileRepository.save(translatorProfile);
         return translatorProfile;
     }

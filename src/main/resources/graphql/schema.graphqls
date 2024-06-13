@@ -84,9 +84,9 @@ type Mutation {
     changeIsActive(id: ID): Boolean
     changeIsDebtor(id: ID): Boolean
     addFcmToken(fcmToken: String, id: ID): User
-    deleteFcmToken(id: ID): User
+    deleteFcmToken(id: ID): Boolean
     addApnToken(apnToken: String, id: ID): User
-    deleteApnToken(id: ID): User
+    deleteApnToken(id: ID): Boolean
     addUserProfile(isFreeCallMade: Boolean): UserProfile
     updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
     deleteUserProfile(id: ID): Boolean
@@ -99,7 +99,7 @@ type Mutation {
     updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     changeIsAvailable(id: ID): Boolean
     changeIsOnline(id: ID): Boolean
-    changeBalanceForTranslatorProfileId(id: ID, balance: Float): TranslatorProfile
+    changeBalanceForTranslatorProfileId(id: ID, balance: Float): User
     addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
     deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
     addLanguage(languageInput: LanguageInput): Language
@@ -353,7 +353,8 @@ input TranslatorProfileInput {
     isAvailable: Boolean
     isOnline: Boolean
     levelOfKorean: String
-    languages: [ID]!
+    languages: [ID]
+    themes: [ID]
 }
 
 input LanguageInput {

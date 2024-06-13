@@ -66,6 +66,7 @@ public class UserProfileService implements com.habsida.morago.service.UserProfil
         UserProfile userProfile = userProfileRepository.findById(id)
                 .orElseThrow(() -> new Exception("UserProfile not found with id: " + id));
         userProfile.setIsFreeCallMade(!userProfile.getIsFreeCallMade());
+        userProfileRepository.save(userProfile);
         return true;
     }
     public User changeBalanceByUserProfileId(Long id, Float balance) throws Exception {

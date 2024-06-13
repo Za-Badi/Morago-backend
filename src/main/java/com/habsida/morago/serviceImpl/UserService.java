@@ -113,12 +113,14 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User not found with id: " + id));
         user.setIsActive(!user.getIsActive());
+        userRepository.save(user);
         return true;
     }
     public boolean changeIsDebtor(Long id) throws Exception {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User not found with id: " + id));
         user.setIsDebtor(!user.getIsDebtor());
+        userRepository.save(user);
         return true;
     }
     public User addFcmToken(String fcmToken, Long id) throws Exception {
