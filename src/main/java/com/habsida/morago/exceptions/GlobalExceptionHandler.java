@@ -29,12 +29,12 @@ public class GlobalExceptionHandler {
                 .errorType(ErrorType.DataFetchingException)
                 .build();
     }
-    @GraphQlExceptionHandler
-    public GraphQLError handle(RuntimeException ex) {
-        return GraphQLError.newError()
-                .errorType(ErrorType.DataFetchingException)
-                .message(ex.getMessage())
-                .errorType(ErrorType.DataFetchingException)
-                .build();
-    }
+//    @GraphQlExceptionHandler
+//    public GraphQLError handle(RuntimeException ex) {
+//        return GraphQLError.newError()
+//                .errorType(ErrorType.DataFetchingException)
+//                .message(ex.getMessage())
+//                .errorType(ErrorType.DataFetchingException)
+//                .build();
+//    }
 }

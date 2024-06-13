@@ -129,7 +129,8 @@ type Mutation {
     createRating(RatingDto: RatingInput) : Rating
     updateRating(id: ID!, grade: Float): Rating
     deleteRating(id: ID!): Boolean
-    addFile(file: Upload!): File
+    addFile(file: FileUpload!): Boolean
+    addFiles:String
 }
 
 
@@ -432,5 +433,5 @@ enum QuestionsCategories {
     ENTERTAINMENT
     GROCERY
 }
-scalar Upload
-#scalar FileUpload
+scalar FileUpload
+#scalar Upload
