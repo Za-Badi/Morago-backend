@@ -5,7 +5,7 @@ import com.habsida.morago.model.enums.EPlatform;
 import com.habsida.morago.repository.AppVersionRespository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 
 import java.util.List;
 

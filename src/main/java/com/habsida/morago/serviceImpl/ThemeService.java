@@ -8,10 +8,11 @@ import com.habsida.morago.repository.CategoryRepository;
 import com.habsida.morago.repository.ThemeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,9 +25,9 @@ public class ThemeService {
     private final FileService fileService;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public Theme createTheme(CreateThemeInput input, MultipartFile file) {
+    public Theme createTheme(CreateThemeInput input, MultipartFile file) throws IOException {
         Theme theme = new Theme();
-        theme.setCategory(categoryRepository.getReferenceById(input.getCategoryId()));
+        theme.setCategory(categoryRepository.findById(input.getCategoryId()).orElseThrow(EntityNotFoundException::new));
         theme.setDescription(input.getDescription());
         theme.setName(input.getName());
         theme.setKorean_title(input.getKoreanTitle());
@@ -47,7 +48,7 @@ public class ThemeService {
     public Theme updateTheme(UpdateThemeInput input) {
         Theme theme = repository.findById(input.getId()).orElseThrow(EntityNotFoundException::new);
         if (input.getCategoryId() != null && input.getCategoryId() != 0) {
-            theme.setCategory(categoryRepository.getReferenceById(input.getCategoryId()));
+            theme.setCategory(categoryRepository.findById(input.getCategoryId()).orElseThrow(EntityNotFoundException::new));
         }
         if (input.getDescription() != null && !input.getDescription().isEmpty()) {
             theme.setDescription(input.getDescription());

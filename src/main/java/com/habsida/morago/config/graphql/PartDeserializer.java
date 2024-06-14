@@ -8,7 +8,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.codec.multipart.Part;
+
+import javax.servlet.http.Part;
 
 @JsonComponent
 public class PartDeserializer extends JsonDeserializer<Part> {
@@ -27,5 +28,3 @@ public class PartDeserializer extends JsonDeserializer<Part> {
         return objectMapper;
     }
 }
-
-

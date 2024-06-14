@@ -1,10 +1,12 @@
 package com.habsida.morago.model.inputs;
 
 import com.habsida.morago.model.enums.QuestionsCategories;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Setter
 @Getter

@@ -1,7 +1,9 @@
 package com.habsida.morago.model.entity;
 
 import com.habsida.morago.model.enums.CallStatus;
-import jakarta.persistence.*;
+
+import javax.persistence.*;
+
 import lombok.Data;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

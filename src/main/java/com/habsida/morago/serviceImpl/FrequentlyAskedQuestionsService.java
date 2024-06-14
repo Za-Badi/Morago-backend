@@ -5,9 +5,9 @@ import com.habsida.morago.model.enums.QuestionsCategories;
 import com.habsida.morago.model.inputs.CreateFrequentlyAskedQuestionsInput;
 import com.habsida.morago.model.inputs.UpdateFrequentlyAskedQuestionsInput;
 import com.habsida.morago.repository.FrequentlyAskedQuestionsRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import javax.persistence.EntityNotFoundException;
 
 import java.util.HashSet;
 import java.util.Set;

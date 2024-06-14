@@ -4,7 +4,7 @@ import com.habsida.morago.model.entity.Category;
 import com.habsida.morago.model.inputs.CreateCategoryInput;
 import com.habsida.morago.model.inputs.UpdateCategoryInput;
 import com.habsida.morago.repository.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

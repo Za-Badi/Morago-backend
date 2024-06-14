@@ -4,8 +4,6 @@ import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.entity.UserProfile;
 import com.habsida.morago.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

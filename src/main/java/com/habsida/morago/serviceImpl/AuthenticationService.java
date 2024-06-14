@@ -1,6 +1,5 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.exceptions.GlobalException;
 import com.habsida.morago.model.entity.*;
 import com.habsida.morago.model.inputs.LoginUserInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
@@ -47,12 +46,12 @@ public class AuthenticationService {
 
     public void signUpAsUser(RegisterUserInput registerUserInput) throws Exception {
         if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
-            throw new GlobalException("Phone number is already used: " + registerUserInput.getPhone());
+            throw new GraphQLException("Phone number is already used: " + registerUserInput.getPhone());
         }
         User user = new User();
         user.setPhone(registerUserInput.getPhone());
         if (!Objects.equals(registerUserInput.getFirstPassword(), registerUserInput.getSecondPassword())) {
-            throw new GlobalException("Passwords don't match");
+            throw new GraphQLException("Passwords don't match");
         }
         user.setPassword(passwordEncoder.encode(registerUserInput.getFirstPassword()));
         user.setBalance((double) 0);
@@ -79,7 +78,7 @@ public class AuthenticationService {
         User user = new User();
         user.setPhone(registerUserInput.getPhone());
         if (!Objects.equals(registerUserInput.getFirstPassword(), registerUserInput.getSecondPassword())) {
-            throw new GlobalException("Passwords don't match");
+            throw new GraphQLException("Passwords don't match");
         }
         user.setPassword(passwordEncoder.encode(registerUserInput.getFirstPassword()));
         user.setBalance((double) 0);

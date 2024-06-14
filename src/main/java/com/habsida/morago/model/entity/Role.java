@@ -1,12 +1,13 @@
 package com.habsida.morago.model.entity;
 
-import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.*;
 import java.util.List;
 import java.time.LocalDateTime;
 

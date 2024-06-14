@@ -5,7 +5,6 @@ import com.habsida.morago.model.entity.UserProfile;
 import com.habsida.morago.repository.UserProfileRepository;
 import com.habsida.morago.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

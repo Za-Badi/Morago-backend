@@ -5,7 +5,7 @@ import com.habsida.morago.model.entity.Coin;
 import com.habsida.morago.model.inputs.CreateCoinInput;
 import com.habsida.morago.model.inputs.UpdateCoinInput;
 import com.habsida.morago.repository.CoinRespository;
-import jakarta.persistence.EntityNotFoundException;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

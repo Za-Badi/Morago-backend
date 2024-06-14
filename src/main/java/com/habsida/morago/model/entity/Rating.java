@@ -1,7 +1,8 @@
 package com.habsida.morago.model.entity;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
 import lombok.*;
 
 import java.time.LocalDateTime;

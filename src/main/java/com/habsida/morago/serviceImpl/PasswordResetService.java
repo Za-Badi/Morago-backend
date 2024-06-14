@@ -3,9 +3,10 @@ package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.model.entity.PasswordReset;
 import com.habsida.morago.repository.PasswordResetRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
 
 
 @Service

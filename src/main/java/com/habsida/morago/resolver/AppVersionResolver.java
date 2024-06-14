@@ -4,9 +4,6 @@ import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
 import com.habsida.morago.serviceImpl.AppVersionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -17,27 +14,22 @@ import java.util.List;
 public class AppVersionResolver {
     private final AppVersionService appVersionService;
 
-    @MutationMapping
-    public AppVersion createAppVersion(@Argument EPlatform platform, @Argument String min, @Argument String latest) {
+    public AppVersion createAppVersion(EPlatform platform, String min, String latest) {
         return appVersionService.createAppVersion(platform, min, latest);
     }
 
-    @MutationMapping
-    public AppVersion updateAppVersion(@Argument EPlatform platform, @Argument String min, @Argument String latest) {
+    public AppVersion updateAppVersion(EPlatform platform, String min, String latest) {
         return appVersionService.updateAppVersion(platform, min, latest);
     }
 
-    @MutationMapping
-    public Boolean deleteAppVersion(@Argument EPlatform platform) {
+    public Boolean deleteAppVersion(EPlatform platform) {
         return appVersionService.delete(platform);
     }
 
-    @QueryMapping
-    public AppVersion getAppVersionByPlatform(@Argument EPlatform platform) {
+    public AppVersion getAppVersionByPlatform(EPlatform platform) {
         return appVersionService.getAppVersionByPlatform(platform);
     }
 
-    @QueryMapping
     public List<AppVersion> getAllAppVersions() {
         return appVersionService.getAll();
     }
