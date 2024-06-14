@@ -1,6 +1,6 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.model.enums.Status;
+import com.habsida.morago.model.enums.CallStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,7 +28,7 @@ public class Withdrawals {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private Status status;
+    private CallStatus status;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

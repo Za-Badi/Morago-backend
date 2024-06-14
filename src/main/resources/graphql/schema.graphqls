@@ -51,9 +51,11 @@ type Query {
 
     getAllWithdrawals: [Withdrawals]
     getWithdrawalById(id: ID!): Withdrawals
-
     getAllCalls: [Call]
-    getCallById(id: ID!): Call
+    getCallById(caller : ID!): Call
+    getCallsByUserId(id: ID!): [Call]
+    getAllMissedCalls(callStatus: CallStatus!): [Call]
+    getCallsByStatus(status: CallStatus!): [Call]
 }
 
 type Mutation {
@@ -124,11 +126,11 @@ type Mutation {
     deleteWithdrawal(id: ID!): Boolean
 
     createCall(CallDto : CallInput) : Call
-    updateCall(id : ID!, CallDto : CallUpdateInput):Call
+    updateCall(id : ID!, status : CallStatus, duration: Int!, commission : Float):Call
     deleteCall(id: ID!): Boolean
-    createRating(RatingDto: RatingInput) : Rating
-    updateRating(id: ID!, grade: Float): Rating
+    updateRating(id: ID!, RatingUpdate : RatingInput): Rating
     deleteRating(id: ID!): Boolean
+
     addFile(file: FileUpload!): Boolean
     addFiles:String
 }
@@ -432,6 +434,11 @@ enum QuestionsCategories {
     Law
     ENTERTAINMENT
     GROCERY
+}
+enum CallStatus {
+    MISSED_CALL,
+    INCOMING_CALL,
+    OUTGOING_CALL
 }
 scalar FileUpload
 #scalar Upload

@@ -1,9 +1,9 @@
 
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.model.enums.Status;
-import com.habsida.morago.model.input.DepositsInput;
+import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.entity.Deposits;
+import com.habsida.morago.model.inputs.DepositsInput;
 import com.habsida.morago.service.DepositsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class DepositsResolver {
         this.depositsService = depositsService;
     }
 
-    public List<Deposits> getDepositsByStatus(Status status) {
+    public List<Deposits> getDepositsByStatus(CallStatus status) {
         return depositsService.getDepositsByStatus(status);
     }
 

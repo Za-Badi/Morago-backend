@@ -1,8 +1,8 @@
 package com.habsida.morago.controllers;
 
-import com.habsida.morago.model.enums.Status;
-import com.habsida.morago.model.input.DepositsInput;
+import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.entity.Deposits;
+import com.habsida.morago.model.inputs.DepositsInput;
 import com.habsida.morago.resolver.DepositsResolver;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -26,7 +26,7 @@ public class DepositsController {
     }
 
     @QueryMapping
-    public List<Deposits> getDepositsByStatus(@Argument Status status) {
+    public List<Deposits> getDepositsByStatus(@Argument CallStatus status) {
         return depositsResolver.getDepositsByStatus(status);
     }
 

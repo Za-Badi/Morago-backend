@@ -1,21 +1,22 @@
 package com.habsida.morago.service;
 
 import com.habsida.morago.model.entity.Call;
+import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.inputs.CallInput;
-import com.habsida.morago.model.inputs.CallUpdateInput;
 
 import java.util.List;
-import java.util.Optional;
-
 
 public interface CallService {
     List<Call> getAllCalls();
-
-    Optional<Call> getCallById(Long id);
-
-    Call createCall(CallInput callInput) throws Exception;
-
-    Call updateCall(Long id, CallUpdateInput callUpdateInput) throws Exception;
-
+    Call getCallById(Long id) throws Exception;
+    Call createCall(CallInput callInput);
+    Call updateCall(Long id, CallStatus status, Integer duration, Float commission) throws Exception;
     void deleteCall(Long id) throws Exception;
+
+    List<Call> getCallByUserId(Long id);
+    List<Call> getAllMissedCall(CallStatus callStatus);
+
+    List <Call> getCallByStatus(CallStatus status);
+
 }

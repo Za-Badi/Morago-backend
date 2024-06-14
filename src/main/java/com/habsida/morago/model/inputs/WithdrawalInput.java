@@ -1,6 +1,6 @@
 package com.habsida.morago.model.inputs;
 
-import com.habsida.morago.model.enums.Status;
+import com.habsida.morago.model.enums.CallStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +10,6 @@ public class WithdrawalInput {
     private String accountNumber;
     private String accountHolder;
     private Float sum;
-    private Status status;
+    private CallStatus status;
     private Long userId;
 }

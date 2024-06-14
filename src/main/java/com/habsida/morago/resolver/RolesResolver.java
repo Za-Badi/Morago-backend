@@ -16,9 +16,8 @@ public class RolesResolver {
     public List<Role> getAllRoles() {
         return rolesService.getAllRoles();
     }
-
     public Role getRole(Long id) {
-        return rolesService.getRoleById(id).orElseThrow(() -> new RuntimeException("resource not found"));
+        return rolesService.getRoleById(id).orElseThrow(()-> new RuntimeException("resource not found"));
     }
 
     public void createRoles(Role roles) {

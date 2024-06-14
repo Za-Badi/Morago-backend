@@ -1,9 +1,8 @@
 package com.habsida.morago.service;
 
-
-import com.habsida.morago.model.enums.Status;
-import com.habsida.morago.model.input.DepositsInput;
+import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.entity.Deposits;
+import com.habsida.morago.model.inputs.DepositsInput;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface DepositsService {
 
     public void deleteDeposit(Long id) throws Exception;
 
-    public List<Deposits> getDepositsByStatus(Status status);
+    public List<Deposits> getDepositsByStatus(CallStatus status);
 
     public List<Deposits> getDepositByUserId(Long userId);
 }

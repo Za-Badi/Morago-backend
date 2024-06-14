@@ -1,8 +1,8 @@
 package com.habsida.morago.model.entity;
 
+import com.habsida.morago.model.enums.CallStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+
 public class Call {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +32,8 @@ public class Call {
     @Column(name = "duration")
     private Integer duration;
 
-    @Column(name = "status", length = 50)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private CallStatus status;
 
     @Column(name = "sum")
     private Double sum;

@@ -1,6 +1,6 @@
-package com.habsida.morago.model.input;
+package com.habsida.morago.model.inputs;
 
-import com.habsida.morago.model.enums.Status;
+import com.habsida.morago.model.enums.CallStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +11,6 @@ public class DepositsInput {
     private String nameOfBank;
     private Double coin;
     private Double won;
-    private Status status;
+    private CallStatus status;
     private Long userId;
 }
