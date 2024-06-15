@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface AppVersionRespository extends JpaRepository<AppVersion, Long> {
+public interface AppVersionRepository extends JpaRepository<AppVersion, Long> {
     Optional<AppVersion> findByPlatform(EPlatform platform);
 }

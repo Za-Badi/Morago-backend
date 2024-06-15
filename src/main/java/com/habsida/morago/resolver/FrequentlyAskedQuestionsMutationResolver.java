@@ -1,17 +1,19 @@
 package com.habsida.morago.resolver;
 
+import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.habsida.morago.model.entity.FrequentlyAskedQuestion;
 import com.habsida.morago.model.inputs.CreateFrequentlyAskedQuestionsInput;
 import com.habsida.morago.model.inputs.UpdateFrequentlyAskedQuestionsInput;
 import com.habsida.morago.serviceImpl.FrequentlyAskedQuestionsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import java.util.Set;
 
-@Controller
+@Component
 @RequiredArgsConstructor
-public class FrequentlyAskedQuestionsResolver {
+public class FrequentlyAskedQuestionsMutationResolver implements GraphQLMutationResolver {
     private final FrequentlyAskedQuestionsService frequentlyAskedQuestionsService;
 
     public FrequentlyAskedQuestion createFrequentlyAskedQuestion(CreateFrequentlyAskedQuestionsInput input) {
@@ -25,13 +27,4 @@ public class FrequentlyAskedQuestionsResolver {
     public Boolean deleteFrequentlyAskedQuestionById(Long id) {
         return frequentlyAskedQuestionsService.deleteFrequentlyAskedQuestionsById(id);
     }
-
-    public Set<FrequentlyAskedQuestion> getAllFrequentlyAskedQuestionById() {
-        return frequentlyAskedQuestionsService.getAllFrequentlyAskedQuestions();
-    }
-
-    public FrequentlyAskedQuestion getFrequentlyAskedQuestionById(Long id) {
-        return frequentlyAskedQuestionsService.getFrequentlyAskedQuestionByID(id);
-    }
-
 }

@@ -4,7 +4,7 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.model.entity.Coin;
 import com.habsida.morago.model.inputs.CreateCoinInput;
 import com.habsida.morago.model.inputs.UpdateCoinInput;
-import com.habsida.morago.repository.CoinRespository;
+import com.habsida.morago.repository.CoinRepository;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CoinService {
-    private final CoinRespository repository;
+    private final CoinRepository repository;
 
     public Coin createCoin(CreateCoinInput input) {
         Coin coins = new Coin();

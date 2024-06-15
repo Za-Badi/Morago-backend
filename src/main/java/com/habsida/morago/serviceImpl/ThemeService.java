@@ -35,12 +35,12 @@ public class ThemeService {
         theme.setNightPrice(input.getNightPrice());
         theme.setIsPopular(input.getIsPopular());
         theme.setIsActive(input.getIsActive());
-        if (file != null) {
-            File icon = fileService.uploadFile(file);
-            theme.setIconId(icon);
-        } else {
-            theme.setIconId(null);
-        }
+//        if (file != null) {
+//            File icon = fileService.uploadFile(file);
+//            theme.setIconId(icon);
+//        } else {
+//            theme.setIconId(null);
+//        }
         return repository.save(theme);
     }
 

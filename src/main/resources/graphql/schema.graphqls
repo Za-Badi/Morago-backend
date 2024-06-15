@@ -8,19 +8,23 @@ type Query {
 #    testAuthentication: [User]
     getCoinById(id: ID!): Coin
     getAllCoins: [Coin]
-#    getAppVersionByPlatform(platform: EPlatform!): AppVersion
-#    getAllAppVersions:[AppVersion]
-#    getAllCategories: [Category]
-#    getCategoryById(id: ID!): Category
-#    getCategoryByName(name: String!): Category
-#    getCategoryByStatus(status: Boolean!): [Category]
+
+    getAppVersionByPlatform(platform: EPlatform!): AppVersion
+    getAllAppVersions:[AppVersion]
+
+    getAllCategories: [Category]
+    getCategoryById(id: ID!): Category
+    getCategoryByName(name: String!): Category
+    getCategoryByStatus(status: Boolean!): [Category]
+
 #    getAllThemes:[Theme]
 #    getThemeById(id: ID!): Theme
 #    getThemesByCategoriesId(id: ID): [Theme]
 #    getThemesByName(name: String): Theme
 #    getThemeByStatus(status: Boolean!): [Theme]
-#    getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
-#    getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
+
+    getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
+    getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
 #    getAllUsers: [User]
 #    getAllUsersPaged(page: Int!): UserPage
 #    getUserById(id: ID!): User
@@ -62,24 +66,29 @@ type Mutation {
 #    signUpAsUser(registerUserInput: RegisterUserInput): String
 #    signUpAsTranslator(registerUserInput: RegisterUserInput): String
 #    logIn(loginUserInput: LoginUserInput): String
-#    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
-#    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
-#    deleteAppVersion(platform: EPlatform!): Boolean
+
+    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
+    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
+    deleteAppVersion(platform: EPlatform!): Boolean
+
     createCoin(input: CreateCoinInput): Coin
     updateCoin(input: UpdateCoinInput): Coin
     deleteCoin(id: ID!): Boolean
-#    createCategory(input: CreateCategoryInput): Category
-#    updateCategory(input: UpdateCategoryInput): Category
-#    deleteCategoryById(id: ID!): Boolean
-#    changeCategoryStatus(id: ID!): Boolean
-#    createTheme(input: CreateThemeInput): Theme
+
+    createCategory(input: CreateCategoryInput): Category
+    updateCategory(input: UpdateCategoryInput): Category
+    deleteCategoryById(id: ID!): Boolean
+    changeCategoryStatus(id: ID!): Boolean
+
+#    createTheme(input: CreateThemeInput, icon: Upload!): Theme
 #    updateThemeById(input: UpdateThemeInput): Theme
 #    deleteThemeById(id: ID!): Boolean
 #    changeThemeStatus(id: ID!): Boolean
 #    changeThemePopularity(id: ID): Boolean
-#    createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
-#    updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
-#    deleteFrequentlyAskedQuestionById(id: ID!): Boolean
+
+    createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
+    updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
+    deleteFrequentlyAskedQuestionById(id: ID!): Boolean
 #    addUser(userInput: UserInput): User
 #    updateUser(id: ID, userInput: UserInput): User
 #    deleteUser(id: ID): Boolean
@@ -133,6 +142,7 @@ type Mutation {
 
     addFile(file: Upload!): File
 }
+
 
 
 
@@ -288,12 +298,12 @@ type Withdrawals {
 
 input CreateCategoryInput {
     name: String!
-    is_active: Boolean!
+    isActive: Boolean!
 }
 input UpdateCategoryInput {
     id: ID!
     name: String
-    is_active: Boolean
+    isActive: Boolean
 }
 input CreateCoinInput {
     coin: Float!

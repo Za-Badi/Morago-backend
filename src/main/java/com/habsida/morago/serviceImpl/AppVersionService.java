@@ -1,8 +1,9 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
-import com.habsida.morago.repository.AppVersionRespository;
+import com.habsida.morago.repository.AppVersionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -13,13 +14,26 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AppVersionService {
-    private final AppVersionRespository repository;
+    private final AppVersionRepository repository;
 
     public AppVersion createAppVersion(EPlatform platform, String min, String latest) {
         AppVersion appVersion = new AppVersion();
         appVersion.setPlatform(platform);
-        appVersion.setMin(min);
-        appVersion.setLatest(latest);
+
+        if(!appVersion.getMin().isBlank()){
+            appVersion.setMin(min);
+        }
+        else {
+            throw new ExceptionGraphql("minimum version is required");
+        }
+        if(!appVersion.getLatest().isBlank()){
+            appVersion.setLatest(min);
+        }
+        else {
+            throw new ExceptionGraphql("latest version is required");
+        }
+
+
         return repository.save(appVersion);
     }
 
