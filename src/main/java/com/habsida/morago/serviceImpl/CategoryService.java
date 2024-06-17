@@ -7,7 +7,9 @@ import com.habsida.morago.model.entity.Category;
 import com.habsida.morago.model.inputs.CreateCategoryInput;
 import com.habsida.morago.model.inputs.UpdateCategoryInput;
 import com.habsida.morago.repository.CategoryRepository;
+
 import javax.persistence.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +25,9 @@ public class CategoryService {
 
     public Category createCategory(CreateCategoryInput input) {
         Category category = new Category();
-        if(!input.getName().isEmpty()){
+        if (!input.getName().isEmpty()) {
             category.setName(input.getName());
-        }
-        else{
+        } else {
             throw new ExceptionGraphql("Please enter valid name");
         }
         category.setIsActive(input.getIsActive());
@@ -38,11 +39,11 @@ public class CategoryService {
     }
 
     public Category getCategoryById(Long id) {
-        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("No Category with ID: "+ id));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("No Category with ID: " + id));
     }
 
     public Category getCategoryByName(String name) {
-        return repository.findByName(name).orElseThrow(()-> new EntityNotFoundException("No Category with name: "+ name));
+        return repository.findByName(name).orElseThrow(() -> new EntityNotFoundException("No Category with name: " + name));
     }
 
     @Transactional(rollbackFor = RuntimeException.class)

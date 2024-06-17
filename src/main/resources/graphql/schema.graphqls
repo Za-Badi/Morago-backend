@@ -350,8 +350,6 @@ input updateFrequentlyAskedQuestionsInput {
     Category: QuestionsCategories
 }
 
-
-
 input UserInput {
     phone: String!
     password: String!
@@ -448,6 +446,10 @@ enum CallStatus {
     MISSED_CALL,
     INCOMING_CALL,
     OUTGOING_CALL
+}
+enum ESort {
+    DES
+    ASC
 }
 #scalar FileUpload
 scalar Upload
