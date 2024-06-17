@@ -22,19 +22,25 @@ type Query {
     getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
     getAllUsers: [User]
-    getAllUsersPaged(page: Int!): UserPage
+    getAllUsersPaged(page: Int, size: Int): UserPage
     getUserById(id: ID!): User
     getUserByPhone(phone: String): User
+    searchUsers(searchUsersInput: SearchUsersInput, page: Int, size: Int): UserPage
+
 
     existsUserByPhone(phone: String): Boolean
     getAuthenticatedUser: User
     getAllUserProfiles: [UserProfile]
     getUserProfileById(id: ID): UserProfile
     getAllTranslatorProfiles: [TranslatorProfile]
+    getAllTranslatorProfilesPaged(page: Int, size: Int): TranslatorPage
     getTranslatorProfileById(id: ID): TranslatorProfile
     getTranslatorProfilesByThemeId(id: ID): [TranslatorProfile]
+    getTranslatorProfilesByThemeIdPaged(page: Int, size: Int, id: ID): TranslatorPage
     getTranslatorProfilesByThemeName(name: String): [TranslatorProfile]
-    getTranslatorProfilesByIsOnline(isOnline: Boolean): [TranslatorProfile]
+    getTranslatorProfilesByThemeNamePaged(page: Int, size: Int, name: String): TranslatorPage
+    getTranslatorProfilesByIsOnlineAndThemeId(isOnline: Boolean, id: ID): [TranslatorProfile]
+    getTranslatorProfilesByIsOnlineAndThemeIdPaged(page: Int, size: Int, id: ID, isOnline: Boolean): TranslatorPage
     getAllLanguages: [Language]
     getLanguageById(id: ID): Language
 
@@ -81,24 +87,24 @@ type Mutation {
     addUser(userInput: UserInput): User
     updateUser(id: ID, userInput: UserInput): User
     deleteUser(id: ID): Boolean
-    changeIsActive(id: ID): Boolean
-    changeIsDebtor(id: ID): Boolean
+    changeIsActive(id: ID, isActive: Boolean): User
+    changeIsDebtor(id: ID, isDebtor: Boolean): User
     addFcmToken(fcmToken: String, id: ID): User
     deleteFcmToken(id: ID): Boolean
     addApnToken(apnToken: String, id: ID): User
     deleteApnToken(id: ID): Boolean
-    addUserProfile(isFreeCallMade: Boolean): UserProfile
+    addUserProfile(isFreeCallMade: Boolean, id: ID): UserProfile
     updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
     deleteUserProfile(id: ID): Boolean
     updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
-    changeIsFreeCallMade(id: ID): Boolean
+    changeIsFreeCallMade(id: ID, isFreeCallMade: Boolean): UserProfile
     changeBalanceByUserProfileId(id: ID, balance: Float): User
-    addTranslatorProfile(translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    addTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
     deleteTranslatorProfile(id: ID): Boolean
     updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-    changeIsAvailable(id: ID): Boolean
-    changeIsOnline(id: ID): Boolean
+    changeIsAvailable(id: ID, isAvailable: Boolean): TranslatorProfile
+    changeIsOnline(id: ID, isOnline: Boolean): TranslatorProfile
     changeBalanceForTranslatorProfileId(id: ID, balance: Float): User
     addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
     deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
@@ -207,6 +213,10 @@ type UserPage {
     size: Int
     number: Int
 }
+input SearchUsersInput {
+    firstName: String
+    phone: String
+}
 type UserProfile {
     id: ID!
     isFreeCallMade: Boolean
@@ -218,6 +228,13 @@ type TranslatorProfile {
     isAvailable: Boolean
     isOnline: Boolean
     levelOfKorean: String
+}
+type TranslatorPage {
+    content: [TranslatorProfile]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
 }
 type Call {
     id: ID
@@ -363,8 +380,7 @@ input LanguageInput {
 
 input RegisterUserInput {
     phone: String!
-    firstPassword: String!
-    secondPassword: String!
+    password: String!
 }
 
 input LoginUserInput {

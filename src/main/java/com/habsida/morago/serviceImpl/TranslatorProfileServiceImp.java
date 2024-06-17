@@ -1,13 +1,16 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.GlobalException;
 import com.habsida.morago.model.entity.*;
+import com.habsida.morago.model.inputs.TranslatorPage;
 import com.habsida.morago.model.inputs.TranslatorProfileInput;
-import com.habsida.morago.repository.LanguageRepository;
-import com.habsida.morago.repository.ThemeRepository;
-import com.habsida.morago.repository.TranslatorProfileRepository;
-import com.habsida.morago.repository.UserRepository;
+import com.habsida.morago.model.inputs.UserPage;
+import com.habsida.morago.repository.*;
 import com.habsida.morago.service.TranslatorProfileService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,62 +18,97 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class TranslatorProfileServiceImp implements TranslatorProfileService {
     private final TranslatorProfileRepository translatorProfileRepository;
     private final LanguageRepository languageRepository;
     private final UserRepository userRepository;
-    private final ThemeRepository themeRepository;
-
-    @Autowired
-    public TranslatorProfileServiceImp(TranslatorProfileRepository translatorProfileRepository, LanguageRepository languageRepository, UserRepository userRepository, ThemeRepository themeRepository) {
-        this.translatorProfileRepository = translatorProfileRepository;
-        this.languageRepository = languageRepository;
-        this.userRepository = userRepository;
-        this.themeRepository = themeRepository;
-    }
+    private final TranslatorProfileRepositoryPaged translatorProfileRepositoryPaged;
 
     public List<TranslatorProfile> getAllTranslatorProfiles() {
         return translatorProfileRepository.findAll();
     }
 
-    public TranslatorProfile getTranslatorProfileById(Long id) throws Exception {
-        return translatorProfileRepository.findById(id)
-                .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
-    }
-    public List<TranslatorProfile> getTranslatorProfilesByIsOnline(Boolean isOnline) {
-        List<TranslatorProfile> translatorProfileList = translatorProfileRepository.findAll();
-        List<TranslatorProfile> isOnlineList = new ArrayList<>();
-        for (TranslatorProfile translatorProfile: translatorProfileList) {
-            if (translatorProfile.getIsOnline() == isOnline) {
-                isOnlineList.add(translatorProfile);
-            }
+    public TranslatorPage getAllTranslatorProfilesPaged(Integer page, Integer size) {
+        if (page == null) {
+            page = 0;
         }
-        return isOnlineList;
-    }
-    public List<TranslatorProfile> getTranslatorProfilesByThemeId(Long id) throws Exception {
-        Theme theme = themeRepository.findById(id)
-                .orElseThrow(() -> new Exception("Theme not found with id: " + id));
-        List<TranslatorProfile> translatorProfilesByThemeId = new ArrayList<>();
-        for (TranslatorProfile translatorProfile : translatorProfileRepository.findAll()) {
-            if (translatorProfile.getThemes().contains(theme)) {
-                translatorProfilesByThemeId.add(translatorProfile);
-            }
+        if (size == null) {
+            size = 10;
         }
-        return translatorProfilesByThemeId;
-    }
-    public List<TranslatorProfile> getTranslatorProfilesByThemeName(String name) throws Exception {
-        Theme theme = themeRepository.findByName(name)
-                .orElseThrow(() -> new Exception("Theme not found with name: " + name));
-        List<TranslatorProfile> translatorProfilesByThemeName = new ArrayList<>();
-        for (TranslatorProfile translatorProfile : translatorProfileRepository.findAll()) {
-            if (translatorProfile.getThemes().contains(theme)) {
-                translatorProfilesByThemeName.add(translatorProfile);
-            }
-        }
-        return translatorProfilesByThemeName;
+        Page<TranslatorProfile> translatorProfilePage = translatorProfileRepositoryPaged.findAll(PageRequest.of(page, size));
+        return new TranslatorPage(
+                translatorProfilePage.getContent(),
+                translatorProfilePage.getTotalPages(),
+                (int) translatorProfilePage.getTotalElements(),
+                translatorProfilePage.getSize(),
+                translatorProfilePage.getNumber()
+        );
     }
 
-    public TranslatorProfile addTranslatorProfile(TranslatorProfileInput translatorProfileInput) throws Exception {
+    public TranslatorProfile getTranslatorProfileById(Long id) throws GlobalException {
+        return translatorProfileRepository.findById(id)
+                .orElseThrow(() -> new GlobalException("TranslatorProfile not found with id: " + id));
+    }
+    public List<TranslatorProfile> getTranslatorProfilesByIsOnlineAndThemeId(Boolean isOnline, Long id) {
+        return translatorProfileRepository.findByIsOnlineAndThemesId(isOnline, id);
+    }
+    public TranslatorPage getTranslatorProfilesByIsOnlineAndThemeIdPaged(Integer page, Integer size, Long id, Boolean isOnline) {
+        if (page == null) {
+            page = 0;
+        }
+        if (size == null) {
+            size = 10;
+        }
+        Page<TranslatorProfile> translatorProfilePage = translatorProfileRepositoryPaged.findByIsOnlineAndThemesId(isOnline, id ,PageRequest.of(page, size));
+        return new TranslatorPage(
+                translatorProfilePage.getContent(),
+                translatorProfilePage.getTotalPages(),
+                (int) translatorProfilePage.getTotalElements(),
+                translatorProfilePage.getSize(),
+                translatorProfilePage.getNumber()
+        );
+    }
+    public List<TranslatorProfile> getTranslatorProfilesByThemeId(Long id) {
+        return translatorProfileRepository.findByThemesId(id);
+    }
+    public TranslatorPage getTranslatorProfilesByThemeIdPaged(Integer page, Integer size, Long id) {
+        if (page == null) {
+            page = 0;
+        }
+        if (size == null) {
+            size = 10;
+        }
+        Page<TranslatorProfile> translatorProfilePage = translatorProfileRepositoryPaged.findByThemesId(id, PageRequest.of(page, size));
+        return new TranslatorPage(
+                translatorProfilePage.getContent(),
+                translatorProfilePage.getTotalPages(),
+                (int) translatorProfilePage.getTotalElements(),
+                translatorProfilePage.getSize(),
+                translatorProfilePage.getNumber()
+        );
+    }
+    public List<TranslatorProfile> getTranslatorProfilesByThemeName(String name)  {
+        return translatorProfileRepository.findByThemesName(name);
+    }
+    public TranslatorPage getTranslatorProfilesByThemeNamePaged(Integer page, Integer size, String name) {
+        if (page == null) {
+            page = 0;
+        }
+        if (size == null) {
+            size = 10;
+        }
+        Page<TranslatorProfile> translatorProfilePage = translatorProfileRepositoryPaged.findByThemesName(name, PageRequest.of(page, size));
+        return new TranslatorPage(
+                translatorProfilePage.getContent(),
+                translatorProfilePage.getTotalPages(),
+                (int) translatorProfilePage.getTotalElements(),
+                translatorProfilePage.getSize(),
+                translatorProfilePage.getNumber()
+        );
+    }
+
+    public TranslatorProfile addTranslatorProfile(Long id, TranslatorProfileInput translatorProfileInput) throws GlobalException {
         TranslatorProfile translatorProfile = new TranslatorProfile();
         translatorProfile.setDateOfBirth(translatorProfileInput.getDateOfBirth());
         translatorProfile.setEmail(translatorProfileInput.getEmail());
@@ -81,23 +119,31 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
         if (translatorProfileInput.getLanguages() != null) {
             for (Long languageId : translatorProfileInput.getLanguages()) {
                 Language language = languageRepository.findById(languageId)
-                        .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
+                        .orElseThrow(() -> new GlobalException("Language not found with id: " + languageId));
                 languages.add(language);
             }
         }
         translatorProfile.setLanguages(languages);
         List<Theme> themes = new ArrayList<>();
         translatorProfile.setThemes(themes);
-        return translatorProfileRepository.save(translatorProfile);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
+        if (user.getTranslatorProfile() == null) {
+            user.setTranslatorProfile(translatorProfile);
+            userRepository.save(user);
+        } else {
+            throw new GlobalException("User already has a Profile attached");
+        }
+        return user.getTranslatorProfile();
     }
 
-    public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileInput) throws Exception {
+    public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileInput) throws GlobalException {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
-                .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
-        if (translatorProfileInput.getDateOfBirth() != null && !translatorProfileInput.getDateOfBirth().trim().isEmpty()) {
+                .orElseThrow(() -> new GlobalException("TranslatorProfile not found with id: " + id));
+        if (translatorProfileInput.getDateOfBirth() != null && !translatorProfileInput.getDateOfBirth().isBlank()) {
             translatorProfile.setDateOfBirth(translatorProfileInput.getDateOfBirth());
         }
-        if (translatorProfileInput.getEmail() != null && !translatorProfileInput.getEmail().trim().isEmpty()) {
+        if (translatorProfileInput.getEmail() != null && !translatorProfileInput.getEmail().isBlank()) {
             translatorProfile.setEmail(translatorProfileInput.getEmail());
         }
         if (translatorProfileInput.getIsAvailable() != null) {
@@ -106,7 +152,7 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
         if (translatorProfileInput.getIsOnline() != null) {
             translatorProfile.setIsOnline(translatorProfileInput.getIsOnline());
         }
-        if (translatorProfileInput.getLevelOfKorean() != null && !translatorProfileInput.getLevelOfKorean().trim().isEmpty()) {
+        if (translatorProfileInput.getLevelOfKorean() != null && !translatorProfileInput.getLevelOfKorean().isBlank()) {
             translatorProfile.setLevelOfKorean(translatorProfileInput.getLevelOfKorean());
         }
         if (translatorProfileInput.getLanguages() != null) {
@@ -114,7 +160,7 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
             List<Language> languages = new ArrayList<>();
             for (Long languageId : translatorProfileInput.getLanguages()) {
                 Language language = languageRepository.findById(languageId)
-                        .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
+                        .orElseThrow(() -> new GlobalException("Language not found with id: " + languageId));
                 languages.add(language);
             }
             translatorProfile.setLanguages(languages);
@@ -122,9 +168,9 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
         return translatorProfileRepository.save(translatorProfile);
     }
 
-    public void deleteTranslatorProfile(Long id) throws Exception {
+    public void deleteTranslatorProfile(Long id) throws GlobalException {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
-                .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("TranslatorProfile not found with id: " + id));
         if (translatorProfile.getUser() != null){
             User user = translatorProfile.getUser();
             user.setTranslatorProfile(null);
@@ -132,23 +178,24 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
             userRepository.save(user);
         }
         translatorProfile.getLanguages().clear();
+        translatorProfile.getThemes().clear();
         translatorProfileRepository.save(translatorProfile);
         translatorProfileRepository.deleteById(id);
     }
 
-    public TranslatorProfile updateTranslatorProfileByUserId(Long id, TranslatorProfileInput translatorProfileInput) throws Exception {
+    public TranslatorProfile updateTranslatorProfileByUserId(Long id, TranslatorProfileInput translatorProfileInput) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
         Long newId = user.getTranslatorProfile().getId();
         if (newId==null) {
-            throw new Exception("User doesn't have Translator Profile");
+            throw new GlobalException("User doesn't have Translator Profile");
         }
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(newId)
-                .orElseThrow(() -> new Exception("TranslatorProfile not found with id: " + newId));
-        if (translatorProfileInput.getDateOfBirth() != null && !translatorProfileInput.getDateOfBirth().trim().isEmpty()) {
+                .orElseThrow(() -> new GlobalException("TranslatorProfile not found with id: " + newId));
+        if (translatorProfileInput.getDateOfBirth() != null && !translatorProfileInput.getDateOfBirth().isBlank()) {
             translatorProfile.setDateOfBirth(translatorProfileInput.getDateOfBirth());
         }
-        if (translatorProfileInput.getEmail() != null && !translatorProfileInput.getEmail().trim().isEmpty()) {
+        if (translatorProfileInput.getEmail() != null && !translatorProfileInput.getEmail().isBlank()) {
             translatorProfile.setEmail(translatorProfileInput.getEmail());
         }
         if (translatorProfileInput.getIsAvailable() != null) {
@@ -157,7 +204,7 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
         if (translatorProfileInput.getIsOnline() != null) {
             translatorProfile.setIsOnline(translatorProfileInput.getIsOnline());
         }
-        if (translatorProfileInput.getLevelOfKorean() != null && !translatorProfileInput.getLevelOfKorean().trim().isEmpty()) {
+        if (translatorProfileInput.getLevelOfKorean() != null && !translatorProfileInput.getLevelOfKorean().isBlank()) {
             translatorProfile.setLevelOfKorean(translatorProfileInput.getLevelOfKorean());
         }
         if (translatorProfileInput.getLanguages() != null) {
@@ -165,53 +212,51 @@ public class TranslatorProfileServiceImp implements TranslatorProfileService {
             List<Language> languages = new ArrayList<>();
             for (Long languageId : translatorProfileInput.getLanguages()) {
                 Language language = languageRepository.findById(languageId)
-                        .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
+                        .orElseThrow(() -> new GlobalException("Language not found with id: " + languageId));
                 languages.add(language);
             }
             translatorProfile.setLanguages(languages);
         }
         return translatorProfileRepository.save(translatorProfile);
     }
-    public boolean changeIsAvailable(Long id) throws Exception {
+    public TranslatorProfile changeIsAvailable(Long id, Boolean isAvailable) throws GlobalException {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
-                .orElseThrow(() -> new Exception("Translator Profile not found with id: " + id));
-        translatorProfile.setIsAvailable(!translatorProfile.getIsAvailable());
-        translatorProfileRepository.save(translatorProfile);
-        return true;
+                .orElseThrow(() -> new GlobalException("Translator Profile not found with id: " + id));
+        translatorProfile.setIsAvailable(isAvailable);
+        return translatorProfileRepository.save(translatorProfile);
     }
-    public boolean changeIsOnline(Long id) throws Exception {
+    public TranslatorProfile changeIsOnline(Long id, Boolean isOnline) throws GlobalException {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
-                .orElseThrow(() -> new Exception("Translator Profile not found with id: " + id));
-        translatorProfile.setIsOnline(!translatorProfile.getIsOnline());
-        translatorProfileRepository.save(translatorProfile);
-        return true;
+                .orElseThrow(() -> new GlobalException("Translator Profile not found with id: " + id));
+        translatorProfile.setIsOnline(isOnline);
+        return translatorProfileRepository.save(translatorProfile);
     }
-    public TranslatorProfile addLanguageToTranslatorProfile(Long languageId, Long translatorProfileId) throws Exception {
+    public TranslatorProfile addLanguageToTranslatorProfile(Long languageId, Long translatorProfileId) throws GlobalException {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(translatorProfileId)
-                .orElseThrow(() -> new Exception("Translator Profile not found with id: " + translatorProfileId));
+                .orElseThrow(() -> new GlobalException("Translator Profile not found with id: " + translatorProfileId));
         Language language = languageRepository.findById(languageId)
-                .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
+                .orElseThrow(() -> new GlobalException("Language not found with id: " + languageId));
         if(!translatorProfile.getLanguages().contains(language)) {
             translatorProfile.getLanguages().add(language);
         } else {
-            throw new Exception("User already has this language");
+            throw new GlobalException("User already has this language");
         }
         translatorProfileRepository.save(translatorProfile);
         return translatorProfile;
     }
-    public void deleteLanguageFromTranslatorProfile(Long languageId, Long translatorProfileId) throws Exception {
+    public void deleteLanguageFromTranslatorProfile(Long languageId, Long translatorProfileId) throws GlobalException {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(translatorProfileId)
-                .orElseThrow(() -> new Exception("Translator Profile not found with id: " + translatorProfileId));
+                .orElseThrow(() -> new GlobalException("Translator Profile not found with id: " + translatorProfileId));
         Language language = languageRepository.findById(languageId)
-                .orElseThrow(() -> new Exception("Language not found with id: " + languageId));
+                .orElseThrow(() -> new GlobalException("Language not found with id: " + languageId));
         translatorProfile.getLanguages().remove(language);
         translatorProfileRepository.save(translatorProfile);
     }
-    public User changeBalanceForTranslatorProfileId(Long id, Float balance) throws Exception {
+    public User changeBalanceForTranslatorProfileId(Long id, Float balance) throws GlobalException {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
-                .orElseThrow(() -> new Exception("Translator Profile not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("Translator Profile not found with id: " + id));
         User user = userRepository.findById(translatorProfile.getUser().getId())
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
         Double newBalance = balance.doubleValue();
         user.setBalance(newBalance);
         return userRepository.save(user);

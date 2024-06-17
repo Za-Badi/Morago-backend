@@ -2,6 +2,7 @@ package com.habsida.morago.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     private String fcmToken;
     @Column(name = "apn_token", length = 255)
     private String apnToken;
+
     @Column(name = "ratings")
     private Double ratings;
     @Column(name = "total_ratings")
@@ -54,7 +56,7 @@ public class User implements UserDetails {
     private Boolean isDebtor;
     @Column(name = "on_boarding_status")
     private Integer onBoardingStatus;
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")
     private File image;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -118,5 +120,27 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (balance == null) {
+            balance = 0.0;
+        }
+        if (ratings == null) {
+            ratings = 0.0;
+        }
+        if (totalRatings == null) {
+            totalRatings = 0;
+        }
+        if (isActive == null) {
+            isActive = true;
+        }
+        if (isDebtor == null) {
+            isDebtor = false;
+        }
+        if (onBoardingStatus == null) {
+            onBoardingStatus = 0;
+        }
     }
 }

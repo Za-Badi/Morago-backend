@@ -49,7 +49,7 @@ public class Theme {
     @JoinColumn(name = "categories_id")
     private Category category;
 
-    @ManyToMany(mappedBy = "themes")
+    @ManyToMany(mappedBy = "themes", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TranslatorProfile> translatorProfiles;
 
     @Override
