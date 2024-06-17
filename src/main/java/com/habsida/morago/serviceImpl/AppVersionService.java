@@ -16,29 +16,26 @@ import java.util.List;
 public class AppVersionService {
     private final AppVersionRepository repository;
 
-    public AppVersion createAppVersion(EPlatform platform, String min, String latest) {
+    public AppVersion createAppVersion(EPlatform platform, String min, String latest)  {
         AppVersion appVersion = new AppVersion();
         appVersion.setPlatform(platform);
-
-        if(!appVersion.getMin().isBlank()){
+        if( min !=null && !min.isBlank()){
             appVersion.setMin(min);
         }
         else {
-            throw new ExceptionGraphql("minimum version is required");
+            throw new  NullPointerException("minimum version is required");
         }
-        if(!appVersion.getLatest().isBlank()){
-            appVersion.setLatest(min);
+        if((latest != null) && !latest.isBlank()){
+            appVersion.setLatest(latest);
         }
         else {
-            throw new ExceptionGraphql("latest version is required");
+            throw new NullPointerException("latest version is required");
         }
-
-
         return repository.save(appVersion);
     }
 
     public AppVersion getAppVersionByPlatform(EPlatform platform) {
-        return repository.findByPlatform(platform).orElseThrow(EntityNotFoundException::new);
+        return repository.findByPlatform(platform).orElseThrow(()-> new EntityNotFoundException("No App Version with name: "+ platform));
     }
 
     public AppVersion updateAppVersion(EPlatform platform, String min, String latest) {

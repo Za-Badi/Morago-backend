@@ -22,5 +22,5 @@ public class CreateThemeInput {
 
     @Setter
     @JsonIgnore
-    private Part file;
+    private Part icon;
 }

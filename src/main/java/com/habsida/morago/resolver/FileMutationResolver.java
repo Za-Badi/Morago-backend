@@ -23,10 +23,9 @@ public class FileMutationResolver implements GraphQLMutationResolver {
         this.fileService = fileService;
     }
 
-
-    public File addFile( Part part1, DataFetchingEnvironment environment) throws IOException, java.io.IOException {
+    public File addFile(Part part1, DataFetchingEnvironment environment) throws IOException, java.io.IOException {
         DefaultGraphQLServletContext context = environment.getContext();
-        context.getFileParts().forEach(part -> System.out.println(part.getSubmittedFileName()+"  " + part.getSubmittedFileName() + part.getContentType()));
+        context.getFileParts().forEach(part -> System.out.println(part.getSubmittedFileName() + "  " + part.getSubmittedFileName() + part.getContentType()));
         Part part = environment.getArgument("file");
         MultipartFile mfile = new MockMultipartFile(part.getSubmittedFileName(), part.getSubmittedFileName(), part.getContentType(), part.getInputStream());
         return fileService.uploadFile(mfile);

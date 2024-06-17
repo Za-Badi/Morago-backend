@@ -2,7 +2,6 @@ package com.habsida.morago.model.inputs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.codec.multipart.Part;
 
@@ -13,7 +12,7 @@ import java.math.BigDecimal;
 public class UpdateThemeInput {
     private Long id;
     private String name = "";
-    private String korean_title = "";
+    private String koreanTitle = "";
     private BigDecimal price;
     private BigDecimal nightPrice;
     private String description = "";
@@ -23,5 +22,5 @@ public class UpdateThemeInput {
 
     @Setter
     @JsonIgnore
-    private Part file;
+    private Part icon;
 }

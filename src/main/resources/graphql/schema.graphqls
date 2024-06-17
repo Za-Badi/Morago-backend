@@ -17,11 +17,11 @@ type Query {
     getCategoryByName(name: String!): Category
     getCategoryByStatus(status: Boolean!): [Category]
 
-#    getAllThemes:[Theme]
-#    getThemeById(id: ID!): Theme
-#    getThemesByCategoriesId(id: ID): [Theme]
-#    getThemesByName(name: String): Theme
-#    getThemeByStatus(status: Boolean!): [Theme]
+    getAllThemes:[Theme]
+    getThemeById(id: ID!): Theme
+    getThemesByCategoriesId(id: ID): [Theme]
+    getThemesByName(name: String): Theme
+    getThemeByStatus(status: Boolean!): [Theme]
 
     getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
@@ -80,11 +80,11 @@ type Mutation {
     deleteCategoryById(id: ID!): Boolean
     changeCategoryStatus(id: ID!): Boolean
 
-#    createTheme(input: CreateThemeInput, icon: Upload!): Theme
-#    updateThemeById(input: UpdateThemeInput): Theme
-#    deleteThemeById(id: ID!): Boolean
-#    changeThemeStatus(id: ID!): Boolean
-#    changeThemePopularity(id: ID): Boolean
+    createTheme(input: CreateThemeInput): Theme
+    updateThemeById(input: UpdateThemeInput): Theme
+    deleteThemeById(id: ID!): Boolean
+    changeThemeStatus(id: ID!): Boolean
+    changeThemePopularity(id: ID, themePopularity: Boolean ): Boolean
 
     createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
     updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
@@ -176,7 +176,7 @@ type Category {
 type Theme {
     id: ID
     name: String
-    korean_title: String
+    koreanTitle: String
     price: Float
     nightPrice: Float
     description: String
@@ -317,26 +317,26 @@ input UpdateCoinInput {
 
 input CreateThemeInput{
     name: String!
-    korean_title: String!
+    koreanTitle: String!
     price: Float!
-    nightPrice: Float
-    description: String
-    isPopular: Boolean
-    isActive: Boolean
+    nightPrice: Float!
+    description: String!
+    isPopular: Boolean!
+    isActive: Boolean!
     categoryId: ID!
-#    file: FileUpload
+    icon: Upload
 }
 input UpdateThemeInput{
     id: ID!
     name: String
-    korean_title: String
+    koreanTitle: String
     price: Float
     nightPrice: Float
     description: String
     isPopular: Boolean
     isActive: Boolean
     categoryId: ID
-#    file: Upload
+    icon: Upload
 }
 input CreateFrequentlyAskedQuestionsInput {
     question: String!

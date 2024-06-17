@@ -1,5 +1,8 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.ExceptionGraphql;
+import com.habsida.morago.exceptions.GraphqlException;
+import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.entity.Category;
 import com.habsida.morago.model.inputs.CreateCategoryInput;
 import com.habsida.morago.model.inputs.UpdateCategoryInput;
@@ -20,7 +23,12 @@ public class CategoryService {
 
     public Category createCategory(CreateCategoryInput input) {
         Category category = new Category();
-        category.setName(input.getName());
+        if(!input.getName().isEmpty()){
+            category.setName(input.getName());
+        }
+        else{
+            throw new ExceptionGraphql("Please enter valid name");
+        }
         category.setIsActive(input.getIsActive());
         return repository.save(category);
     }
@@ -30,11 +38,11 @@ public class CategoryService {
     }
 
     public Category getCategoryById(Long id) {
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("No Category with ID: "+ id));
     }
 
     public Category getCategoryByName(String name) {
-        return repository.findByName(name).orElseThrow(EntityNotFoundException::new);
+        return repository.findByName(name).orElseThrow(()-> new EntityNotFoundException("No Category with name: "+ name));
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
@@ -50,7 +58,8 @@ public class CategoryService {
     }
 
     public Boolean deleteCategoryById(Long id) {
-        repository.deleteById(id);
+        Category category = getCategoryById(id);
+        repository.delete(category);
         return true;
     }
 

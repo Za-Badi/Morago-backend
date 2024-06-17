@@ -1,16 +1,15 @@
 package com.habsida.morago.serviceImpl;
 
-
+import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.entity.Coin;
 import com.habsida.morago.model.inputs.CreateCoinInput;
 import com.habsida.morago.model.inputs.UpdateCoinInput;
 import com.habsida.morago.repository.CoinRepository;
-import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 
@@ -21,13 +20,21 @@ public class CoinService {
 
     public Coin createCoin(CreateCoinInput input) {
         Coin coins = new Coin();
-        coins.setCoin(input.getCoin());
-        coins.setWon(input.getWon());
+        if (input.getCoin() != 0.0) {
+            coins.setCoin(input.getCoin());
+        } else {
+            throw new ExceptionGraphql("Enter valid double for coin");
+        }
+        if (input.getWon() != 0.0) {
+            coins.setWon(input.getWon());
+        } else {
+            throw new ExceptionGraphql("Enter valid double for won");
+        }
         return repository.save(coins);
     }
 
     public Coin getByID(Long id) {
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("No Coin with id: "+ id));
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
@@ -51,6 +58,4 @@ public class CoinService {
         repository.delete(coin);
         return true;
     }
-
-
 }

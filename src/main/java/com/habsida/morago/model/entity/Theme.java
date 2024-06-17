@@ -21,14 +21,18 @@ import java.util.List;
 @Setter
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-@NamedEntityGraph(name = "themes.field", attributeNodes = {@NamedAttributeNode("category")})
+@NamedEntityGraph(name = "themes.field", attributeNodes = {@NamedAttributeNode("category"),
+        @NamedAttributeNode("icon")})
+@NamedEntityGraph(name = "themes.image",
+        attributeNodes = {@NamedAttributeNode("icon")}
+)
 public class Theme {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String korean_title;
+    private String koreanTitle;
     private BigDecimal price;
     private BigDecimal nightPrice;
     private String description;
@@ -38,7 +42,7 @@ public class Theme {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon_id")
-    private File iconId;
+    private File icon;
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -55,6 +59,6 @@ public class Theme {
 
     @Override
     public String toString() {
-        return "Theme {" + "id=" + id + ", name='" + name + '\'' + ", price=" + price + ", night_price=" + nightPrice + '\'' + ", korean_title=" + korean_title + ", description='" + description + '\'' + ", is_popular=" + isPopular + ", is_active=" + isActive + ", icon_id=" + iconId + ", category_id=" + category.getId() + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+        return "Theme {" + "id=" + id + ", name='" + name + '\'' + ", price=" + price + ", night_price=" + nightPrice + '\'' + ", korean_title=" + koreanTitle + ", description='" + description + '\'' + ", is_popular=" + isPopular + ", is_active=" + isActive + ", icon_id=" + icon + ", category_id=" + category.getId() + '\'' + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
     }
 }

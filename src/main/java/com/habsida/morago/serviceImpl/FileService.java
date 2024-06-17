@@ -18,12 +18,8 @@ import java.nio.file.StandardCopyOption;
 @Service
 @RequiredArgsConstructor
 public class FileService {
-
     private final FileRepository repository;
     private final FileUtil fileUtil;
-
-
-
 
     public File uploadFile(MultipartFile file) throws IOException {
         String originalFilename = file.getOriginalFilename();
@@ -35,7 +31,6 @@ public class FileService {
         fileDB.setOriginalTitle(originalFilename);
         fileDB.setType(type);
 //        fileUtil.uploadFileLocal(file, filename);
-
 
 
         return repository.save(fileDB);

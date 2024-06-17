@@ -26,7 +26,7 @@ public class FrequentlyAskedQuestionsService {
     }
 
     public FrequentlyAskedQuestion getFrequentlyAskedQuestionByID(Long id) {
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("No FAQ with id: "+ id));
     }
 
     public FrequentlyAskedQuestion updateFrequentlyAskedQuestion(UpdateFrequentlyAskedQuestionsInput input) {
@@ -48,7 +48,7 @@ public class FrequentlyAskedQuestionsService {
     }
 
     public Boolean deleteFrequentlyAskedQuestionsById(Long id) {
-        FrequentlyAskedQuestion frequentlyAskedQuestion = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        FrequentlyAskedQuestion frequentlyAskedQuestion = getFrequentlyAskedQuestionByID(id);
         repository.delete(frequentlyAskedQuestion);
         return true;
     }
