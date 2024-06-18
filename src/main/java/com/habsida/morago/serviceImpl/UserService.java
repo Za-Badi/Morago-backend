@@ -1,11 +1,14 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.GlobalException;
 import com.habsida.morago.model.entity.Role;
+import com.habsida.morago.model.inputs.SearchUsersInput;
 import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.UserPage;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.UserRepositoryPaged;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,22 +24,22 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepositoryPaged userRepositoryPaged;
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRepositoryPaged userRepositoryPaged) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userRepositoryPaged = userRepositoryPaged;
-    }
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-    public UserPage getAllUsersPaged(Integer page) {
-        int pageSize = 10;
-        Page<User> usersPage = userRepositoryPaged.findAll(PageRequest.of(page, pageSize));
+    public UserPage getAllUsersPaged(Integer page, Integer size) {
+        if (page == null) {
+            page = 0;
+        }
+        if (size == null) {
+            size = 10;
+        }
+        Page<User> usersPage = userRepositoryPaged.findAll(PageRequest.of(page, size));
         return new UserPage(
                 usersPage.getContent(),
                 usersPage.getTotalPages(),
@@ -46,15 +49,15 @@ public class UserService {
         );
     }
 
-    public User getUserById(Long id) throws Exception {
+    public User getUserById(Long id) throws GlobalException {
         return userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
     }
 
 
-    public User getUserByPhone(String phone) throws Exception {
+    public User getUserByPhone(String phone) throws GlobalException {
         return userRepository.findByPhone(phone)
-                .orElseThrow(() -> new Exception("User not found with phone: " + phone));
+                .orElseThrow(() -> new GlobalException("User not found with phone: " + phone));
     }
 
     public User getAuthenticatedUser() {
@@ -65,25 +68,44 @@ public class UserService {
         }
         return null;
     }
+    public UserPage searchUsers(SearchUsersInput searchUsersInput, Integer page, Integer size) {
+        if (page == null) {
+            page = 0;
+        }
+        if (size == null) {
+            size = 10;
+        }
+        String phone = searchUsersInput.getPhone();
+        String firstName = searchUsersInput.getFirstName();
+        Page<User> usersPage = userRepositoryPaged.findByPhoneContainingAndFirstNameContainingIgnoreCase(phone, firstName, PageRequest.of(page, size));
+        return new UserPage(
+                usersPage.getContent(),
+                usersPage.getTotalPages(),
+                (int) usersPage.getTotalElements(),
+                usersPage.getSize(),
+                usersPage.getNumber()
+        );
+    }
     public Boolean existsUserByPhone(String phone) {
         return userRepository.findByPhone(phone).isPresent();
     }
 
-    public User addUser(UserInput userInput) throws Exception {
+    public User addUser(UserInput userInput) throws GlobalException {
+        if (userInput.getPhone().isBlank() || userInput.getPassword().isBlank()) {
+            throw new GlobalException("Empty values are not allowed");
+        }
+        String phoneInput = userInput.getPhone().replaceAll("\\D", "");
+        if (phoneInput.isBlank()) {
+            throw new GlobalException("Phone number must contain at least one digit");
+        }
         if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
-            throw new Exception("Phone number is already used: " + userInput.getPhone());
+            throw new GlobalException("Phone number is already used: " + userInput.getPhone());
         }
         User user = new User();
-        user.setPhone(userInput.getPhone());
+        user.setPhone(phoneInput);
         user.setPassword(passwordEncoder.encode(userInput.getPassword()));
         user.setFirstName(userInput.getFirstName());
         user.setLastName(userInput.getLastName());
-        user.setBalance((double)0);
-        user.setRatings((double)0);
-        user.setTotalRatings(0);
-        user.setIsActive(true);
-        user.setIsDebtor(false);
-        user.setOnBoardingStatus(0);
         user.setImage(null);
         user.setTranslatorProfile(null);
         user.setUserProfile(null);
@@ -92,58 +114,67 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(Long id, UserInput userInput) throws Exception {
+    public User updateUser(Long id, UserInput userInput) throws GlobalException {
+        if (userInput.getPhone() == null || userInput.getPhone().isBlank() ||
+                userInput.getPassword() == null || userInput.getPassword().isBlank()) {
+            throw new GlobalException("Empty values are not allowed");
+        }
+        String phoneInput = userInput.getPhone().replaceAll("\\D", "");
+        if (phoneInput.isBlank()) {
+            throw new GlobalException("Phone number must contain at least one digit");
+        }
+        if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
+            throw new GlobalException("Phone number is already used: " + userInput.getPhone());
+        }
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
-        if (userInput.getPhone() != null && !userInput.getPhone().trim().isEmpty()) { user.setPhone(userInput.getPhone()); }
-        if (userInput.getPassword() != null && !userInput.getPassword().trim().isEmpty()) { user.setPassword(passwordEncoder.encode(userInput.getPassword())); }
-        if (userInput.getFirstName() != null && !userInput.getFirstName().trim().isEmpty()) { user.setFirstName(userInput.getFirstName()); }
-        if (userInput.getLastName() != null && !userInput.getLastName().trim().isEmpty()) { user.setLastName(userInput.getLastName()); }
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
+        user.setPhone(phoneInput);
+        user.setPassword(passwordEncoder.encode(userInput.getPassword()));
+        if (userInput.getFirstName() != null && !userInput.getFirstName().isBlank()) { user.setFirstName(userInput.getFirstName()); }
+        if (userInput.getLastName() != null && !userInput.getLastName().isBlank()) { user.setLastName(userInput.getLastName()); }
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long id) throws Exception {
+    public void deleteUser(Long id) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
         user.getRoles().clear();
         userRepository.save(user);
         userRepository.deleteById(id);
     }
-    public boolean changeIsActive(Long id) throws Exception {
+    public User changeIsActive(Long id, Boolean isActive) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
-        user.setIsActive(!user.getIsActive());
-        userRepository.save(user);
-        return true;
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
+        user.setIsActive(isActive);
+        return userRepository.save(user);
     }
-    public boolean changeIsDebtor(Long id) throws Exception {
+    public User changeIsDebtor(Long id, Boolean isDebtor) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
-        user.setIsDebtor(!user.getIsDebtor());
-        userRepository.save(user);
-        return true;
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
+        user.setIsDebtor(isDebtor);
+        return userRepository.save(user);
     }
-    public User addFcmToken(String fcmToken, Long id) throws Exception {
+    public User addFcmToken(String fcmToken, Long id) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
         user.setFcmToken(fcmToken);
         return userRepository.save(user);
     }
-    public void deleteFcmToken(Long id) throws Exception {
+    public void deleteFcmToken(Long id) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
         user.setFcmToken(null);
         userRepository.save(user);
     }
-    public User addApnToken(String apnToken, Long id) throws Exception {
+    public User addApnToken(String apnToken, Long id) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
         user.setApnToken(apnToken);
         return userRepository.save(user);
     }
-    public void deleteApnToken(Long id) throws Exception {
+    public void deleteApnToken(Long id) throws GlobalException {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User not found with id: " + id));
+                .orElseThrow(() -> new GlobalException("User not found with id: " + id));
         user.setApnToken(null);
         userRepository.save(user);
     }

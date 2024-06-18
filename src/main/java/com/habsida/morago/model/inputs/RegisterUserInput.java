@@ -14,6 +14,5 @@ import java.util.List;
 @Getter
 public class RegisterUserInput {
     private String phone;
-    private String firstPassword;
-    private String secondPassword;
+    private String password;
 }

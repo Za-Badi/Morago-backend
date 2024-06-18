@@ -1,5 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.GlobalException;
 import com.habsida.morago.model.entity.*;
 import com.habsida.morago.model.inputs.LoginUserInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
@@ -8,6 +9,9 @@ import com.habsida.morago.repository.FileRepository;
 import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.repository.UserRepository;
 import graphql.GraphQLException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,79 +23,68 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
-    private final FileRepository fileRepository;
-    private final UserService userService;
 
-
-    public AuthenticationService(
-            UserRepository userRepository,
-            AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder,
-            RoleRepository roleRepository,
-            FileRepository fileRepository,
-            UserService userService
-    ) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
-        this.fileRepository = fileRepository;
-        this.userService = userService;
-    }
-
-    public void signUpAsUser(RegisterUserInput registerUserInput) throws Exception {
+    public User signUpAsUser(RegisterUserInput registerUserInput) throws GlobalException {
+        if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
+                registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
+            throw new GlobalException("Empty values are not allowed");
+        }
+        String phoneInput = registerUserInput.getPhone().replaceAll("\\D", "");
+        if (phoneInput.isBlank()) {
+            throw new GlobalException("Phone number must contain at least one digit");
+        }
         if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
-            throw new GraphQLException("Phone number is already used: " + registerUserInput.getPhone());
+            throw new GlobalException("Phone number is already used: " + registerUserInput.getPhone());
         }
         User user = new User();
-        user.setPhone(registerUserInput.getPhone());
-        if (!Objects.equals(registerUserInput.getFirstPassword(), registerUserInput.getSecondPassword())) {
-            throw new GraphQLException("Passwords don't match");
-        }
-        user.setPassword(passwordEncoder.encode(registerUserInput.getFirstPassword()));
-        user.setBalance((double) 0);
-        user.setRatings((double) 0);
-        user.setTotalRatings(0);
-        user.setIsActive(true);
-        user.setIsDebtor(false);
-        user.setOnBoardingStatus(0);
+        user.setPhone(phoneInput);
+        user.setPassword(passwordEncoder.encode(registerUserInput.getPassword()));
         user.setImage(null);
         user.setTranslatorProfile(null);
         List<Role> roles = new ArrayList<>();
         Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new Exception("Role not found with name: ROLE_USER"));
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setName("ROLE_USER");
+                    return roleRepository.save(newRole);
+                });
         roles.add(userRole);
         user.setRoles(roles);
         user.setUserProfile(new UserProfile());
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
-    public void signUpAsTranslator(RegisterUserInput registerUserInput) throws Exception {
+    public User signUpAsTranslator(RegisterUserInput registerUserInput) throws GlobalException {
+        if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
+                registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
+            throw new GlobalException("Empty values are not allowed");
+        }
+        String phoneInput = registerUserInput.getPhone().replaceAll("\\D", "");
+        if (phoneInput.isBlank()) {
+            throw new GlobalException("Phone number must contain at least one digit");
+        }
         if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
-            throw new Exception("Phone number is already used: " + registerUserInput.getPhone());
+            throw new GlobalException("Phone number is already used: " + registerUserInput.getPhone());
         }
         User user = new User();
+        user.setPhone(phoneInput);
         user.setPhone(registerUserInput.getPhone());
-        if (!Objects.equals(registerUserInput.getFirstPassword(), registerUserInput.getSecondPassword())) {
-            throw new GraphQLException("Passwords don't match");
-        }
-        user.setPassword(passwordEncoder.encode(registerUserInput.getFirstPassword()));
-        user.setBalance((double) 0);
-        user.setRatings((double) 0);
-        user.setTotalRatings(0);
-        user.setIsActive(true);
-        user.setIsDebtor(false);
-        user.setOnBoardingStatus(0);
+        user.setPassword(passwordEncoder.encode(registerUserInput.getPassword()));
         user.setImage(null);
         user.setUserProfile(null);
         List<Role> roles = new ArrayList<>();
         Role translatorRole = roleRepository.findByName("ROLE_TRANSLATOR")
-                .orElseThrow(() -> new Exception("Role not found with name: ROLE_TRANSLATOR"));
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setName("ROLE_TRANSLATOR");
+                    return roleRepository.save(newRole);
+                });
         roles.add(translatorRole);
         user.setRoles(roles);
         List<Language> languages = new ArrayList<>();
@@ -100,7 +93,7 @@ public class AuthenticationService {
         translatorProfile.setLanguages(languages);
         translatorProfile.setThemes(themes);
         user.setTranslatorProfile(translatorProfile);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public User logIn(LoginUserInput loginUserInput) {

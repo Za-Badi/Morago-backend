@@ -3,9 +3,10 @@ schema {
     mutation: Mutation
 }
 type Query {
-#    testUser: [User]
-#    testTranslator: [User]
-#    testAuthentication: [User]
+    testUser: [User]
+    testTranslator: [User]
+    testAuthentication: [User]
+
     getCoinById(id: ID!): Coin
     getAllCoins: [Coin]
 
@@ -25,47 +26,51 @@ type Query {
 
     getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
-#    getAllUsers: [User]
-#    getAllUsersPaged(page: Int!): UserPage
-#    getUserById(id: ID!): User
-#    getUserByPhone(phone: String): User
-#
-#    existsUserByPhone(phone: String): Boolean
-#    getAuthenticatedUser: User
-#    getAllUserProfiles: [UserProfile]
-#    getUserProfileById(id: ID): UserProfile
-#    getAllTranslatorProfiles: [TranslatorProfile]
-#    getTranslatorProfileById(id: ID): TranslatorProfile
-#    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfile]
-#    getTranslatorProfilesByThemeName(name: String): [TranslatorProfile]
-#    getTranslatorProfilesByIsOnline(isOnline: Boolean): [TranslatorProfile]
-#    getAllLanguages: [Language]
-#    getLanguageById(id: ID): Language
-#
-#    getAllDeposits: [Deposits]
-#    getDepositById(id: ID!): Deposits
-#    getDepositsByStatus(status: Status!):[Deposits]
-#    getDepositsByUserId(userId: ID!): User
-#
-#    getAllDebtors: [Debtor]
-#    getDebtorById(id: ID!): Debtor
-#
-#    getAllNotification: [Notification]
-#    getNotificationById(id: ID!): Notification
-#
-#    getAllWithdrawals: [Withdrawals]
-#    getWithdrawalById(id: ID!): Withdrawals
-#    getAllCalls: [Call]
-#    getCallById(caller : ID!): Call
-#    getCallsByUserId(id: ID!): [Call]
-#    getAllMissedCalls(callStatus: CallStatus!): [Call]
-#    getCallsByStatus(status: CallStatus!): [Call]
+    getAllUsers: [User]
+    getAllUsersPaged(page: Int, size: Int): UserPage
+    getUserById(id: ID!): User
+    getUserByPhone(phone: String): User
+    searchUsers(searchUsersInput: SearchUsersInput, page: Int, size: Int): UserPage
+
+
+    existsUserByPhone(phone: String): Boolean
+    getAuthenticatedUser: User
+    getAllUserProfiles: [UserProfile]
+    getUserProfileById(id: ID): UserProfile
+    getAllTranslatorProfiles: [TranslatorProfile]
+    getAllTranslatorProfilesPaged(page: Int, size: Int): TranslatorPage
+    getTranslatorProfileById(id: ID): TranslatorProfile
+    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfile]
+    getTranslatorProfilesByThemeIdPaged(page: Int, size: Int, id: ID): TranslatorPage
+    getTranslatorProfilesByThemeName(name: String): [TranslatorProfile]
+    getTranslatorProfilesByThemeNamePaged(page: Int, size: Int, name: String): TranslatorPage
+    getTranslatorProfilesByIsOnlineAndThemeId(isOnline: Boolean, id: ID): [TranslatorProfile]
+    getTranslatorProfilesByIsOnlineAndThemeIdPaged(page: Int, size: Int, id: ID, isOnline: Boolean): TranslatorPage
+    getAllLanguages: [Language]
+    getLanguageById(id: ID): Language
+
+    getAllDeposits: [Deposits]
+    getDepositById(id: ID!): Deposits
+    getDepositsByStatus(status: Status!):[Deposits]
+    getDepositsByUserId(userId: ID!): User
+
+    getAllDebtors: [Debtor]
+    getDebtorById(id: ID!): Debtor
+
+    getAllNotification: [Notification]
+    getNotificationById(id: ID!): Notification
+
+    getAllWithdrawals: [Withdrawals]
+    getWithdrawalById(id: ID!): Withdrawals
+
+    getAllCalls: [Call]
+    getCallById(id: ID!): Call
 }
 
 type Mutation {
-#    signUpAsUser(registerUserInput: RegisterUserInput): String
-#    signUpAsTranslator(registerUserInput: RegisterUserInput): String
-#    logIn(loginUserInput: LoginUserInput): String
+    signUpAsUser(registerUserInput: RegisterUserInput): String
+    signUpAsTranslator(registerUserInput: RegisterUserInput): String
+    logIn(loginUserInput: LoginUserInput): String
 
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
@@ -89,36 +94,37 @@ type Mutation {
     createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
     updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
     deleteFrequentlyAskedQuestionById(id: ID!): Boolean
-#    addUser(userInput: UserInput): User
-#    updateUser(id: ID, userInput: UserInput): User
-#    deleteUser(id: ID): Boolean
-#    changeIsActive(id: ID): Boolean
-#    changeIsDebtor(id: ID): Boolean
-#    addFcmToken(fcmToken: String, id: ID): User
-#    deleteFcmToken(id: ID): Boolean
-#    addApnToken(apnToken: String, id: ID): User
-#    deleteApnToken(id: ID): Boolean
-#    addUserProfile(isFreeCallMade: Boolean): UserProfile
-#    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
-#    deleteUserProfile(id: ID): Boolean
-#    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
-#    changeIsFreeCallMade(id: ID): Boolean
-#    changeBalanceByUserProfileId(id: ID, balance: Float): User
-#    addTranslatorProfile(translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-#    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-#    deleteTranslatorProfile(id: ID): Boolean
-#    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-#    changeIsAvailable(id: ID): Boolean
-#    changeIsOnline(id: ID): Boolean
-#    changeBalanceForTranslatorProfileId(id: ID, balance: Float): User
-#    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
-#    deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
-#    addLanguage(languageInput: LanguageInput): Language
-#    updateLanguage(id: ID, languageInput: LanguageInput): Language
-#    deleteLanguage(id: ID): Boolean
-#
-#
-#    addDeposit(depositsDto: DepositsInput): Deposits
+
+    addUser(userInput: UserInput): User
+    updateUser(id: ID, userInput: UserInput): User
+    deleteUser(id: ID): Boolean
+    changeIsActive(id: ID, isActive: Boolean): User
+    changeIsDebtor(id: ID, isDebtor: Boolean): User
+    addFcmToken(fcmToken: String, id: ID): User
+    deleteFcmToken(id: ID): Boolean
+    addApnToken(apnToken: String, id: ID): User
+    deleteApnToken(id: ID): Boolean
+    addUserProfile(isFreeCallMade: Boolean, id: ID): UserProfile
+    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
+    deleteUserProfile(id: ID): Boolean
+    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
+    changeIsFreeCallMade(id: ID, isFreeCallMade: Boolean): UserProfile
+    changeBalanceByUserProfileId(id: ID, balance: Float): User
+    addTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    deleteTranslatorProfile(id: ID): Boolean
+    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    changeIsAvailable(id: ID, isAvailable: Boolean): TranslatorProfile
+    changeIsOnline(id: ID, isOnline: Boolean): TranslatorProfile
+    changeBalanceForTranslatorProfileId(id: ID, balance: Float): User
+    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
+    deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
+    addLanguage(languageInput: LanguageInput): Language
+    updateLanguage(id: ID, languageInput: LanguageInput): Language
+    deleteLanguage(id: ID): Boolean
+
+
+    #    addDeposit(depositsDto: DepositsInput): Deposits
 #    updateDeposit(id: ID!, depositsDto: DepositsInput): Deposits
 #    deleteDeposit(id: ID!): Boolean
 #
@@ -139,6 +145,33 @@ type Mutation {
 #    deleteCall(id: ID!): Boolean
 #    updateRating(id: ID!, RatingUpdate : RatingInput): Rating
 #    deleteRating(id: ID!): Boolean
+    addUser(userInput: UserInput): User
+    updateUser(id: ID, userInput: UserInput): User
+    deleteUser(id: ID): Boolean
+    changeIsActive(id: ID, isActive: Boolean): User
+    changeIsDebtor(id: ID, isDebtor: Boolean): User
+    addFcmToken(fcmToken: String, id: ID): User
+    deleteFcmToken(id: ID): Boolean
+    addApnToken(apnToken: String, id: ID): User
+    deleteApnToken(id: ID): Boolean
+    addUserProfile(isFreeCallMade: Boolean, id: ID): UserProfile
+    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
+    deleteUserProfile(id: ID): Boolean
+    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
+    changeIsFreeCallMade(id: ID, isFreeCallMade: Boolean): UserProfile
+    changeBalanceByUserProfileId(id: ID, balance: Float): User
+    addTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    deleteTranslatorProfile(id: ID): Boolean
+    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    changeIsAvailable(id: ID, isAvailable: Boolean): TranslatorProfile
+    changeIsOnline(id: ID, isOnline: Boolean): TranslatorProfile
+    changeBalanceForTranslatorProfileId(id: ID, balance: Float): User
+    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
+    deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
+    addLanguage(languageInput: LanguageInput): Language
+    updateLanguage(id: ID, languageInput: LanguageInput): Language
+    deleteLanguage(id: ID): Boolean
 
     addFile(file: Upload!): File
 }
@@ -219,6 +252,10 @@ type UserPage {
     size: Int
     number: Int
 }
+input SearchUsersInput {
+    firstName: String
+    phone: String
+}
 type UserProfile {
     id: ID!
     isFreeCallMade: Boolean
@@ -230,6 +267,13 @@ type TranslatorProfile {
     isAvailable: Boolean
     isOnline: Boolean
     levelOfKorean: String
+}
+type TranslatorPage {
+    content: [TranslatorProfile]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
 }
 type Call {
     id: ID
@@ -373,8 +417,7 @@ input LanguageInput {
 
 input RegisterUserInput {
     phone: String!
-    firstPassword: String!
-    secondPassword: String!
+    password: String!
 }
 
 input LoginUserInput {
