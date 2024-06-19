@@ -30,17 +30,5 @@ public class FileMutationResolver implements GraphQLMutationResolver {
         MultipartFile mfile = new MockMultipartFile(part.getSubmittedFileName(), part.getSubmittedFileName(), part.getContentType(), part.getInputStream());
         return fileService.uploadFile(mfile);
     }
-//@MutationMapping
-//    public String addFiles(@Argument Scalars file) {
-//       return "fileService.uploadFile(mfile)";
-//    }
-//    public Boolean addFile(Part part1, DataFetchingEnvironment environment) throws IOException {
-//
-//
-//        Part part = environment.getArgument("file");
-//        MultipartFile mfile = new MockMultipartFile(part.getSubmittedFileName(), part.getSubmittedFileName(), part.getContentType(), part.getInputStream());
-//
-//        File file = fileService.uploadFile(mfile);
-//        return true;
-//    }
+
 }

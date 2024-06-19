@@ -1,25 +1,24 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GraphqlException;
-import com.habsida.morago.model.entity.Category;
 import com.habsida.morago.model.entity.File;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.inputs.CreateThemeInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UpdateThemeInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.CategoryRepository;
 import com.habsida.morago.repository.ThemeRepository;
-import graphql.schema.DataFetchingEnvironment;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.Page;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.Part;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -67,8 +66,7 @@ public class ThemeService {
             try {
                 File file = fileService.uploadFile(icon);
                 theme.setIcon(file);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
@@ -78,7 +76,7 @@ public class ThemeService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public Theme updateTheme(UpdateThemeInput input,  MultipartFile icon) {
+    public Theme updateTheme(UpdateThemeInput input, MultipartFile icon) {
         Theme theme = repository.findById(input.getId()).orElseThrow(() -> new EntityNotFoundException("No Theme with id: " + input.getId()));
         if (input.getCategoryId() != null && input.getCategoryId() != 0) {
             theme.setCategory(categoryRepository.findById(input.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("No Category with id: " + input.getCategoryId())));
@@ -105,13 +103,12 @@ public class ThemeService {
             theme.setIsActive(input.getIsActive());
         }
         if (icon != null) {
-          try{
-              File file = fileService.uploadFile(icon);
-              theme.setIcon(file);
-          }
-          catch (IOException e) {
-              e.printStackTrace();
-          }
+            try {
+                File file = fileService.uploadFile(icon);
+                theme.setIcon(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return repository.save(theme);
     }
@@ -122,24 +119,30 @@ public class ThemeService {
 
     public Boolean removeThemeById(Long id) {
         Theme theme = getThemeById(id);
+        File icon = theme.getIcon();
         repository.delete(theme);
+        fileService.deleteById(icon.getId());
         return true;
     }
+
     @Transactional
-    public Set<Theme> getAllThemes() {
-        return new HashSet<>(repository.findAll());
+    public PageOutput<Theme> getAllThemes(PagingInput input) {
+        Page<Theme> pageRequest = repository.findAll(PageUtil.buildPageable(input));
+        return PageUtil.buildPage(pageRequest);
     }
 
-    public Set<Theme> getThemesByCategoryId(Long id) {
-        return repository.findThemesByCategoryId(id);
+    public PageOutput<Theme> getThemesByCategoryId(PagingInput input, Long id) {
+        Page<Theme> pagedrequest = repository.findThemesByCategoryId(PageUtil.buildPageable(input), id);
+        return PageUtil.buildPage(pagedrequest);
     }
 
     public Theme getThemeByName(String name) {
         return repository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Entity Not Found with name " + name));
     }
 
-    public Set<Theme> getThemeByStatus(Boolean status) {
-        return repository.findThemeByIsActive(status);
+    public PageOutput<Theme> getThemeByIsActiveStatus(PagingInput input) {
+        Page<Theme> pagedRequest = repository.findThemeByIsActive(PageUtil.buildPageable(input));
+        return PageUtil.buildPage(pagedRequest);
     }
 
     public Boolean changeThemeStatus(Long themeId) {

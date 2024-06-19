@@ -25,7 +25,8 @@ public class FileService {
         String originalFilename = file.getOriginalFilename();
         String type = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
         String filename = fileUtil.getUUID() + "." + type;
-        String path = fileUtil.uploadFileLocal(file, filename);
+        String path =
+                fileUtil.uploadFileToS3Bucket( filename,file);
         File fileDB = new File();
         fileDB.setPath(path);
         fileDB.setOriginalTitle(originalFilename);
@@ -43,7 +44,8 @@ public class FileService {
     public void deleteById(Long id) {
         File file = getById(id);
         System.out.println(file.toString());
-        fileUtil.deleteLocalFile(file.getPath());
+        fileUtil.deleteFileFromS3Bucket(file.getPath());
+//        fileUtil.deleteLocalFile(file.getPath());
         repository.deleteById(id);
     }
 
