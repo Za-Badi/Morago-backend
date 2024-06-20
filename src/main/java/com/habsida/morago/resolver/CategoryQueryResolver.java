@@ -1,21 +1,20 @@
 package com.habsida.morago.resolver;
 
-
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.habsida.morago.model.entity.Category;
+import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.serviceImpl.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Component
 public class CategoryQueryResolver implements GraphQLQueryResolver {
     private final CategoryService categoryService;
 
-    public Set<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    public PageOutput<Category> getAllCategoriesByPaging(PagingInput input) {
+        return categoryService.getAllCategories(input);
     }
 
     public Category getCategoryById(Long id) {
@@ -26,8 +25,8 @@ public class CategoryQueryResolver implements GraphQLQueryResolver {
         return categoryService.getCategoryByName(name);
     }
 
-    public Set<Category> getCategoryByStatus(Boolean status) {
-        return categoryService.getCategoryByStatus(status);
+    public PageOutput<Category> getCategoryByStatusIsActiveByPaging(PagingInput input) {
+        return categoryService.getCategoryByStatusIsActive(input);
     }
 
 }
