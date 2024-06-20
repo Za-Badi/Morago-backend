@@ -27,11 +27,9 @@ public class Role implements GrantedAuthority {
 
     @Column(name = "name", nullable = false)
     private String name;
-
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
