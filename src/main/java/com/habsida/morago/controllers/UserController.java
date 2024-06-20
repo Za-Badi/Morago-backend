@@ -5,7 +5,7 @@
 //import com.habsida.morago.model.entity.User;
 //import com.habsida.morago.model.inputs.UserInput;
 //import com.habsida.morago.model.inputs.UserPage;
-//import com.habsida.morago.resolver.UserResolver;
+//import com.habsida.morago.resolver.UserQueryResolver;
 //import org.springframework.graphql.data.method.annotation.Argument;
 //import org.springframework.graphql.data.method.annotation.MutationMapping;
 //import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -17,8 +17,8 @@
 //
 //@Controller
 //public class UserController {
-//    private final UserResolver userResolver;
-//    public UserController(UserResolver userResolver) {
+//    private final UserQueryResolver userResolver;
+//    public UserController(UserQueryResolver userResolver) {
 //        this.userResolver = userResolver;
 //    }
 //    @QueryMapping

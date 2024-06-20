@@ -2,7 +2,7 @@
 //
 //import com.habsida.morago.model.input.DebtorInput;
 //import com.habsida.morago.model.entity.Debtor;
-//import com.habsida.morago.resolver.DebtorResolver;
+//import com.habsida.morago.resolver.DebtorQueryResolver;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
 //
@@ -11,10 +11,10 @@
 //@Controller
 //public class DebtorController {
 //
-//    private final DebtorResolver debtorResolver;
+//    private final DebtorQueryResolver debtorResolver;
 //
 //    @Autowired
-//    public DebtorController(DebtorResolver debtorResolver) {
+//    public DebtorController(DebtorQueryResolver debtorResolver) {
 //        this.debtorResolver = debtorResolver;
 //    }
 //

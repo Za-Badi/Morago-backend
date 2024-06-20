@@ -1,8 +1,10 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.model.input.DebtorInput;
+import com.habsida.morago.exceptions.GraphqlException;
 import com.habsida.morago.model.entity.Debtor;
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.inputs.CreateDebtorInput;
+import com.habsida.morago.model.inputs.UpdateDebtorInput;
 import com.habsida.morago.repository.DebtorRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DebtorService;
@@ -28,40 +30,58 @@ public class DebtorServiceImpl implements DebtorService {
     }
 
     @Override
-    public Debtor getDebtorById(Long id) throws Exception {
+    public Debtor getDebtorById(Long id) {
         return debtorRepository.findById(id)
-                .orElseThrow(() -> new Exception("Debtor not found for id: " + id));
+                .orElseThrow(() -> new GraphqlException("Debtor not found for id: " + id));
     }
 
     @Override
-    public Debtor addDebtor(DebtorInput debtorDto) {
-        User user = userRepository.findById(debtorDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found for id: " + debtorDto.getUserId()));
+    public Debtor addDebtor(CreateDebtorInput createDebtorInput) {
 
         Debtor debtor = new Debtor();
-        debtor.setAccountHolder(debtorDto.getAccountHolder());
-        debtor.setNameOfBank(debtorDto.getNameOfBank());
-        debtor.setIsPaid(debtorDto.getIsPaid());
+        debtor.setAccountHolder(createDebtorInput.getAccountHolder());
+        debtor.setNameOfBank(createDebtorInput.getNameOfBank());
+        debtor.setIsPaid(createDebtorInput.getIsPaid());
+        User user = userRepository.findById(createDebtorInput.getUserId())
+                .orElseThrow(() -> new GraphqlException("User not found for id: " + createDebtorInput.getUserId()));
         debtor.setUser(user);
 
         return debtorRepository.save(debtor);
     }
 
     @Override
-    public Debtor updateDebtor(Long id, DebtorInput debtorDto) throws Exception {
+    public Debtor updateDebtor(Long id, UpdateDebtorInput updateDebtorInput) {
         Debtor debtor = debtorRepository.findById(id)
-                .orElseThrow(() -> new Exception("Debtor not found for id: " + id));
-        debtor.setAccountHolder(debtorDto.getAccountHolder());
-        debtor.setNameOfBank(debtorDto.getNameOfBank());
-        debtor.setIsPaid(debtorDto.getIsPaid());
+                .orElseThrow(() -> new GraphqlException("Debtor not found for id: " + id));
+
+        if (updateDebtorInput.getAccountHolder() != null & !updateDebtorInput.getAccountHolder().isEmpty()) {
+            debtor.setAccountHolder(updateDebtorInput.getAccountHolder());
+        }
+        if (updateDebtorInput.getNameOfBank() != null && !updateDebtorInput.getNameOfBank().isEmpty()) {
+            debtor.setNameOfBank(updateDebtorInput.getNameOfBank());
+        }
+        if (updateDebtorInput.getIsPaid() != null) {
+            debtor.setIsPaid(updateDebtorInput.getIsPaid());
+        }
 
         return debtorRepository.save(debtor);
     }
 
     @Override
-    public void deleteDebtor(Long id) throws Exception {
+    public void deleteDebtor(Long id) {
         Debtor debtor = debtorRepository.findById(id)
-                .orElseThrow(() -> new Exception("Debtor not found for id: " + id));
-        debtorRepository.delete(debtor);
+                .orElseThrow(() -> new GraphqlException("Debtor not found for id: " + id));
+        debtorRepository.deleteById(id);
     }
+
+    @Override
+    public List<Debtor> getDebtorByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
+        List<Debtor> debtorByUserId = debtorRepository.findByUserId(userId);
+
+        return debtorByUserId;
+    }
+
+
 }

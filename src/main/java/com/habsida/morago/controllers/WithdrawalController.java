@@ -2,7 +2,7 @@
 //
 //import com.habsida.morago.model.entity.Withdrawals;
 //import com.habsida.morago.model.inputs.WithdrawalInput;
-//import com.habsida.morago.resolver.WithdrawalsResolver;
+//import com.habsida.morago.resolver.WithdrawalsQueryResolver;
 //import org.springframework.graphql.data.method.annotation.Argument;
 //import org.springframework.graphql.data.method.annotation.MutationMapping;
 //import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -13,9 +13,9 @@
 //@Controller
 //public class WithdrawalController {
 //
-//    private WithdrawalsResolver withdrawalsResolver;
+//    private WithdrawalsQueryResolver withdrawalsResolver;
 //
-//    public WithdrawalController(WithdrawalsResolver withdrawalsResolver) {
+//    public WithdrawalController(WithdrawalsQueryResolver withdrawalsResolver) {
 //        this.withdrawalsResolver = withdrawalsResolver;
 //    }
 //

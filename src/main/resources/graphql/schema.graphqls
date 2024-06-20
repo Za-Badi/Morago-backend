@@ -25,10 +25,12 @@ type Query {
 
     getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
-#    getAllUsers: [User]
-#    getAllUsersPaged(page: Int!): UserPage
-#    getUserById(id: ID!): User
-#    getUserByPhone(phone: String): User
+    getAllUsers: [User]
+
+    #getAllUsersPaged(page: Int!): UserPage
+
+    getUserById(id: ID!): User
+    getUserByPhone(phone: String): User
 #
 #    existsUserByPhone(phone: String): Boolean
 #    getAuthenticatedUser: User
@@ -41,20 +43,26 @@ type Query {
 #    getTranslatorProfilesByIsOnline(isOnline: Boolean): [TranslatorProfile]
 #    getAllLanguages: [Language]
 #    getLanguageById(id: ID): Language
-#
-#    getAllDeposits: [Deposits]
-#    getDepositById(id: ID!): Deposits
-#    getDepositsByStatus(status: Status!):[Deposits]
-#    getDepositsByUserId(userId: ID!): User
-#
-#    getAllDebtors: [Debtor]
-#    getDebtorById(id: ID!): Debtor
-#
-#    getAllNotification: [Notification]
-#    getNotificationById(id: ID!): Notification
-#
-#    getAllWithdrawals: [Withdrawals]
-#    getWithdrawalById(id: ID!): Withdrawals
+
+    getAllDebtors: [Debtor]
+    getDebtorById(id: ID!): Debtor
+    getDebtorByUserId(userId: ID!): [Debtor]
+
+    getAllDeposits: [Deposits]
+    getDepositById(id: ID!): Deposits
+    getDepositsByStatus(status: PaymentStatus!):[Deposits]
+    getDepositsByUserId(userId: ID!): [Deposits]
+
+    getAllNotification: [Notification]
+    getNotificationById(id: ID!): Notification
+    getNotificationsByUserId(userId: ID!): [Notification]
+
+    getAllWithdrawals: [Withdrawals]
+    getWithdrawalsById(id: ID!): Withdrawals
+    getWithdrawalsByStatus(status: PaymentStatus!):[Withdrawals]
+    getWithdrawalsByUserId(userId: ID!): [Withdrawals]
+
+
 #    getAllCalls: [Call]
 #    getCallById(caller : ID!): Call
 #    getCallsByUserId(id: ID!): [Call]
@@ -89,15 +97,16 @@ type Mutation {
     createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
     updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
     deleteFrequentlyAskedQuestionById(id: ID!): Boolean
-#    addUser(userInput: UserInput): User
-#    updateUser(id: ID, userInput: UserInput): User
-#    deleteUser(id: ID): Boolean
-#    changeIsActive(id: ID): Boolean
-#    changeIsDebtor(id: ID): Boolean
-#    addFcmToken(fcmToken: String, id: ID): User
-#    deleteFcmToken(id: ID): Boolean
-#    addApnToken(apnToken: String, id: ID): User
-#    deleteApnToken(id: ID): Boolean
+    addUser(userInput: UserInput): User
+    updateUser(id: ID, userInput: UserInput): User
+    deleteUser(id: ID): Boolean
+
+    changeIsActive(id: ID): Boolean
+    changeIsDebtor(id: ID): Boolean
+    addFcmToken(fcmToken: String, id: ID): User
+    deleteFcmToken(id: ID): Boolean
+    addApnToken(apnToken: String, id: ID): User
+    deleteApnToken(id: ID): Boolean
 #    addUserProfile(isFreeCallMade: Boolean): UserProfile
 #    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
 #    deleteUserProfile(id: ID): Boolean
@@ -118,21 +127,22 @@ type Mutation {
 #    deleteLanguage(id: ID): Boolean
 #
 #
-#    addDeposit(depositsDto: DepositsInput): Deposits
-#    updateDeposit(id: ID!, depositsDto: DepositsInput): Deposits
-#    deleteDeposit(id: ID!): Boolean
-#
-#    addDebtor(debtorDto: DebtorInput): Debtor
-#    updateDebtor(id: ID!, debtorDto: DebtorInput): Debtor
-#    deleteDebtor(id: ID!): Boolean
-#
-#    addNotification(notificationDto: NotificationInput): Notification
-#    updateNotification(id:ID!, notificationDto: NotificationInput):Notification
-#    deleteNotification(id:ID!): Notification
-#
-#    addWithdrawal(withdrawalDto: WithdrawalsInput): Withdrawals
-#    updateWithdrawal(id: ID!, withdrawalDto: WithdrawalsInput): Withdrawals
-#    deleteWithdrawal(id: ID!): Boolean
+    addDeposit(createDepositsInput: CreateDepositsInput): Deposits
+    updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
+    deleteDeposit(id: ID!): Boolean
+
+
+    addDebtor(createDebtorInput:CreateDebtorInput): Debtor
+    updateDebtor(id: ID!, updateDebtorInput: UpdateDebtorInput): Debtor
+    deleteDebtor(id: ID!): Boolean
+
+    addNotification(createNotificationInput: CreateNotificationInput): Notification
+    updateNotification(id:ID!, updateNotificationInput: UpdateNotificationInput):Notification
+    deleteNotification(id:ID!): Boolean
+
+    addWithdrawal(createWithdrawalInput: CreateWithdrawalsInput): Withdrawals
+    updateWithdrawal(id: ID!, updateWithdrawalInput: UpdateWithdrawalsInput): Withdrawals
+    deleteWithdrawal(id: ID!): Boolean
 #
 #    createCall(CallDto : CallInput) : Call
 #    updateCall(id : ID!, status : CallStatus, duration: Int!, commission : Float):Call
@@ -265,35 +275,105 @@ type Debtor {
     updatedAt: String
     user: User
 }
+input CreateDebtorInput {
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
+    userId: ID!
+}
+
+input UpdateDebtorInput {
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
+
+}
+
+
 type Deposits {
     id: ID!
     accountHolder: String
     nameOfBank: String
     coin: Float
     won: Float
-    status: String!
+    status: PaymentStatus
     createdAt: String
     updatedAt: String
     user: User
 }
+input CreateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    coin: Float
+    status: PaymentStatus
+    won: Float
+    userId: ID!
+}
+
+input UpdateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    status: PaymentStatus
+    coin: Float
+    won: Float
+}
 
 type Notification {
     id: ID!
-    title: String
-    text: String
+    title: String!
+    text: String!
     date: String
     time: String
-    user: User
+    user: User!
 }
+
+input CreateNotificationInput {
+    title: String!
+    text: String!
+
+    userId: ID!
+}
+
+input UpdateNotificationInput {
+    title: String!
+    text: String!
+
+}
+
+
 type Withdrawals {
     id: ID!
     accountNumber: String!
     accountHolder: String!
     sum: Float!
-    status: String!
+    status: PaymentStatus
     createdAt: String
     updatedAt: String
     user: User
+}
+
+
+input CreateWithdrawalsInput {
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float
+    status: PaymentStatus
+    userId: ID!
+}
+
+input UpdateWithdrawalsInput {
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float
+    status: PaymentStatus
+
+}
+
+enum PaymentStatus {
+    PENDING,
+    COMPLETED,
+    FAILED,
+    CANCELLED
 }
 
 input CreateCategoryInput {

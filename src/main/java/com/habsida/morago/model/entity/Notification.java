@@ -5,7 +5,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "notification")
@@ -24,11 +25,11 @@ public class Notification {
 
     @CreationTimestamp
     @Column(name = "date")
-    private LocalDateTime date;
+    private LocalDate date;
 
     @CreationTimestamp
     @Column(name = "time")
-    private LocalDateTime time;
+    private LocalTime time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
