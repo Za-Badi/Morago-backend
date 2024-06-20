@@ -2,7 +2,7 @@
 //
 //import com.habsida.morago.model.inputs.NotificationInput;
 //import com.habsida.morago.model.entity.Notification;
-//import com.habsida.morago.resolver.NotificationResolver;
+//import com.habsida.morago.resolver.NotificationQueryResolver;
 //import org.springframework.graphql.data.method.annotation.Argument;
 //import org.springframework.graphql.data.method.annotation.MutationMapping;
 //import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -12,9 +12,9 @@
 //
 //@Controller
 //public class NotificationController {
-//    private NotificationResolver notificationResolver;
+//    private NotificationQueryResolver notificationResolver;
 //
-//    public NotificationController(NotificationResolver notificationResolver) {
+//    public NotificationController(NotificationQueryResolver notificationResolver) {
 //        this.notificationResolver = notificationResolver;
 //    }
 //

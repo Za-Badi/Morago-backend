@@ -1,10 +1,13 @@
 
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.model.enums.CallStatus;
-import com.habsida.morago.model.inputs.DepositsInput;
+
+import com.habsida.morago.exceptions.GraphqlException;
 import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.enums.PaymentStatus;
+import com.habsida.morago.model.inputs.CreateDepositsInput;
+import com.habsida.morago.model.inputs.UpdateDepositsInput;
 import com.habsida.morago.repository.DepositsRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DepositsService;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+
 public class DepositsServiceImpl implements DepositsService {
     private final DepositsRepository depositsRepository;
     private final UserRepository userRepository;
@@ -30,68 +34,75 @@ public class DepositsServiceImpl implements DepositsService {
         return depositsRepository.findAll();
     }
 
-    public Deposits getDepositById(Long id) throws Exception {
+    public Deposits getDepositById(Long id) {
         return depositsRepository.findById(id)
-                .orElseThrow(()-> new Exception("Deposits not found for id: " + id));
+                .orElseThrow(() -> new GraphqlException("Deposits not found for id: " + id));
     }
 
-    public Deposits addDeposit(DepositsInput depositsDto) {
-        User user = userRepository.findById(depositsDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public Deposits addDeposit(CreateDepositsInput createDepositsInput) {
 
         Deposits deposits = new Deposits();
-        deposits.setAccountHolder(depositsDto.getAccountHolder());
-        deposits.setNameOfBank(depositsDto.getNameOfBank());
-        deposits.setWon(depositsDto.getWon());
-        deposits.setCoin(depositsDto.getCoin());
-        deposits.setStatus(depositsDto.getStatus());
+        deposits.setAccountHolder(createDepositsInput.getAccountHolder());
+        deposits.setNameOfBank(createDepositsInput.getNameOfBank());
+        deposits.setWon(createDepositsInput.getWon());
+        deposits.setCoin(createDepositsInput.getCoin());
+        deposits.setStatus(createDepositsInput.getStatus());
+
+        User user = userRepository.findById(createDepositsInput.getUserId())
+                .orElseThrow(() -> new GraphqlException("User not found for id: " + createDepositsInput.getUserId()));
+
         deposits.setUser(user);
 
         return depositsRepository.save(deposits);
     }
 
-    public Deposits updateDeposit(Long id, DepositsInput depositsDto) throws Exception {
+    public Deposits updateDeposit(Long id, UpdateDepositsInput updateDepositsInput) {
         Deposits deposits = depositsRepository.findById(id)
-                .orElseThrow(() -> new Exception("Deposits not found for id: " + id));
-        if (depositsDto.getAccountHolder() != null) {
-            deposits.setAccountHolder(depositsDto.getAccountHolder());
+                .orElseThrow(() -> new GraphqlException("Deposits not found for id: " + id));
+        if (updateDepositsInput.getAccountHolder() != null && !updateDepositsInput.getAccountHolder().isEmpty()) {
+            deposits.setAccountHolder(updateDepositsInput.getAccountHolder());
         }
-        if (depositsDto.getNameOfBank() != null) {
-            deposits.setNameOfBank(depositsDto.getNameOfBank());
+        if (updateDepositsInput.getNameOfBank() != null && !updateDepositsInput.getNameOfBank().isEmpty()) {
+            deposits.setNameOfBank(updateDepositsInput.getNameOfBank());
         }
-        if (depositsDto.getNameOfBank() != null) {
-            deposits.setNameOfBank(depositsDto.getNameOfBank());
+        if (updateDepositsInput.getCoin() != null) {
+            deposits.setCoin(updateDepositsInput.getCoin());
         }
-        if (depositsDto.getCoin() != null) {
-            deposits.setCoin(depositsDto.getCoin());
+        if (updateDepositsInput.getWon() != null) {
+            deposits.setWon(updateDepositsInput.getWon());
         }
-        if (depositsDto.getWon() != null) {
-            deposits.setWon(depositsDto.getWon());
-        }if (depositsDto.getStatus() != null) {
-            deposits.setStatus(depositsDto.getStatus());
+        if (updateDepositsInput.getStatus() != null) {
+            deposits.setStatus(updateDepositsInput.getStatus());
         }
-        if (depositsDto.getUserId() != null) {
-            User user = userRepository.findById(depositsDto.getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            deposits.setUser(user);
-        }
+
 
         return depositsRepository.save(deposits);
     }
 
-    public void deleteDeposit(Long id) throws Exception {
-        depositsRepository.findById(id)
-                .orElseThrow(() -> new Exception("Deposits not found for id: " + id));
+    public void deleteDeposit(Long id) {
+        Deposits deposits = depositsRepository.findById(id)
+                .orElseThrow(() -> new GraphqlException("Deposit not found for id: " + id));
         depositsRepository.deleteById(id);
+
     }
 
     @Override
-    public List<Deposits> getDepositsByStatus(CallStatus status) {
-        return null;
+    public List<Deposits> getDepositsByStatus(PaymentStatus status) {
+        List<Deposits> depositsByStatus = depositsRepository.findByStatus(status);
+        if (depositsByStatus.isEmpty()) {
+            throw new GraphqlException("Deposits not found for status: " + status);
+        }
+        return depositsByStatus;
     }
 
     @Override
     public List<Deposits> getDepositByUserId(Long userId) {
-        return null;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
+        List<Deposits> depositsByUserId = depositsRepository.findByUserId(userId);
+
+
+    return depositsByUserId;
     }
+
 }

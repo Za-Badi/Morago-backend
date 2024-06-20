@@ -1,12 +1,11 @@
 package com.habsida.morago.model.entity;
 
-import com.habsida.morago.model.enums.CallStatus;
-
-import javax.persistence.*;
-
+import com.habsida.morago.model.enums.PaymentStatus;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,11 +29,13 @@ public class Withdrawals {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50)
-    private CallStatus status;
+    private PaymentStatus status;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @CreationTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
