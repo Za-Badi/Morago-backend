@@ -108,6 +108,13 @@ type Query {
 #    getCallsByUserId(id: ID!): [Call]
 #    getAllMissedCalls(callStatus: CallStatus!): [Call]
 #    getCallsByStatus(status: CallStatus!): [Call]
+    getCallsByOutgoingIncoming: [Call]
+    getCallsByOutgoingIncomingStatus(status: CallStatus!): [Call]
+
+    getAllRatings : [Rating]
+    getRatingById (id : ID!) : Rating
+    getAverageRating(toWhomUserId : ID!) : Float
+
 }
 
 type Mutation {
@@ -193,6 +200,17 @@ type Mutation {
 #    deleteCall(id: ID!): Boolean
 #    updateRating(id: ID!, RatingUpdate : RatingInput): Rating
 #    deleteRating(id: ID!): Boolean
+
+
+    addDeposit(createDepositsInput: CreateDepositsInput): Deposits
+    updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
+    deleteDeposit(id: ID!): Boolean
+
+
+
+    updateRating(id: ID!, update : UpdateRatingInput): Rating
+    createRating(ratingInput : RatingInput): Rating
+    deleteRating(id: ID!): Boolean
 
     addFile(file: Upload!): File
 }
@@ -321,23 +339,21 @@ type Call {
     recipient: User
     createdAt: String
     duration: Int
-    status: String
+    status: CallStatus
     sum: Float
     commission: Float
     translatorHasRated: Boolean
     userHasRated: Boolean
-    file: File
+#    file: File
     theme: Theme
 }
 type Rating {
     id: ID!
     whoUser: User!
     toWhomUser: User!
-    grade: Float
     createdAt: String
     updatedAt: String
     ratings: Float
-    totalRatings: Int
 }
 
 type Debtor {
@@ -362,6 +378,7 @@ input UpdateDebtorInput {
     isPaid: Boolean!
 
 }
+
 
 
 type Deposits {
@@ -562,21 +579,26 @@ input DepositsInput {
     userId: ID!
 }
 
-input CallInput {
+input CreateCallInput {
     caller: ID!
     recipient : ID!
+    theme : ID!
 }
 input CallUpdateInput {
     duration: Int
-    status: String
+    status: CallStatus
     commission: Float
 }
 input RatingInput {
-    callId: ID!
     whoUserId: ID!
     toWhomUserId: ID!
-    grade: Float!
+   rating : Float
 }
+
+input UpdateRatingInput {
+    rating : Float!
+}
+
 input NotificationInput {
     title: String
     text: String
