@@ -31,11 +31,14 @@ public class UserProfileService  {
         userProfile.setIsFreeCallMade(isFreeCallMade);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
+        if (user.getTranslatorProfile() != null) {
+            throw new ExceptionGraphql("User has a Translator Profile attached");
+        }
         if (user.getUserProfile() == null) {
             user.setUserProfile(userProfile);
             userRepository.save(user);
         } else {
-            throw new ExceptionGraphql("User already has a Profile attached");
+            throw new ExceptionGraphql("User already has a User Profile attached");
         }
         return user.getUserProfile();
     }

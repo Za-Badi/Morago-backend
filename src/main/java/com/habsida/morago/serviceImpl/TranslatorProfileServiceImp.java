@@ -149,11 +149,14 @@ public class TranslatorProfileServiceImp {
         translatorProfile.setThemes(themes);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
+        if (user.getUserProfile() != null) {
+            throw new ExceptionGraphql("User has a User Profile attached");
+        }
         if (user.getTranslatorProfile() == null) {
             user.setTranslatorProfile(translatorProfile);
             userRepository.save(user);
         } else {
-            throw new ExceptionGraphql("User already has a Profile attached");
+            throw new ExceptionGraphql("User already has a Translator Profile attached");
         }
         return user.getTranslatorProfile();
     }
