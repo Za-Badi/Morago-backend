@@ -31,6 +31,7 @@ type Query {
     existsUserByPhone(phone: String): Boolean
     getAllUsersPaged(page: Int, size: Int): UserPage
     searchUsers(searchInput: String, page: Int, size: Int): UserPage
+
     testUser: [User]
     testTranslator: [User]
     testAuthentication: [User]
@@ -70,23 +71,15 @@ type Query {
     getWithdrawalsByStatus(status: PaymentStatus!):[Withdrawals]
     getWithdrawalsByUserId(userId: ID!): [Withdrawals]
 
-
-#    getAllCalls: [Call]
-#    getCallById(caller : ID!): Call
-#    getCallsByUserId(id: ID!): [Call]
-#    getAllMissedCalls(callStatus: CallStatus!): [Call]
-#    getCallsByStatus(status: CallStatus!): [Call]
     getCallsByOutgoingIncoming: [Call]
     getCallsByOutgoingIncomingStatus(status: CallStatus!): [Call]
 
     getAllRatings : [Rating]
     getRatingById (id : ID!) : Rating
     getAverageRating(toWhomUserId : ID!) : Float
-
 }
 
 type Mutation {
-
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
     deleteAppVersion(platform: EPlatform!): Boolean
@@ -145,11 +138,9 @@ type Mutation {
     updateLanguage(id: ID, languageInput: LanguageInput): Language
     deleteLanguage(id: ID): Boolean
 
-
     addDeposit(createDepositsInput: CreateDepositsInput): Deposits
     updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
     deleteDeposit(id: ID!): Boolean
-
 
     addDebtor(createDebtorInput:CreateDebtorInput): Debtor
     updateDebtor(id: ID!, updateDebtorInput: UpdateDebtorInput): Debtor
@@ -169,9 +160,6 @@ type Mutation {
 
     addFile(file: Upload!): File
 }
-
-
-
 
 type AppVersion {
     platform: EPlatform
@@ -258,10 +246,6 @@ type UserPage {
     size: Int
     number: Int
 }
-input SearchUsersInput {
-    firstName: String
-    phone: String
-}
 type UserProfile {
     id: ID!
     isFreeCallMade: Boolean
@@ -281,7 +265,6 @@ type TranslatorProfile {
     isOnline: Boolean
     levelOfKorean: String
 }
-
 type Call {
     id: ID
     caller: User
@@ -304,7 +287,6 @@ type Rating {
     updatedAt: String
     ratings: Float
 }
-
 type Debtor {
     id: ID!
     accountHolder: String!
@@ -314,22 +296,6 @@ type Debtor {
     updatedAt: String
     user: User
 }
-input CreateDebtorInput {
-    accountHolder: String!
-    nameOfBank: String!
-    isPaid: Boolean!
-    userId: ID!
-}
-
-input UpdateDebtorInput {
-    accountHolder: String!
-    nameOfBank: String!
-    isPaid: Boolean!
-
-}
-
-
-
 type Deposits {
     id: ID!
     accountHolder: String
@@ -341,23 +307,6 @@ type Deposits {
     updatedAt: String
     user: User
 }
-input CreateDepositsInput {
-    accountHolder: String!
-    nameOfBank: String!
-    coin: Float
-    status: PaymentStatus
-    won: Float
-    userId: ID!
-}
-
-input UpdateDepositsInput {
-    accountHolder: String!
-    nameOfBank: String!
-    status: PaymentStatus
-    coin: Float
-    won: Float
-}
-
 type Notification {
     id: ID!
     title: String!
@@ -366,21 +315,6 @@ type Notification {
     time: String
     user: User!
 }
-
-input CreateNotificationInput {
-    title: String!
-    text: String!
-
-    userId: ID!
-}
-
-input UpdateNotificationInput {
-    title: String!
-    text: String!
-
-}
-
-
 type Withdrawals {
     id: ID!
     accountNumber: String!
@@ -392,7 +326,47 @@ type Withdrawals {
     user: User
 }
 
+input CreateDebtorInput {
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
+    userId: ID!
+}
+input UpdateDebtorInput {
+    accountHolder: String!
+    nameOfBank: String!
+    isPaid: Boolean!
 
+}
+input CreateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    coin: Float
+    status: PaymentStatus
+    won: Float
+    userId: ID!
+}
+input UpdateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    status: PaymentStatus
+    coin: Float
+    won: Float
+}
+input SearchUsersInput {
+    firstName: String
+    phone: String
+}
+input CreateNotificationInput {
+    title: String!
+    text: String!
+
+    userId: ID!
+}
+input UpdateNotificationInput {
+    title: String!
+    text: String!
+}
 input CreateWithdrawalsInput {
     accountNumber: String!
     accountHolder: String!
@@ -400,7 +374,6 @@ input CreateWithdrawalsInput {
     status: PaymentStatus
     userId: ID!
 }
-
 input UpdateWithdrawalsInput {
     accountNumber: String!
     accountHolder: String!
@@ -408,14 +381,6 @@ input UpdateWithdrawalsInput {
     status: PaymentStatus
 
 }
-
-enum PaymentStatus {
-    PENDING,
-    COMPLETED,
-    FAILED,
-    CANCELLED
-}
-
 input CreateCategoryInput {
     name: String!
     isActive: Boolean!
@@ -434,7 +399,6 @@ input UpdateCoinInput {
     coin: Float
     won: Float
 }
-
 input CreateThemeInput{
     name: String!
     koreanTitle: String!
@@ -479,14 +443,12 @@ input PagingInput {
     sortBy: String
     sort: ESort
 }
-
 input UserInput {
     phone: String!
     password: String!
     firstName: String!
     lastName: String!
 }
-
 input TranslatorProfileInput {
     dateOfBirth: String
     email: String
@@ -496,29 +458,23 @@ input TranslatorProfileInput {
     languages: [ID]
     themes: [ID]
 }
-
 input LanguageInput {
     name: String!
 }
-
 input RegisterUserInput {
     phone: String!
     password: String!
 }
-
 input LoginUserInput {
     phone: String!
     password: String!
 }
-
-
 input DebtorInput {
     accountHolder: String
     nameOfBank: String
     isPaid: Boolean
     userId: ID!
 }
-
 input DepositsInput {
     accountHolder: String
     nameOfBank: String
@@ -527,7 +483,6 @@ input DepositsInput {
     status: String
     userId: ID!
 }
-
 input CreateCallInput {
     caller: ID!
     recipient : ID!
@@ -543,11 +498,9 @@ input RatingInput {
     toWhomUserId: ID!
    rating : Float
 }
-
 input UpdateRatingInput {
     rating : Float!
 }
-
 input NotificationInput {
     title: String
     text: String
@@ -585,5 +538,11 @@ enum ESort {
     DES
     ASC
 }
-#scalar FileUpload
+enum PaymentStatus {
+    PENDING,
+    COMPLETED,
+    FAILED,
+    CANCELLED
+}
+
 scalar Upload
