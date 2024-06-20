@@ -170,12 +170,6 @@ type Mutation {
     updateLanguage(id: ID, languageInput: LanguageInput): Language
     deleteLanguage(id: ID): Boolean
 
-    changeIsActive(id: ID): Boolean
-    changeIsDebtor(id: ID): Boolean
-    addFcmToken(fcmToken: String, id: ID): User
-    deleteFcmToken(id: ID): Boolean
-    addApnToken(apnToken: String, id: ID): User
-    deleteApnToken(id: ID): Boolean
 
     addDeposit(createDepositsInput: CreateDepositsInput): Deposits
     updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
