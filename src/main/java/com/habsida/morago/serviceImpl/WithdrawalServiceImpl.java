@@ -1,9 +1,12 @@
 package com.habsida.morago.serviceImpl;
 
 
+import com.habsida.morago.exceptions.GraphqlException;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.entity.Withdrawals;
-import com.habsida.morago.model.inputs.WithdrawalInput;
+import com.habsida.morago.model.enums.PaymentStatus;
+import com.habsida.morago.model.inputs.CreateWithdrawalInput;
+import com.habsida.morago.model.inputs.UpdateWithdrawalInput;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.WithdrawalRepository;
 import com.habsida.morago.service.WithdrawalService;
@@ -29,48 +32,43 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     }
 
     @Override
-    public Withdrawals getWithdrawalById(Long id) throws Exception {
+    public Withdrawals getWithdrawalById(Long id) {
         return withdrawalRepository.findById(id)
-                .orElseThrow(() -> new Exception("Withdrawal not found for id: " + id));
+                .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
     }
 
 
     @Override
-    public Withdrawals addWithdrawal(WithdrawalInput withdrawalDto) {
-        User user = userRepository.findById(withdrawalDto.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public Withdrawals addWithdrawal(CreateWithdrawalInput createWithdrawalInput) {
+        User user = userRepository.findById(createWithdrawalInput.getUserId())
+                .orElseThrow(() -> new GraphqlException("User not found for id: " + createWithdrawalInput.getUserId()));
 
         Withdrawals withdrawals = new Withdrawals();
-        withdrawals.setAccountNumber(withdrawalDto.getAccountNumber());
-        withdrawals.setAccountHolder(withdrawalDto.getAccountHolder());
-        withdrawals.setSum(withdrawalDto.getSum());
-        withdrawals.setStatus(withdrawalDto.getStatus());
+        withdrawals.setAccountNumber(createWithdrawalInput.getAccountNumber());
+        withdrawals.setAccountHolder(createWithdrawalInput.getAccountHolder());
+        withdrawals.setSum(createWithdrawalInput.getSum());
+        withdrawals.setStatus(createWithdrawalInput.getStatus());
         withdrawals.setUser(user);
 
         return withdrawalRepository.save(withdrawals);
     }
 
     @Override
-    public Withdrawals updateWithdrawal(Long id, WithdrawalInput withdrawalDto) throws Exception {
-        Withdrawals withdrawals = withdrawalRepository.findById(withdrawalDto.getUserId())
-                .orElseThrow(() -> new Exception("Withdrawals not found for id: " + id));
+    public Withdrawals updateWithdrawal(Long id, UpdateWithdrawalInput updateWithdrawalInput) {
+        Withdrawals withdrawals = withdrawalRepository.findById(id)
+                .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
 
-        if (withdrawalDto.getAccountNumber() != null) {
-            withdrawals.setAccountNumber(withdrawalDto.getAccountNumber());
+        if (updateWithdrawalInput.getAccountNumber() != null && !updateWithdrawalInput.getAccountNumber().isEmpty()) {
+            withdrawals.setAccountNumber(updateWithdrawalInput.getAccountNumber());
         }
-        if (withdrawalDto.getAccountNumber() != null) {
-            withdrawals.setAccountNumber(withdrawalDto.getAccountNumber());
+        if (updateWithdrawalInput.getAccountNumber() != null && !updateWithdrawalInput.getAccountHolder().isEmpty()) {
+            withdrawals.setAccountHolder(updateWithdrawalInput.getAccountHolder());
         }
-        if (withdrawalDto.getSum() != null) {
-            withdrawals.setSum(withdrawalDto.getSum());
+        if (updateWithdrawalInput.getSum() != null) {
+            withdrawals.setSum(updateWithdrawalInput.getSum());
         }
-        if (withdrawalDto.getStatus() != null) {
-            withdrawals.setStatus(withdrawalDto.getStatus());
-        }
-        if (withdrawalDto.getUserId() != null) {
-            User user = userRepository.findById(withdrawalDto.getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-            withdrawals.setUser(user);
+        if (updateWithdrawalInput.getStatus() != null) {
+            withdrawals.setStatus(updateWithdrawalInput.getStatus());
         }
 
         return withdrawalRepository.save(withdrawals);
@@ -78,10 +76,29 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     }
 
     @Override
-    public void deleteWithdrawal(Long id) throws Exception {
-        withdrawalRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Withdrawal not found for id: " + id));
+    public void deleteWithdrawal(Long id)  {
+        Withdrawals withdrawals = withdrawalRepository.findById(id)
+                .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
         withdrawalRepository.deleteById(id);
 
+    }
+
+
+    @Override
+    public List<Withdrawals> getWithdrawalsByStatus(PaymentStatus status) {
+        List<Withdrawals> withdrawalsByStatus = withdrawalRepository.findByStatus(status);
+        if (withdrawalsByStatus.isEmpty()){
+            throw new GraphqlException("Deposits not found for status: " + status);
+        }
+        return withdrawalsByStatus;
+    }
+
+    @Override
+    public List<Withdrawals> getWithdrawalsByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
+        List<Withdrawals> withdrawalsByUserId = withdrawalRepository.findByUserId(userId);
+
+        return withdrawalsByUserId;
     }
 }

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,11 +28,12 @@ public class Rating {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "ratings")
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "grade")
     private Double ratings;
 
-    @Column(name = "total_ratings")
-    private Integer totalRatings;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_id")

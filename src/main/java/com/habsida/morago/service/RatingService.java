@@ -2,6 +2,7 @@ package com.habsida.morago.service;
 
 import com.habsida.morago.model.entity.Rating;
 import com.habsida.morago.model.inputs.RatingInput;
+import com.habsida.morago.model.inputs.UpdateRatingInput;
 
 
 import java.util.List;
@@ -10,6 +11,9 @@ public interface RatingService {
     List<Rating> getAllRatings();
     Rating getRatingById(Long id);
     Rating createRating(RatingInput ratingInput) throws Exception;
-    Rating updateRating(Long id, RatingInput ratingInput);
+
     void deleteRating(Long id) throws Exception;
+    public Double getAverageRating(Long toWhomUserId);
+    Rating updateRating(Long id, UpdateRatingInput updateRating) throws Exception;
+
 }

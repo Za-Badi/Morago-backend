@@ -1,6 +1,5 @@
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.model.input.DebtorInput;
 import com.habsida.morago.model.entity.Debtor;
 import com.habsida.morago.service.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +21,12 @@ public class DebtorResolver {
         return debtorService.getAllDebtors();
     }
 
-    public Debtor getDebtorById(Long id) throws Exception {
+    public Debtor getDebtorById(Long id) {
         return debtorService.getDebtorById(id);
     }
 
-    public Debtor addDebtor(DebtorInput debtorDto) {
-        return debtorService.addDebtor(debtorDto);
+    public List<Debtor> getDebtorByUserId(Long userId) {
+        return debtorService.getDebtorByUserId(userId);
     }
 
-    public Debtor updateDebtor(Long id, DebtorInput debtorDto) throws Exception {
-        return debtorService.updateDebtor(id, debtorDto);
-    }
-
-    public Boolean deleteDebtor(Long id) throws Exception {
-        debtorService.deleteDebtor(id);
-        return true;
-    }
 }

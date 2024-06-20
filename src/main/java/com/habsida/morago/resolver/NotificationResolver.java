@@ -1,7 +1,8 @@
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.model.inputs.NotificationInput;
 import com.habsida.morago.model.entity.Notification;
+import com.habsida.morago.model.inputs.CreateNotificationInput;
+import com.habsida.morago.model.inputs.UpdateNotificationInput;
 import com.habsida.morago.service.NotificationService;
 import org.springframework.stereotype.Component;
 
@@ -20,20 +21,28 @@ public class NotificationResolver {
         return notificationService.getAllNotification();
     }
 
-    public Notification getNotificationById(Long id) throws Exception {
+    public Notification getNotificationById(Long id) {
         return notificationService.getNotificationById(id);
     }
 
-    public Notification addNotification(NotificationInput notificationDto) {
-        return notificationService.addNotification(notificationDto);
+    public List<Notification> getNotificationsByUserId(Long userId){
+        return notificationService.getNotificationByUserId(userId);
     }
 
-    public Notification updateNotification(Long id, NotificationInput notificationDto) throws Exception {
-        return notificationService.updateNotification(id, notificationDto);
+    public Notification addNotification(CreateNotificationInput createNotificationInput) {
+        return notificationService.addNotification(createNotificationInput);
     }
 
-    public Boolean deleteNotification(Long id) throws Exception {
+    public Notification updateNotification(Long id, UpdateNotificationInput updateNotificationInput) {
+        return notificationService.updateNotification(id, updateNotificationInput);
+    }
+
+    public Boolean deleteNotification(Long id) {
         notificationService.deleteNotification(id);
         return true;
+    }
+
+    public List<Notification> getNotificationByUserId(Long userId){
+        return notificationService.getNotificationByUserId(userId);
     }
 }

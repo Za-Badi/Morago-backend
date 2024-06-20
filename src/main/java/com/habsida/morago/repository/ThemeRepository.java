@@ -26,4 +26,6 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
     Set<Theme> findThemeByIsActive(Boolean isActive);
 
 
+
+
 }

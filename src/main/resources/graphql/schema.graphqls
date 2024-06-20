@@ -3,9 +3,7 @@ schema {
     mutation: Mutation
 }
 type Query {
-#    testUser: [User]
-#    testTranslator: [User]
-#    testAuthentication: [User]
+
     getCoinById(id: ID!): Coin
     getAllCoins: [Coin]
 
@@ -25,47 +23,36 @@ type Query {
 
     getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
-#    getAllUsers: [User]
-#    getAllUsersPaged(page: Int!): UserPage
-#    getUserById(id: ID!): User
-#    getUserByPhone(phone: String): User
+    getAllUsers: [User]
+
+
+
+    getUserById(id: ID!): User
+    getUserByPhone(phone: String): User
 #
-#    existsUserByPhone(phone: String): Boolean
-#    getAuthenticatedUser: User
-#    getAllUserProfiles: [UserProfile]
-#    getUserProfileById(id: ID): UserProfile
-#    getAllTranslatorProfiles: [TranslatorProfile]
-#    getTranslatorProfileById(id: ID): TranslatorProfile
-#    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfile]
-#    getTranslatorProfilesByThemeName(name: String): [TranslatorProfile]
-#    getTranslatorProfilesByIsOnline(isOnline: Boolean): [TranslatorProfile]
-#    getAllLanguages: [Language]
-#    getLanguageById(id: ID): Language
+
 #
-#    getAllDeposits: [Deposits]
-#    getDepositById(id: ID!): Deposits
-#    getDepositsByStatus(status: Status!):[Deposits]
-#    getDepositsByUserId(userId: ID!): User
-#
-#    getAllDebtors: [Debtor]
-#    getDebtorById(id: ID!): Debtor
-#
-#    getAllNotification: [Notification]
-#    getNotificationById(id: ID!): Notification
-#
-#    getAllWithdrawals: [Withdrawals]
-#    getWithdrawalById(id: ID!): Withdrawals
-#    getAllCalls: [Call]
-#    getCallById(caller : ID!): Call
-#    getCallsByUserId(id: ID!): [Call]
-#    getAllMissedCalls(callStatus: CallStatus!): [Call]
+    getAllDeposits: [Deposits]
+    getDepositById(id: ID!): Deposits
+    getDepositsByStatus(status: PaymentStatus!):[Deposits]
+    getDepositsByUserId(userId: ID!): [Deposits]
+
+    getAllCalls: [Call]
+    getCallById(id : ID!): Call
+    getCallsByUserId(userId: ID!): [Call]
+    getAllMissedCalls( status: CallStatus!): [Call]
 #    getCallsByStatus(status: CallStatus!): [Call]
+    getCallsByOutgoingIncoming: [Call]
+    getCallsByOutgoingIncomingStatus(status: CallStatus!): [Call]
+
+    getAllRatings : [Rating]
+    getRatingById (id : ID!) : Rating
+    getAverageRating(toWhomUserId : ID!) : Float
+
 }
 
 type Mutation {
-#    signUpAsUser(registerUserInput: RegisterUserInput): String
-#    signUpAsTranslator(registerUserInput: RegisterUserInput): String
-#    logIn(loginUserInput: LoginUserInput): String
+
 
     createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
     updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
@@ -89,58 +76,27 @@ type Mutation {
     createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
     updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
     deleteFrequentlyAskedQuestionById(id: ID!): Boolean
-#    addUser(userInput: UserInput): User
-#    updateUser(id: ID, userInput: UserInput): User
-#    deleteUser(id: ID): Boolean
-#    changeIsActive(id: ID): Boolean
-#    changeIsDebtor(id: ID): Boolean
-#    addFcmToken(fcmToken: String, id: ID): User
-#    deleteFcmToken(id: ID): Boolean
-#    addApnToken(apnToken: String, id: ID): User
-#    deleteApnToken(id: ID): Boolean
-#    addUserProfile(isFreeCallMade: Boolean): UserProfile
-#    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
-#    deleteUserProfile(id: ID): Boolean
-#    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
-#    changeIsFreeCallMade(id: ID): Boolean
-#    changeBalanceByUserProfileId(id: ID, balance: Float): User
-#    addTranslatorProfile(translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-#    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-#    deleteTranslatorProfile(id: ID): Boolean
-#    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-#    changeIsAvailable(id: ID): Boolean
-#    changeIsOnline(id: ID): Boolean
-#    changeBalanceForTranslatorProfileId(id: ID, balance: Float): User
-#    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
-#    deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
-#    addLanguage(languageInput: LanguageInput): Language
-#    updateLanguage(id: ID, languageInput: LanguageInput): Language
-#    deleteLanguage(id: ID): Boolean
-#
-#
-#    addDeposit(depositsDto: DepositsInput): Deposits
-#    updateDeposit(id: ID!, depositsDto: DepositsInput): Deposits
-#    deleteDeposit(id: ID!): Boolean
-#
-#    addDebtor(debtorDto: DebtorInput): Debtor
-#    updateDebtor(id: ID!, debtorDto: DebtorInput): Debtor
-#    deleteDebtor(id: ID!): Boolean
-#
-#    addNotification(notificationDto: NotificationInput): Notification
-#    updateNotification(id:ID!, notificationDto: NotificationInput):Notification
-#    deleteNotification(id:ID!): Notification
-#
-#    addWithdrawal(withdrawalDto: WithdrawalsInput): Withdrawals
-#    updateWithdrawal(id: ID!, withdrawalDto: WithdrawalsInput): Withdrawals
-#    deleteWithdrawal(id: ID!): Boolean
-#
-#    createCall(CallDto : CallInput) : Call
-#    updateCall(id : ID!, status : CallStatus, duration: Int!, commission : Float):Call
-#    deleteCall(id: ID!): Boolean
-#    updateRating(id: ID!, RatingUpdate : RatingInput): Rating
-#    deleteRating(id: ID!): Boolean
+    addUser(userInput: UserInput): User
+    updateUser(id: ID, userInput: UserInput): User
+    deleteUser(id: ID): Boolean
 
+    changeIsActive(id: ID): Boolean
+    changeIsDebtor(id: ID): Boolean
+    addFcmToken(fcmToken: String, id: ID): User
+    deleteFcmToken(id: ID): Boolean
+    addApnToken(apnToken: String, id: ID): User
+    deleteApnToken(id: ID): Boolean
+#
     addFile(file: Upload!): File
+    addDeposit(createDepositsInput: CreateDepositsInput): Deposits
+    updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
+    deleteDeposit(id: ID!): Boolean
+
+
+
+    updateRating(id: ID!, update : UpdateRatingInput): Rating
+    createRating(ratingInput : RatingInput): Rating
+    deleteRating(id: ID!): Boolean
 }
 
 
@@ -237,63 +193,108 @@ type Call {
     recipient: User
     createdAt: String
     duration: Int
-    status: String
+    status: CallStatus
     sum: Float
     commission: Float
     translatorHasRated: Boolean
     userHasRated: Boolean
-    file: File
+#    file: File
     theme: Theme
 }
 type Rating {
     id: ID!
     whoUser: User!
     toWhomUser: User!
-    grade: Float
     createdAt: String
     updatedAt: String
     ratings: Float
-    totalRatings: Int
 }
 
-type Debtor {
-    id: ID!
-    accountHolder: String!
-    nameOfBank: String!
-    isPaid: Boolean!
-    createdAt: String
-    updatedAt: String
-    user: User
-}
+
 type Deposits {
     id: ID!
     accountHolder: String
     nameOfBank: String
     coin: Float
     won: Float
-    status: String!
+    status: PaymentStatus
     createdAt: String
     updatedAt: String
     user: User
 }
+input CreateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    coin: Float
+    status: PaymentStatus
+    won: Float
+    userId: ID!
+}
+
+input UpdateDepositsInput {
+    accountHolder: String!
+    nameOfBank: String!
+    status: PaymentStatus
+    coin: Float
+    won: Float
+}
 
 type Notification {
     id: ID!
-    title: String
-    text: String
+    title: String!
+    text: String!
     date: String
     time: String
-    user: User
+    user: User!
 }
+
+input CreateNotificationInput {
+    title: String!
+    text: String!
+
+    userId: ID!
+}
+
+input UpdateNotificationInput {
+    title: String!
+    text: String!
+
+}
+
+
 type Withdrawals {
     id: ID!
     accountNumber: String!
     accountHolder: String!
     sum: Float!
-    status: String!
+    status: PaymentStatus
     createdAt: String
     updatedAt: String
     user: User
+}
+
+
+input CreateWithdrawalsInput {
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float
+    status: PaymentStatus
+    userId: ID!
+}
+
+input UpdateWithdrawalsInput {
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float
+    status: PaymentStatus
+
+}
+
+enum PaymentStatus {
+    PENDING,
+    COMPLETED,
+    FAILED,
+    CANCELLED
 }
 
 input CreateCategoryInput {
@@ -401,21 +402,26 @@ input DepositsInput {
     userId: ID!
 }
 
-input CallInput {
+input CreateCallInput {
     caller: ID!
     recipient : ID!
+    theme : ID!
 }
 input CallUpdateInput {
     duration: Int
-    status: String
+    status: CallStatus
     commission: Float
 }
 input RatingInput {
-    callId: ID!
     whoUserId: ID!
     toWhomUserId: ID!
-    grade: Float!
+   rating : Float
 }
+
+input UpdateRatingInput {
+    rating : Float!
+}
+
 input NotificationInput {
     title: String
     text: String

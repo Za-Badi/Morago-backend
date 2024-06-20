@@ -1,7 +1,8 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.model.entity.Rating;
-import com.habsida.morago.repository.CallRespository;
+import com.habsida.morago.model.inputs.UpdateRatingInput;
+import com.habsida.morago.repository.CallRepository;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.RatingInput;
 import com.habsida.morago.repository.RatingRepository;
@@ -19,7 +20,7 @@ public class RatingServiceImpl implements RatingService {
 
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
-    private final CallRespository callRepository;
+    private final CallRepository callRepository;
 
     @Override
     public List<Rating> getAllRatings() {
@@ -33,8 +34,8 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public Rating createRating(RatingInput ratingInput) throws Exception {
-        User whoUser = userRepository.findById(ratingInput.getWhoUserId()).orElseThrow(() -> new RuntimeException("not found"));
-        User toWhom = userRepository.findById(ratingInput.getToWhomUserId()).orElseThrow(() -> new RuntimeException("user not found"));
+        User whoUser = userRepository.findById(ratingInput.getWhoUserId()).orElseThrow(() -> new IllegalArgumentException("user who has rated not found"));
+        User toWhom = userRepository.findById(ratingInput.getToWhomUserId()).orElseThrow(() -> new IllegalArgumentException("user who has been rated not found"));
 
         Rating rating = new Rating();
         rating.setWhoUser(whoUser);
@@ -46,13 +47,11 @@ public class RatingServiceImpl implements RatingService {
 
 
     @Override
-    public Rating updateRating(Long id, RatingInput ratingInput) {
-        Rating existingRating = ratingRepository.findById(id).orElseThrow(() -> new RuntimeException("Rating not found with id " + id));
+    public Rating updateRating(Long id, UpdateRatingInput update) {
+        Rating existingRating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("rating not found"));
 
-
-        existingRating.setRatings(ratingInput.getRating());
-
-
+        existingRating.setRatings(update.getRating());
+        existingRating.setUpdatedAt(LocalDateTime.now());
         return ratingRepository.save(existingRating);
     }
 
@@ -60,7 +59,17 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public void deleteRating(Long id) {
         Rating rating = ratingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Rating not found with id " + id));
+                .orElseThrow(() -> new IllegalArgumentException("rating not found"));
         ratingRepository.delete(rating);
+    }
+    @Override
+    public Double getAverageRating(Long toWhomUserId) {
+        Double averageRating = ratingRepository.findAverageGradeByToWhomUserId(toWhomUserId);
+
+        if (averageRating == null && averageRating.isNaN() ) {
+            throw new IllegalArgumentException("rating with id " + toWhomUserId+ "not found");
+        }
+
+        return averageRating;
     }
 }
