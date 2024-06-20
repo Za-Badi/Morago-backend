@@ -15,11 +15,9 @@ public class LanguageMutationResolver implements GraphQLMutationResolver {
     public Language addLanguage(LanguageInput languageInput) {
         return languageService.addLanguage(languageInput);
     }
-
     public Language updateLanguage(Long id, LanguageInput languageInput) throws ExceptionGraphql {
         return languageService.updateLanguage(id, languageInput);
     }
-
     public Boolean deleteLanguage(Long id) throws ExceptionGraphql {
         languageService.deleteLanguage(id);
         return true;

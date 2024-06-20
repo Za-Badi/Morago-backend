@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
-
+    @Transactional
     public User signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
         if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
                 registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
@@ -52,7 +53,7 @@ public class AuthenticationService {
         user.setUserProfile(new UserProfile());
         return userRepository.save(user);
     }
-
+    @Transactional
     public User signUpAsTranslator(RegisterUserInput registerUserInput) throws ExceptionGraphql {
         if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
                 registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
@@ -88,7 +89,7 @@ public class AuthenticationService {
         user.setTranslatorProfile(translatorProfile);
         return userRepository.save(user);
     }
-
+    @Transactional
     public User logIn(LoginUserInput loginUserInput) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

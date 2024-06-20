@@ -28,9 +28,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepositoryPaged userRepositoryPaged;
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+    @Transactional(readOnly = true)
     public UserPage getAllUsersPaged(Integer page, Integer size) {
         if (page == null) {
             page = 0;
@@ -47,18 +49,17 @@ public class UserService {
                 usersPage.getNumber()
         );
     }
-
+    @Transactional(readOnly = true)
     public User getUserById(Long id) throws ExceptionGraphql {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
     }
-
-
+    @Transactional(readOnly = true)
     public User getUserByPhone(String phone) throws ExceptionGraphql {
         return userRepository.findByPhone(phone)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with phone: " + phone));
     }
-
+    @Transactional(readOnly = true)
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails userDetails) {
@@ -67,6 +68,7 @@ public class UserService {
         }
         return null;
     }
+    @Transactional(readOnly = true)
     public UserPage searchUsers(String searchInput, Integer page, Integer size) {
         if (page == null) {
             page = 0;
@@ -83,10 +85,11 @@ public class UserService {
                 usersPage.getNumber()
         );
     }
+    @Transactional(readOnly = true)
     public Boolean existsUserByPhone(String phone) {
         return userRepository.findByPhone(phone).isPresent();
     }
-
+    @Transactional
     public User addUser(UserInput userInput) throws ExceptionGraphql {
         if (userInput.getPhone().isBlank() || userInput.getPassword().isBlank()) {
             throw new ExceptionGraphql("Empty values are not allowed");
@@ -110,7 +113,7 @@ public class UserService {
         user.setRoles(roles);
         return userRepository.save(user);
     }
-
+    @Transactional
     public User updateUser(Long id, UserInput userInput) throws ExceptionGraphql {
         if (userInput.getPhone() == null || userInput.getPhone().isBlank() ||
                 userInput.getPassword() == null || userInput.getPassword().isBlank()) {
@@ -131,7 +134,7 @@ public class UserService {
         if (userInput.getLastName() != null && !userInput.getLastName().isBlank()) { user.setLastName(userInput.getLastName()); }
         return userRepository.save(user);
     }
-
+    @Transactional
     public void deleteUser(Long id) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
@@ -139,6 +142,7 @@ public class UserService {
         userRepository.save(user);
         userRepository.deleteById(id);
     }
+    @Transactional
     public Boolean changeIsActive(Long id, Boolean isActive) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
@@ -146,6 +150,7 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+    @Transactional
     public Boolean changeIsDebtor(Long id, Boolean isDebtor) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
@@ -153,24 +158,28 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+    @Transactional
     public User addFcmToken(String fcmToken, Long id) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
         user.setFcmToken(fcmToken);
         return userRepository.save(user);
     }
+    @Transactional
     public void deleteFcmToken(Long id) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
         user.setFcmToken(null);
         userRepository.save(user);
     }
+    @Transactional
     public User addApnToken(String apnToken, Long id) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
         user.setApnToken(apnToken);
         return userRepository.save(user);
     }
+    @Transactional
     public void deleteApnToken(Long id) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));

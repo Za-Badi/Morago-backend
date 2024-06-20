@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 public class AuthenticationMutationResolver implements GraphQLMutationResolver {
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
-
     public String signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
         User user = authenticationService.signUpAsUser(registerUserInput);
         LoginUserInput loginUserInput = new LoginUserInput();
@@ -24,7 +23,6 @@ public class AuthenticationMutationResolver implements GraphQLMutationResolver {
         User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
-
     public String signUpAsTranslator(RegisterUserInput registerUserInput) throws ExceptionGraphql {
         User user = authenticationService.signUpAsTranslator(registerUserInput);
         LoginUserInput loginUserInput = new LoginUserInput();
@@ -33,7 +31,6 @@ public class AuthenticationMutationResolver implements GraphQLMutationResolver {
         User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
-
     public String logIn(LoginUserInput loginUserInput) {
         User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);

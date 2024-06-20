@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,11 @@ public class TranslatorProfileServiceImp {
     private final LanguageRepository languageRepository;
     private final UserRepository userRepository;
     private final TranslatorProfileRepositoryPaged translatorProfileRepositoryPaged;
-
+    @Transactional(readOnly = true)
     public List<TranslatorProfile> getAllTranslatorProfiles() {
         return translatorProfileRepository.findAll();
     }
-
+    @Transactional(readOnly = true)
     public TranslatorPage getAllTranslatorProfilesPaged(Integer page, Integer size) {
         if (page == null) {
             page = 0;
@@ -42,14 +43,16 @@ public class TranslatorProfileServiceImp {
                 translatorProfilePage.getNumber()
         );
     }
-
+    @Transactional(readOnly = true)
     public TranslatorProfile getTranslatorProfileById(Long id) throws ExceptionGraphql {
         return translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("TranslatorProfile not found with id: " + id));
     }
+    @Transactional(readOnly = true)
     public List<TranslatorProfile> getTranslatorProfilesByIsOnlineAndThemeId(Boolean isOnline, Long id) {
         return translatorProfileRepository.findByIsOnlineAndThemesId(isOnline, id);
     }
+    @Transactional(readOnly = true)
     public TranslatorPage getTranslatorProfilesByIsOnlineAndThemeIdPaged(Integer page, Integer size, Long id, Boolean isOnline) {
         if (page == null) {
             page = 0;
@@ -66,9 +69,11 @@ public class TranslatorProfileServiceImp {
                 translatorProfilePage.getNumber()
         );
     }
+    @Transactional(readOnly = true)
     public List<TranslatorProfile> getTranslatorProfilesByThemeId(Long id) {
         return translatorProfileRepository.findByThemesId(id);
     }
+    @Transactional(readOnly = true)
     public TranslatorPage getTranslatorProfilesByThemeIdPaged(Integer page, Integer size, Long id) {
         if (page == null) {
             page = 0;
@@ -85,9 +90,11 @@ public class TranslatorProfileServiceImp {
                 translatorProfilePage.getNumber()
         );
     }
+    @Transactional(readOnly = true)
     public List<TranslatorProfile> getTranslatorProfilesByThemeName(String name)  {
         return translatorProfileRepository.findByThemesName(name);
     }
+    @Transactional(readOnly = true)
     public TranslatorPage getTranslatorProfilesByThemeNamePaged(Integer page, Integer size, String name) {
         if (page == null) {
             page = 0;
@@ -104,6 +111,7 @@ public class TranslatorProfileServiceImp {
                 translatorProfilePage.getNumber()
         );
     }
+    @Transactional(readOnly = true)
     public TranslatorPage searchTranslators(String searchInput, Integer page, Integer size) {
         if (page == null) {
             page = 0;
@@ -120,6 +128,7 @@ public class TranslatorProfileServiceImp {
                 translatorProfilePage.getNumber()
         );
     }
+    @Transactional
     public TranslatorProfile addTranslatorProfile(Long id, TranslatorProfileInput translatorProfileInput) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = new TranslatorProfile();
         translatorProfile.setDateOfBirth(translatorProfileInput.getDateOfBirth());
@@ -148,7 +157,7 @@ public class TranslatorProfileServiceImp {
         }
         return user.getTranslatorProfile();
     }
-
+    @Transactional
     public TranslatorProfile updateTranslatorProfile(Long id, TranslatorProfileInput translatorProfileInput) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("TranslatorProfile not found with id: " + id));
@@ -179,7 +188,7 @@ public class TranslatorProfileServiceImp {
         }
         return translatorProfileRepository.save(translatorProfile);
     }
-
+    @Transactional
     public void deleteTranslatorProfile(Long id) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("TranslatorProfile not found with id: " + id));
@@ -194,7 +203,7 @@ public class TranslatorProfileServiceImp {
         translatorProfileRepository.save(translatorProfile);
         translatorProfileRepository.deleteById(id);
     }
-
+    @Transactional
     public TranslatorProfile updateTranslatorProfileByUserId(Long id, TranslatorProfileInput translatorProfileInput) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
@@ -231,6 +240,7 @@ public class TranslatorProfileServiceImp {
         }
         return translatorProfileRepository.save(translatorProfile);
     }
+    @Transactional
     public Boolean changeIsAvailable(Long id, Boolean isAvailable) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("Translator Profile not found with id: " + id));
@@ -238,6 +248,7 @@ public class TranslatorProfileServiceImp {
         translatorProfileRepository.save(translatorProfile);
         return true;
     }
+    @Transactional
     public Boolean changeIsOnline(Long id, Boolean isOnline) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("Translator Profile not found with id: " + id));
@@ -245,6 +256,7 @@ public class TranslatorProfileServiceImp {
         translatorProfileRepository.save(translatorProfile);
         return true;
     }
+    @Transactional
     public TranslatorProfile addLanguageToTranslatorProfile(Long languageId, Long translatorProfileId) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(translatorProfileId)
                 .orElseThrow(() -> new ExceptionGraphql("Translator Profile not found with id: " + translatorProfileId));
@@ -258,6 +270,7 @@ public class TranslatorProfileServiceImp {
         translatorProfileRepository.save(translatorProfile);
         return translatorProfile;
     }
+    @Transactional
     public void deleteLanguageFromTranslatorProfile(Long languageId, Long translatorProfileId) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(translatorProfileId)
                 .orElseThrow(() -> new ExceptionGraphql("Translator Profile not found with id: " + translatorProfileId));
@@ -266,6 +279,7 @@ public class TranslatorProfileServiceImp {
         translatorProfile.getLanguages().remove(language);
         translatorProfileRepository.save(translatorProfile);
     }
+    @Transactional
     public User changeBalanceForTranslatorProfileId(Long id, Double balance) throws ExceptionGraphql {
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("Translator Profile not found with id: " + id));
