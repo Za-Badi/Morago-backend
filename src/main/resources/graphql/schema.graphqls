@@ -52,38 +52,6 @@ type Query {
     getAllLanguages: [Language]
     getLanguageById(id: ID): Language
 
-#    getAllDeposits: [Deposits]
-#    getDepositById(id: ID!): Deposits
-#    getDepositsByStatus(status: Status!):[Deposits]
-#    getDepositsByUserId(userId: ID!): User
-#
-#    getAllDebtors: [Debtor]
-#    getDebtorById(id: ID!): Debtor
-#
-#    getAllNotification: [Notification]
-#    getNotificationById(id: ID!): Notification
-#
-#    getAllWithdrawals: [Withdrawals]
-#    getWithdrawalById(id: ID!): Withdrawals
-    getAllUsers: [User]
-
-    #getAllUsersPaged(page: Int!): UserPage
-
-    getUserById(id: ID!): User
-    getUserByPhone(phone: String): User
-#
-#    existsUserByPhone(phone: String): Boolean
-#    getAuthenticatedUser: User
-#    getAllUserProfiles: [UserProfile]
-#    getUserProfileById(id: ID): UserProfile
-#    getAllTranslatorProfiles: [TranslatorProfile]
-#    getTranslatorProfileById(id: ID): TranslatorProfile
-#    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfile]
-#    getTranslatorProfilesByThemeName(name: String): [TranslatorProfile]
-#    getTranslatorProfilesByIsOnline(isOnline: Boolean): [TranslatorProfile]
-#    getAllLanguages: [Language]
-#    getLanguageById(id: ID): Language
-
     getAllDebtors: [Debtor]
     getDebtorById(id: ID!): Debtor
     getDebtorByUserId(userId: ID!): [Debtor]
@@ -194,19 +162,6 @@ type Mutation {
     addWithdrawal(createWithdrawalInput: CreateWithdrawalsInput): Withdrawals
     updateWithdrawal(id: ID!, updateWithdrawalInput: UpdateWithdrawalsInput): Withdrawals
     deleteWithdrawal(id: ID!): Boolean
-#
-#    createCall(CallDto : CallInput) : Call
-#    updateCall(id : ID!, status : CallStatus, duration: Int!, commission : Float):Call
-#    deleteCall(id: ID!): Boolean
-#    updateRating(id: ID!, RatingUpdate : RatingInput): Rating
-#    deleteRating(id: ID!): Boolean
-
-
-    addDeposit(createDepositsInput: CreateDepositsInput): Deposits
-    updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
-    deleteDeposit(id: ID!): Boolean
-
-
 
     updateRating(id: ID!, update : UpdateRatingInput): Rating
     createRating(ratingInput : RatingInput): Rating
@@ -326,13 +281,7 @@ type TranslatorProfile {
     isOnline: Boolean
     levelOfKorean: String
 }
-type TranslatorPage {
-    content: [TranslatorProfile]
-    totalPages: Int
-    totalElements: Int
-    size: Int
-    number: Int
-}
+
 type Call {
     id: ID
     caller: User
