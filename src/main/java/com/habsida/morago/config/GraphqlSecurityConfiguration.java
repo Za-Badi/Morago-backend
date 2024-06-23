@@ -34,7 +34,7 @@ public class GraphqlSecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/graphql").permitAll()
                         .antMatchers("/graphiql").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagementCustomizer -> sessionManagementCustomizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

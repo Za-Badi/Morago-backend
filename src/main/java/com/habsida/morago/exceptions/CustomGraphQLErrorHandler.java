@@ -4,6 +4,11 @@ import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
 import graphql.servlet.core.DefaultGraphQLErrorHandler;
 import graphql.servlet.core.GraphQLErrorHandler;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.BadCredentialsException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.stereotype.Component;
 
 import javax.naming.AuthenticationException;
@@ -27,6 +32,21 @@ public class CustomGraphQLErrorHandler implements GraphQLErrorHandler {
     private GraphQLError processError(GraphQLError error) {
         if (error instanceof ExceptionWhileDataFetching) {
             Throwable exception = ((ExceptionWhileDataFetching) error).getException();
+            if (exception instanceof AccessDeniedException) {
+                return new ExceptionGraphql(((AccessDeniedException) exception).getMessage());
+            }
+            if (exception instanceof BadCredentialsException) {
+                return new ExceptionGraphql(((BadCredentialsException) exception).getMessage());
+            }
+            if (exception instanceof AccountStatusException) {
+                return new ExceptionGraphql(((AccountStatusException)exception).getMessage());
+            }
+            if (exception instanceof SignatureException) {
+                return new ExceptionGraphql(((SignatureException) exception).getMessage());
+            }
+            if (exception instanceof ExpiredJwtException) {
+                return new ExceptionGraphql(((ExpiredJwtException) exception).getMessage());
+            }
             if (exception instanceof AuthenticationException) {
                 return new ExceptionGraphql(((AuthenticationException) exception).getMessage());
             }
@@ -45,8 +65,6 @@ public class CustomGraphQLErrorHandler implements GraphQLErrorHandler {
             if (exception instanceof IOException) {
                 return new ExceptionGraphql(((IOException) exception).getMessage());
             }
-
-
         }
         return defaultHandler.processErrors(List.of(error)).get(0);
     }
