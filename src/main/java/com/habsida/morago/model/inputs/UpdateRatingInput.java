@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateRatingInput {
-    private Double rating;
+    private Double ratings;
 }

@@ -73,6 +73,13 @@ type Query {
 
     getCallsByOutgoingIncoming: [Call]
     getCallsByOutgoingIncomingStatus(status: CallStatus!): [Call]
+    getAllCalls: [Call]
+    getCallById(id : ID!): Call
+    getAllFreeCalls : [Call]
+    getCallsByUserId(userid : ID!) : [Call]
+    getMissedCalls(userId: ID!, page: Int!, size: Int!): CallPage!
+    getCallsByOutgoingIncoming(page : Int!, size : Int!): CallPage!
+    getCallsByOutgoingIncomingStatus(status : CallStatus, page : Int!, size : Int!) : CallPage!
 
     getAllRatings : [Rating]
     getRatingById (id : ID!) : Rating
@@ -153,6 +160,10 @@ type Mutation {
     addWithdrawal(createWithdrawalInput: CreateWithdrawalsInput): Withdrawals
     updateWithdrawal(id: ID!, updateWithdrawalInput: UpdateWithdrawalsInput): Withdrawals
     deleteWithdrawal(id: ID!): Boolean
+
+    createCall(input : CreateCallInput) : Call
+    updateCall(id : ID!, input : CallUpdateInput) : Call
+    deleteCall(id : ID!) : Boolean
 
     updateRating(id: ID!, update : UpdateRatingInput): Rating
     createRating(ratingInput : RatingInput): Rating
@@ -276,7 +287,7 @@ type Call {
     commission: Float
     translatorHasRated: Boolean
     userHasRated: Boolean
-#    file: File
+    file: File
     theme: Theme
 }
 type Rating {
@@ -357,6 +368,15 @@ input SearchUsersInput {
     firstName: String
     phone: String
 }
+
+type PageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [Call]
+}
+
+
 input CreateNotificationInput {
     title: String!
     text: String!
@@ -367,6 +387,32 @@ input UpdateNotificationInput {
     title: String!
     text: String!
 }
+
+
+type Withdrawals {
+    id: ID!
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float!
+    status: PaymentStatus
+    createdAt: String
+    updatedAt: String
+    user: User
+}
+
+
+type PageInfo {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    pageSize: Int!
+}
+type CallPage {
+    content: [Call!]!
+    pageInfo: PageInfo!
+}
+
+
 input CreateWithdrawalsInput {
     accountNumber: String!
     accountHolder: String!
@@ -489,17 +535,17 @@ input CreateCallInput {
     theme : ID!
 }
 input CallUpdateInput {
-    duration: Int
-    status: CallStatus
-    commission: Float
+    duration: Int!
+    status: CallStatus!
+    commission: Float!
 }
 input RatingInput {
     whoUserId: ID!
     toWhomUserId: ID!
-   rating : Float
+   ratings : Float
 }
 input UpdateRatingInput {
-    rating : Float!
+    ratings : Float!
 }
 input NotificationInput {
     title: String
@@ -513,6 +559,11 @@ input WithdrawalsInput {
     status: Status
     userId: ID!
 }
+input PagingInput {
+    pageNo: Int
+    pageSize: Int
+}
+
 
 enum EPlatform {
     IOS
@@ -545,4 +596,5 @@ enum PaymentStatus {
     CANCELLED
 }
 
+#scalar FileUpload
 scalar Upload

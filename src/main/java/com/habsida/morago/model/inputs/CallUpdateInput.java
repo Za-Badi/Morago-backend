@@ -1,5 +1,6 @@
 package com.habsida.morago.model.inputs;
 
+import com.habsida.morago.model.enums.CallStatus;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class CallUpdateInput {
     private Integer duration;
-    private String status;
+    private CallStatus status;
     private Double commission;
 }
 
