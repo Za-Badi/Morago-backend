@@ -2,11 +2,14 @@ package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.entity.Role;
+import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.UserPage;
+import com.habsida.morago.model.inputs.UsersAndWithdrawals;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.UserRepositoryPaged;
+import com.habsida.morago.repository.WithdrawalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -28,6 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepositoryPaged userRepositoryPaged;
+    private final WithdrawalRepository withdrawalRepository;
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -199,5 +204,20 @@ public class UserService {
 //            throw new Exception());
         }
         return user;
+    }
+
+    public List<UsersAndWithdrawals> getUsersAndWithdrawals() {
+        List<User> users = userRepository.findAll();
+
+        return users.stream()
+                .map(user -> {
+                    List<Withdrawals> withdrawals = withdrawalRepository.findByUserId(user.getId());
+                    if (!withdrawals.isEmpty()) {
+                        return new UsersAndWithdrawals(user, withdrawals);
+                    }
+                    return null;
+                })
+                .filter(usersAndWithdrawals -> usersAndWithdrawals != null)
+                .collect(Collectors.toList());
     }
 }

@@ -3,7 +3,6 @@ schema {
     mutation: Mutation
 }
 type Query {
-
     getCoinById(id: ID!): Coin
     getAllCoins: [Coin]
 
@@ -70,9 +69,8 @@ type Query {
     getWithdrawalsById(id: ID!): Withdrawals
     getWithdrawalsByStatus(status: PaymentStatus!):[Withdrawals]
     getWithdrawalsByUserId(userId: ID!): [Withdrawals]
+    getUsersAndWithdrawals: [UsersAndWithdrawals]
 
-    getCallsByOutgoingIncoming: [Call]
-    getCallsByOutgoingIncomingStatus(status: CallStatus!): [Call]
     getAllCalls: [Call]
     getCallById(id : ID!): Call
     getAllFreeCalls : [Call]
@@ -326,16 +324,6 @@ type Notification {
     time: String
     user: User!
 }
-type Withdrawals {
-    id: ID!
-    accountNumber: String!
-    accountHolder: String!
-    sum: Float!
-    status: PaymentStatus
-    createdAt: String
-    updatedAt: String
-    user: User
-}
 
 input CreateDebtorInput {
     accountHolder: String!
@@ -399,8 +387,10 @@ type Withdrawals {
     updatedAt: String
     user: User
 }
-
-
+type UsersAndWithdrawals {
+    user: User
+    withdrawals: [Withdrawals]
+}
 type PageInfo {
     totalPages: Int!
     totalElements: Int!
@@ -559,11 +549,6 @@ input WithdrawalsInput {
     status: Status
     userId: ID!
 }
-input PagingInput {
-    pageNo: Int
-    pageSize: Int
-}
-
 
 enum EPlatform {
     IOS
