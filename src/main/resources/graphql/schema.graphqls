@@ -39,11 +39,11 @@ type Query {
 
     getAllCalls: [Call]
     getCallById(id : ID!): Call
-    getCallsByUserId(userId: ID!): [Call]
-    getAllMissedCalls( status: CallStatus!): [Call]
-#    getCallsByStatus(status: CallStatus!): [Call]
-    getCallsByOutgoingIncoming: [Call]
-    getCallsByOutgoingIncomingStatus(status: CallStatus!): [Call]
+    getAllFreeCalls : [Call]
+    getCallsByUserId(userid : ID!) : [Call]
+    getMissedCalls(userId: ID!, page: Int!, size: Int!): CallPage!
+    getCallsByOutgoingIncoming(page : Int!, size : Int!): CallPage!
+    getCallsByOutgoingIncomingStatus(status : CallStatus, page : Int!, size : Int!) : CallPage!
 
     getAllRatings : [Rating]
     getRatingById (id : ID!) : Rating
@@ -86,13 +86,15 @@ type Mutation {
     deleteFcmToken(id: ID): Boolean
     addApnToken(apnToken: String, id: ID): User
     deleteApnToken(id: ID): Boolean
-#
+
     addFile(file: Upload!): File
     addDeposit(createDepositsInput: CreateDepositsInput): Deposits
     updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
     deleteDeposit(id: ID!): Boolean
 
-
+    createCall(input : CreateCallInput) : Call
+    updateCall(id : ID!, input : CallUpdateInput) : Call
+    deleteCall(id : ID!) : Boolean
 
     updateRating(id: ID!, update : UpdateRatingInput): Rating
     createRating(ratingInput : RatingInput): Rating
@@ -198,7 +200,7 @@ type Call {
     commission: Float
     translatorHasRated: Boolean
     userHasRated: Boolean
-#    file: File
+    file: File
     theme: Theme
 }
 type Rating {
@@ -248,6 +250,14 @@ type Notification {
     user: User!
 }
 
+type PageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [Call]
+}
+
+
 input CreateNotificationInput {
     title: String!
     text: String!
@@ -271,6 +281,18 @@ type Withdrawals {
     createdAt: String
     updatedAt: String
     user: User
+}
+
+
+type PageInfo {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    pageSize: Int!
+}
+type CallPage {
+    content: [Call!]!
+    pageInfo: PageInfo!
 }
 
 
@@ -408,18 +430,18 @@ input CreateCallInput {
     theme : ID!
 }
 input CallUpdateInput {
-    duration: Int
-    status: CallStatus
-    commission: Float
+    duration: Int!
+    status: CallStatus!
+    commission: Float!
 }
 input RatingInput {
     whoUserId: ID!
     toWhomUserId: ID!
-   rating : Float
+   ratings : Float
 }
 
 input UpdateRatingInput {
-    rating : Float!
+    ratings : Float!
 }
 
 input NotificationInput {
@@ -434,6 +456,11 @@ input WithdrawalsInput {
     status: Status
     userId: ID!
 }
+input PagingInput {
+    pageNo: Int
+    pageSize: Int
+}
+
 
 enum EPlatform {
     IOS
@@ -455,5 +482,15 @@ enum CallStatus {
     INCOMING_CALL,
     OUTGOING_CALL
 }
+
+
+
+
+enum ESort {
+    ASC
+    DESC
+}
+
+
 #scalar FileUpload
 scalar Upload

@@ -26,7 +26,7 @@ public class RatingMutationResolver implements GraphQLMutationResolver {
         Rating existingRating = ratingRepository.findById(id).orElseThrow(() -> new RuntimeException("Rating not found with id " + id));
 
 
-        existingRating.setRatings(update.getRating());
+        existingRating.setRatings(update.getRatings());
         existingRating.setUpdatedAt(LocalDateTime.now());
 
 

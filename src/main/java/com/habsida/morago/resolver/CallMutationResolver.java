@@ -3,6 +3,7 @@ package com.habsida.morago.resolver;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.enums.CallStatus;
+import com.habsida.morago.model.inputs.CallUpdateInput;
 import com.habsida.morago.model.inputs.CreateCallInput;
 import com.habsida.morago.repository.ThemeRepository;
 import com.habsida.morago.repository.UserRepository;
@@ -21,12 +22,16 @@ public class CallMutationResolver implements GraphQLMutationResolver {
         return callService.createCall(input);
     }
 
-    public Call updateCall(Long id, CallStatus status, Integer duration, Float commission) throws Exception {
-        return callService.updateCall(id, status, duration, commission);
+    public Call updateCall(Long id, CallUpdateInput input ) {
+
+        Float commission = (input.getCommission() != null) ? input.getCommission().floatValue() : null;
+
+        return callService.updateCall(id, input.getStatus(), input.getDuration(), commission);
     }
 
     public Boolean deleteCall(Long id) throws Exception {
         callService.deleteCall(id);
+
         return true;
     }
 }

@@ -40,7 +40,7 @@ public class RatingServiceImpl implements RatingService {
         Rating rating = new Rating();
         rating.setWhoUser(whoUser);
         rating.setToWhomUser(toWhom);
-        rating.setRatings(ratingInput.getRating());
+        rating.setRatings(ratingInput.getRatings());
         rating.setCreatedAt(LocalDateTime.now());
         return ratingRepository.save(rating);
     }
@@ -50,7 +50,7 @@ public class RatingServiceImpl implements RatingService {
     public Rating updateRating(Long id, UpdateRatingInput update) {
         Rating existingRating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("rating not found"));
 
-        existingRating.setRatings(update.getRating());
+        existingRating.setRatings(update.getRatings());
         existingRating.setUpdatedAt(LocalDateTime.now());
         return ratingRepository.save(existingRating);
     }

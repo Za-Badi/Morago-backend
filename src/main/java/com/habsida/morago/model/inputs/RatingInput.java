@@ -9,5 +9,5 @@ import lombok.Setter;
 public class RatingInput {
     private Long whoUserId;
     private Long toWhomUserId;
-    private Double rating;
+    private Double ratings;
 }

@@ -1,22 +1,17 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.exceptions.CallNotFoundException;
-import com.habsida.morago.exceptions.CallStatusNotFoundException;
-
-import com.habsida.morago.exceptions.UserNotFoundException;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.entity.User;
-
-
 import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.inputs.CreateCallInput;
 import com.habsida.morago.repository.CallRepository;
 import com.habsida.morago.repository.ThemeRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.CallService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,6 +29,9 @@ public class CallServiceImpl implements CallService {
     @Override
     public List<Call> getAllCalls() {
         return callRepository.findAll();
+    }
+    public List<Call> getAllFreeCall(){
+        return callRepository.getFreeCallIsMade();
     }
 
     @Override
@@ -58,8 +56,6 @@ public class CallServiceImpl implements CallService {
         User recipient = userRepository.findById(recipientId).orElseThrow(()-> new IllegalArgumentException("recipient not found" +input.getRecipient()));
         Theme theme = themeRepository.findById(themeId).orElseThrow(()-> new IllegalArgumentException("theme not found " +input.getTheme()));
 
-
-
         Call call = new Call();
         call.setCaller(caller);
         call.setRecipient(recipient);
@@ -71,38 +67,40 @@ public class CallServiceImpl implements CallService {
 
     @Override
     @Transactional
-    public Call updateCall(Long id, CallStatus status, Integer duration, Float commission) throws Exception{
+    public Call updateCall(Long id, CallStatus status, Integer duration, Float commission){
         Call call = callRepository.findById(id)
-                .orElseThrow(() -> new CallNotFoundException(id));
+                .orElseThrow(() -> new IllegalArgumentException("Calls not found"));
 
         if (status != null && !status.toString().isEmpty()) {
             call.setStatus(status);
-        } else new Exception("status can't be null");
+        } else throw new IllegalArgumentException("status can't be null");
 
 
-        if (duration != null && duration > 0) {
-            call.setDuration(duration);
-        } else if (duration != null && duration <= 0) {
-            throw new Exception("Duration must be greater than zero.");
+        if (duration != null) {
+            if (duration == 0) {
+                throw new IllegalArgumentException("Duration must be greater than zero.");
+            } else if (duration > 0) {
+                call.setDuration(duration);
+            }
+        } else {
+            throw new IllegalArgumentException("Duration cannot be null.");
         }
 
 
-        if (commission != null && commission > 0.0f) {
+        if (commission != null && commission >= 0.0f) {
             call.setCommission(commission.doubleValue());
         } else if (commission != null && commission <= 0.0f) {
-            throw new Exception("Commission must be greater than zero.");
+            throw new IllegalArgumentException("Commission must be greater than zero.");
         }
         call.setUpdatedAt(LocalDateTime.now());
 
         return callRepository.save(call);
 
     }
-
-
     @Override
-    public void deleteCall(Long id) throws Exception {
+    public void deleteCall(Long id)  {
         Call call = callRepository.findById(id)
-                .orElseThrow(() -> new CallNotFoundException(id));
+                .orElseThrow(() -> new IllegalArgumentException("Calls not found"));
         callRepository.delete(call);
     }
 
@@ -117,40 +115,16 @@ public class CallServiceImpl implements CallService {
         return calls;
     }
 
-
-    @Override
-    public List<Call> getAllMissedCalls( CallStatus status) throws Exception{
-
-        if (status != CallStatus.MISSED_CALL) {
-            throw new IllegalArgumentException("Invalid call status. Only MISSED_CALL is allowed.");
-        }
-
-        return callRepository.getCallsByMissedCall( status);
+    public Page<Call> getAllMissedCalls(Long userId, Pageable pageable) {
+        return callRepository.getAllMissedCalls(userId, pageable);
     }
 
-
-
-//    @Override
-//    public List<Call> getCallByStatus(CallStatus status) {
-//        List<Call> calls = callRepository.findByStatus(status);
-//        if (calls != null && !calls.isEmpty()) {
-//            throw new CallStatusNotFoundException(status);
-//        }
-//        return calls;
-//    }
-
-    @Override
-    public List<Call> getCallsByOutgoingIncoming() {
-        return callRepository.getCallsByOutgoingIncoming();
+    public Page<Call> getCallsByOutgoingIncomingStatus(CallStatus status, Pageable pageable) {
+        return callRepository.getCallsByOutgoingIncomingStatus(status, pageable);
     }
 
-    @Override
-    public List<Call> getCallsByOutgoingIncomingStatus(CallStatus callStatus) {
-        if (callStatus == CallStatus.INCOMING_CALL || callStatus == CallStatus.OUTGOING_CALL) {
-            return callRepository.getCallsByOutgoingIncomingStatus(callStatus);
-        } else {
-            throw new CallStatusNotFoundException(callStatus);
-        }
+    public Page<Call> getCallsByOutgoingIncoming(Pageable pageable) {
+        return callRepository.getCallsByOutgoingIncoming(pageable);
     }
 
 
