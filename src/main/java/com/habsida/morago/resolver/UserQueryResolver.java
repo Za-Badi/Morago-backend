@@ -2,7 +2,7 @@ package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.habsida.morago.exceptions.ExceptionGraphql;
-import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.dto.UserDTO;
 import com.habsida.morago.model.inputs.UserPage;
 import com.habsida.morago.model.inputs.UsersAndWithdrawals;
 import com.habsida.morago.serviceImpl.UserService;
@@ -16,42 +16,51 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserQueryResolver implements GraphQLQueryResolver {
     private final UserService userService;
-    public List<User> getAllUsers() {
+
+    public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
-    public User getUserById(Long id) throws ExceptionGraphql {
+
+    public UserDTO getUserById(Long id) throws ExceptionGraphql {
         return userService.getUserById(id);
     }
-    public User getUserByPhone(String phone) throws ExceptionGraphql {
+
+    public UserDTO getUserByPhone(String phone) throws ExceptionGraphql {
         return userService.getUserByPhone(phone);
     }
-    public User getAuthenticatedUser() {
+
+    public UserDTO getAuthenticatedUser() {
         return userService.getAuthenticatedUser();
     }
+
     public Boolean existsUserByPhone(String phone) {
         return userService.existsUserByPhone(phone);
     }
+
     public UserPage getAllUsersPaged(Integer page, Integer size) {
         return userService.getAllUsersPaged(page, size);
     }
+
     public UserPage searchUsers(String searchInput, Integer page, Integer size) {
         return userService.searchUsers(searchInput, page, size);
     }
+
     @PreAuthorize("isAuthenticated()")
-    public List<User> testAuthentication() {
-        return userService.getAllUsers();
-    }
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public List<User> testUser() {
-        return userService.getAllUsers();
-    }
-    @PreAuthorize("hasRole('ROLE_TRANSLATOR')")
-    public List<User> testTranslator() {
+    public List<UserDTO> testAuthentication() {
         return userService.getAllUsers();
     }
 
-    public List<UsersAndWithdrawals> getUsersAndWithdrawals(){
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<UserDTO> testUser() {
+        return userService.getAllUsers();
+    }
+
+    @PreAuthorize("hasRole('ROLE_TRANSLATOR')")
+    public List<UserDTO> testTranslator() {
+        return userService.getAllUsers();
+    }
+
+    public List<UsersAndWithdrawals> getUsersAndWithdrawals() {
         return userService.getUsersAndWithdrawals();
     }
-
 }

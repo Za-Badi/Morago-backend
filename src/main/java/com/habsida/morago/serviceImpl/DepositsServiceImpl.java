@@ -1,8 +1,7 @@
-
 package com.habsida.morago.serviceImpl;
 
-
 import com.habsida.morago.exceptions.GraphqlException;
+import com.habsida.morago.model.dto.DepositsDTO;
 import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.enums.PaymentStatus;
@@ -11,36 +10,43 @@ import com.habsida.morago.model.inputs.UpdateDepositsInput;
 import com.habsida.morago.repository.DepositsRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DepositsService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-
 public class DepositsServiceImpl implements DepositsService {
     private final DepositsRepository depositsRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public DepositsServiceImpl(DepositsRepository depositsRepository, UserRepository userRepository) {
+    public DepositsServiceImpl(DepositsRepository depositsRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.depositsRepository = depositsRepository;
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
-
 
     @Override
-    public List<Deposits> getAllDeposits() {
-        return depositsRepository.findAll();
+    public List<DepositsDTO> getAllDeposits() {
+        return depositsRepository.findAll()
+                .stream()
+                .map(deposits -> modelMapper.map(deposits, DepositsDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public Deposits getDepositById(Long id) {
-        return depositsRepository.findById(id)
+    @Override
+    public DepositsDTO getDepositById(Long id) {
+        Deposits deposits = depositsRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Deposits not found for id: " + id));
+        return modelMapper.map(deposits, DepositsDTO.class);
     }
 
-    public Deposits addDeposit(CreateDepositsInput createDepositsInput) {
-
+    @Override
+    public DepositsDTO addDeposit(CreateDepositsInput createDepositsInput) {
         Deposits deposits = new Deposits();
         deposits.setAccountHolder(createDepositsInput.getAccountHolder());
         deposits.setNameOfBank(createDepositsInput.getNameOfBank());
@@ -52,11 +58,13 @@ public class DepositsServiceImpl implements DepositsService {
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createDepositsInput.getUserId()));
 
         deposits.setUser(user);
+        Deposits savedDeposits = depositsRepository.save(deposits);
 
-        return depositsRepository.save(deposits);
+        return modelMapper.map(savedDeposits, DepositsDTO.class);
     }
 
-    public Deposits updateDeposit(Long id, UpdateDepositsInput updateDepositsInput) {
+    @Override
+    public DepositsDTO updateDeposit(Long id, UpdateDepositsInput updateDepositsInput) {
         Deposits deposits = depositsRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Deposits not found for id: " + id));
         if (updateDepositsInput.getAccountHolder() != null && !updateDepositsInput.getAccountHolder().isEmpty()) {
@@ -75,34 +83,35 @@ public class DepositsServiceImpl implements DepositsService {
             deposits.setStatus(updateDepositsInput.getStatus());
         }
 
-
-        return depositsRepository.save(deposits);
+        Deposits updatedDeposits = depositsRepository.save(deposits);
+        return modelMapper.map(updatedDeposits, DepositsDTO.class);
     }
 
+    @Override
     public void deleteDeposit(Long id) {
         Deposits deposits = depositsRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Deposit not found for id: " + id));
         depositsRepository.deleteById(id);
-
     }
 
     @Override
-    public List<Deposits> getDepositsByStatus(PaymentStatus status) {
+    public List<DepositsDTO> getDepositsByStatus(PaymentStatus status) {
         List<Deposits> depositsByStatus = depositsRepository.findByStatus(status);
         if (depositsByStatus.isEmpty()) {
             throw new GraphqlException("Deposits not found for status: " + status);
         }
-        return depositsByStatus;
+        return depositsByStatus.stream()
+                .map(deposits -> modelMapper.map(deposits, DepositsDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Deposits> getDepositByUserId(Long userId) {
+    public List<DepositsDTO> getDepositByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
         List<Deposits> depositsByUserId = depositsRepository.findByUserId(userId);
-
-
-    return depositsByUserId;
+        return depositsByUserId.stream()
+                .map(deposits -> modelMapper.map(deposits, DepositsDTO.class))
+                .collect(Collectors.toList());
     }
-
 }

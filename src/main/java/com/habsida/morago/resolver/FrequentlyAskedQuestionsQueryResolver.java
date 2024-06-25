@@ -1,7 +1,7 @@
 package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.habsida.morago.model.entity.FrequentlyAskedQuestion;
+import com.habsida.morago.model.dto.FrequentlyAskedQuestionDTO;
 import com.habsida.morago.serviceImpl.FrequentlyAskedQuestionsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,12 +13,11 @@ import java.util.Set;
 public class FrequentlyAskedQuestionsQueryResolver implements GraphQLQueryResolver {
     private final FrequentlyAskedQuestionsService frequentlyAskedQuestionsService;
 
-    public Set<FrequentlyAskedQuestion> getAllFrequentlyAskedQuestionById() {
+    public Set<FrequentlyAskedQuestionDTO> getAllFrequentlyAskedQuestionById() {
         return frequentlyAskedQuestionsService.getAllFrequentlyAskedQuestions();
     }
 
-    public FrequentlyAskedQuestion getFrequentlyAskedQuestionById(Long id) {
+    public FrequentlyAskedQuestionDTO getFrequentlyAskedQuestionById(Long id) {
         return frequentlyAskedQuestionsService.getFrequentlyAskedQuestionByID(id);
     }
-
 }

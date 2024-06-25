@@ -1,6 +1,8 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GraphqlException;
+import com.habsida.morago.model.dto.FileDTO;
+import com.habsida.morago.model.dto.ThemeDTO;
 import com.habsida.morago.model.entity.File;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.inputs.CreateThemeInput;
@@ -11,6 +13,7 @@ import com.habsida.morago.repository.CategoryRepository;
 import com.habsida.morago.repository.ThemeRepository;
 import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +30,10 @@ public class ThemeService {
     private final ThemeRepository repository;
     private final CategoryRepository categoryRepository;
     private final FileService fileService;
+    private final ModelMapper modelMapper;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public Theme createTheme(CreateThemeInput input, MultipartFile icon) {
+    public ThemeDTO createTheme(CreateThemeInput input, MultipartFile icon) {
         Theme theme = new Theme();
 
         if (input.getCategoryId() != null && input.getCategoryId() != 0) {
@@ -58,25 +62,26 @@ public class ThemeService {
         if (!input.getNightPrice().equals(BigDecimal.ZERO)) {
             theme.setNightPrice(input.getNightPrice());
         } else {
-            throw new GraphqlException("nightPrice value is not valid");
+            throw new GraphqlException("NightPrice value is not valid");
         }
         theme.setIsPopular(input.getIsPopular());
         theme.setIsActive(input.getIsActive());
         if (icon != null) {
             try {
-                File file = fileService.uploadFile(icon);
-                theme.setIcon(file);
+                FileDTO fileDTO = fileService.uploadFile(icon);
+                theme.setIcon(modelMapper.map(fileDTO, File.class));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             theme.setIcon(null);
         }
-        return repository.save(theme);
+        Theme savedTheme = repository.save(theme);
+        return modelMapper.map(savedTheme, ThemeDTO.class);
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public Theme updateTheme(UpdateThemeInput input, MultipartFile icon) {
+    public ThemeDTO updateTheme(UpdateThemeInput input, MultipartFile icon) {
         Theme theme = repository.findById(input.getId()).orElseThrow(() -> new EntityNotFoundException("No Theme with id: " + input.getId()));
         if (input.getCategoryId() != null && input.getCategoryId() != 0) {
             theme.setCategory(categoryRepository.findById(input.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("No Category with id: " + input.getCategoryId())));
@@ -104,45 +109,52 @@ public class ThemeService {
         }
         if (icon != null) {
             try {
-                File file = fileService.uploadFile(icon);
-                theme.setIcon(file);
+                FileDTO fileDTO = fileService.uploadFile(icon);
+                theme.setIcon(modelMapper.map(fileDTO, File.class));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return repository.save(theme);
+        Theme updatedTheme = repository.save(theme);
+        return modelMapper.map(updatedTheme, ThemeDTO.class);
     }
 
-    public Theme getThemeById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Theme Not Found with ID " + id));
+    public ThemeDTO getThemeById(Long id) {
+        Theme theme = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Theme Not Found with ID " + id));
+        return modelMapper.map(theme, ThemeDTO.class);
     }
 
     public Boolean removeThemeById(Long id) {
-        Theme theme = getThemeById(id);
+        Theme theme = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Theme Not Found with ID " + id));
         File icon = theme.getIcon();
         repository.delete(theme);
-        fileService.deleteById(icon.getId());
+        if (icon != null) {
+            fileService.deleteById(icon.getId());
+        }
         return true;
     }
 
     @Transactional
-    public PageOutput<Theme> getAllThemes(PagingInput input) {
+    public PageOutput<ThemeDTO> getAllThemes(PagingInput input) {
         Page<Theme> pageRequest = repository.findAll(PageUtil.buildPageable(input));
-        return PageUtil.buildPage(pageRequest);
+        return PageUtil.buildPage(pageRequest.map(theme -> modelMapper.map(theme, ThemeDTO.class)));
     }
 
-    public PageOutput<Theme> getThemesByCategoryId(PagingInput input, Long id) {
-        Page<Theme> pagedrequest = repository.findThemesByCategoryId(PageUtil.buildPageable(input), id);
-        return PageUtil.buildPage(pagedrequest);
+    @Transactional
+    public PageOutput<ThemeDTO> getThemesByCategoryId(PagingInput input, Long id) {
+        Page<Theme> pagedRequest = repository.findThemesByCategoryId(PageUtil.buildPageable(input), id);
+        return PageUtil.buildPage(pagedRequest.map(theme -> modelMapper.map(theme, ThemeDTO.class)));
     }
 
-    public Theme getThemeByName(String name) {
-        return repository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Entity Not Found with name " + name));
+    public ThemeDTO getThemeByName(String name) {
+        Theme theme = repository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Entity Not Found with name " + name));
+        return modelMapper.map(theme, ThemeDTO.class);
     }
 
-    public PageOutput<Theme> getThemeByIsActiveStatus(PagingInput input) {
+    @Transactional
+    public PageOutput<ThemeDTO> getThemeByIsActiveStatus(PagingInput input) {
         Page<Theme> pagedRequest = repository.findThemeByIsActive(PageUtil.buildPageable(input));
-        return PageUtil.buildPage(pagedRequest);
+        return PageUtil.buildPage(pagedRequest.map(theme -> modelMapper.map(theme, ThemeDTO.class)));
     }
 
     public Boolean changeThemeStatus(Long themeId) {
@@ -154,7 +166,7 @@ public class ThemeService {
 
     public Boolean changeThemePopularity(Long themeId, Boolean themePopularity) {
         Theme theme = repository.findById(themeId).orElseThrow(() -> new EntityNotFoundException("Theme Not Found with ID " + themeId));
-        theme.setIsActive(themePopularity);
+        theme.setIsPopular(themePopularity);
         repository.save(theme);
         return true;
     }

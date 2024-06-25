@@ -1,6 +1,6 @@
 package com.habsida.morago.model.inputs;
 
-import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class UserPage {
-    private List<User> content;
+    private List<UserDTO> content;
     private Integer totalPages;
     private Integer totalElements;
     private Integer size;

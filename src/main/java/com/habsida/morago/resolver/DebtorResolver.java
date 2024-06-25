@@ -1,6 +1,6 @@
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.model.entity.Debtor;
+import com.habsida.morago.model.dto.DebtorDTO;
 import com.habsida.morago.service.DebtorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,15 +17,15 @@ public class DebtorResolver {
         this.debtorService = debtorService;
     }
 
-    public List<Debtor> getAllDebtors() {
+    public List<DebtorDTO> getAllDebtors() {
         return debtorService.getAllDebtors();
     }
 
-    public Debtor getDebtorById(Long id) {
+    public DebtorDTO getDebtorById(Long id) {
         return debtorService.getDebtorById(id);
     }
 
-    public List<Debtor> getDebtorByUserId(Long userId) {
+    public List<DebtorDTO> getDebtorByUserId(Long userId) {
         return debtorService.getDebtorByUserId(userId);
     }
 

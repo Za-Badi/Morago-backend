@@ -2,189 +2,190 @@ schema {
     query: Query
     mutation: Mutation
 }
-type Query {
-    getCoinById(id: ID!): Coin
-    getAllCoins: [Coin]
 
-    getAppVersionByPlatform(platform: EPlatform!): AppVersion
-    getAllAppVersions:[AppVersion]
+type Query {
+    getCoinById(id: ID!): CoinDTO
+    getAllCoins: [CoinDTO]
+
+    getAppVersionByPlatform(platform: EPlatform!): AppVersionDTO
+    getAllAppVersions: [AppVersionDTO]
 
     getAllCategoriesByPaging(input: PagingInput): CategoryPage
-    getCategoryById(id: ID!): Category
-    getCategoryByName(name: String!): Category
+    getCategoryById(id: ID!): CategoryDTO
+    getCategoryByName(name: String!): CategoryDTO
     getCategoryByStatusIsActiveByPaging(input: PagingInput): CategoryPage
 
     getAllThemesByPaging(input: PagingInput): ThemePage
-    getThemeById(id: ID!): Theme
+    getThemeById(id: ID!): ThemeDTO
     getThemesByCategoriesId(input: PagingInput, id: ID): ThemePage
-    getThemesByName(name: String): Theme
+    getThemesByName(name: String): ThemeDTO
     getThemeByIsActiveStatus(input: PagingInput): ThemePage
 
-    getAllFrequentlyAskedQuestionById:[FrequentlyAskedQuestionsInput]
-    getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsInput
+    getAllFrequentlyAskedQuestionById: [FrequentlyAskedQuestionsDTO]
+    getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsDTO
 
-    getAllUsers: [User]
-    getUserById(id: ID!): User
-    getUserByPhone(phone: String): User
-    getAuthenticatedUser: User
+    getAllUsers: [UserDTO]
+    getUserById(id: ID!): UserDTO
+    getUserByPhone(phone: String): UserDTO
+    getAuthenticatedUser: UserDTO
     existsUserByPhone(phone: String): Boolean
     getAllUsersPaged(page: Int, size: Int): UserPage
     searchUsers(searchInput: String, page: Int, size: Int): UserPage
 
-    testUser: [User]
-    testTranslator: [User]
-    testAuthentication: [User]
+    testUser: [UserDTO]
+    testTranslator: [UserDTO]
+    testAuthentication: [UserDTO]
 
-    getAllUserProfiles: [UserProfile]
-    getUserProfileById(id: ID): UserProfile
+    getAllUserProfiles: [UserProfileDTO]
+    getUserProfileById(id: ID): UserProfileDTO
 
-    getAllTranslatorProfiles: [TranslatorProfile]
+    getAllTranslatorProfiles: [TranslatorProfileDTO]
     getAllTranslatorProfilesPaged(page: Int, size: Int): TranslatorPage
-    getTranslatorProfileById(id: ID): TranslatorProfile
-    getTranslatorProfilesByIsOnlineAndThemeId(isOnline: Boolean, id: ID): [TranslatorProfile]
+    getTranslatorProfileById(id: ID): TranslatorProfileDTO
+    getTranslatorProfilesByIsOnlineAndThemeId(isOnline: Boolean, id: ID): [TranslatorProfileDTO]
     getTranslatorProfilesByIsOnlineAndThemeIdPaged(page: Int, size: Int, id: ID, isOnline: Boolean): TranslatorPage
-    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfile]
+    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfileDTO]
     getTranslatorProfilesByThemeIdPaged(page: Int, size: Int, id: ID): TranslatorPage
-    getTranslatorProfilesByThemeName(name: String): [TranslatorProfile]
+    getTranslatorProfilesByThemeName(name: String): [TranslatorProfileDTO]
     getTranslatorProfilesByThemeNamePaged(page: Int, size: Int, name: String): TranslatorPage
     searchTranslators(searchInput: String, page: Int, size: Int): TranslatorPage
 
-    getAllLanguages: [Language]
-    getLanguageById(id: ID): Language
+    getAllLanguages: [LanguageDTO]
+    getLanguageById(id: ID): LanguageDTO
 
-    getAllDebtors: [Debtor]
-    getDebtorById(id: ID!): Debtor
-    getDebtorByUserId(userId: ID!): [Debtor]
+    getAllDebtors: [DebtorDTO]
+    getDebtorById(id: ID!): DebtorDTO
+    getDebtorByUserId(userId: ID!): [DebtorDTO]
 
-    getAllDeposits: [Deposits]
-    getDepositById(id: ID!): Deposits
-    getDepositsByStatus(status: PaymentStatus!):[Deposits]
-    getDepositsByUserId(userId: ID!): [Deposits]
+    getAllDeposits: [DepositsDTO]
+    getDepositById(id: ID!): DepositsDTO
+    getDepositsByStatus(status: PaymentStatus!): [DepositsDTO]
+    getDepositsByUserId(userId: ID!): [DepositsDTO]
 
-    getAllNotification: [Notification]
-    getNotificationById(id: ID!): Notification
-    getNotificationsByUserId(userId: ID!): [Notification]
+    getAllNotification: [NotificationDTO]
+    getNotificationById(id: ID!): NotificationDTO
+    getNotificationsByUserId(userId: ID!): [NotificationDTO]
 
-    getAllWithdrawals: [Withdrawals]
-    getWithdrawalsById(id: ID!): Withdrawals
-    getWithdrawalsByStatus(status: PaymentStatus!):[Withdrawals]
-    getWithdrawalsByUserId(userId: ID!): [Withdrawals]
-    getUsersAndWithdrawals: [UsersAndWithdrawals]
+    getAllWithdrawals: [WithdrawalsDTO]
+    getWithdrawalsById(id: ID!): WithdrawalsDTO
+    getWithdrawalsByStatus(status: PaymentStatus!): [WithdrawalsDTO]
+    getWithdrawalsByUserId(userId: ID!): [WithdrawalsDTO]
+    getUsersAndWithdrawals: [UsersAndWithdrawalsDTO]
 
-    getAllCalls: [Call]
-    getCallById(id : ID!): Call
-    getAllFreeCalls : [Call]
-    getCallsByUserId(userid : ID!) : [Call]
+    getAllCalls: [CallDTO]
+    getCallById(id: ID!): CallDTO
+    getAllFreeCalls: [CallDTO]
+    getCallsByUserId(userid: ID!): [CallDTO]
     getMissedCalls(userId: ID!, page: Int!, size: Int!): CallPage!
-    getCallsByOutgoingIncoming(page : Int!, size : Int!): CallPage!
-    getCallsByOutgoingIncomingStatus(status : CallStatus, page : Int!, size : Int!) : CallPage!
+    getCallsByOutgoingIncoming(page: Int!, size: Int!): CallPage!
+    getCallsByOutgoingIncomingStatus(status: CallStatus, page: Int!, size: Int!): CallPage!
 
-    getAllRatings : [Rating]
-    getRatingById (id : ID!) : Rating
-    getAverageRating(toWhomUserId : ID!) : Float
+    getAllRatings: [RatingDTO]
+    getRatingById(id: ID!): RatingDTO
+    getAverageRating(toWhomUserId: ID!): Float
 }
 
 type Mutation {
-    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersion
-    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersion
+    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersionDTO
+    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersionDTO
     deleteAppVersion(platform: EPlatform!): Boolean
 
-    createCoin(input: CreateCoinInput): Coin
-    updateCoin(input: UpdateCoinInput): Coin
+    createCoin(input: CreateCoinInput): CoinDTO
+    updateCoin(input: UpdateCoinInput): CoinDTO
     deleteCoin(id: ID!): Boolean
 
-    createCategory(input: CreateCategoryInput): Category
-    updateCategory(input: UpdateCategoryInput): Category
+    createCategory(input: CreateCategoryInput): CategoryDTO
+    updateCategory(input: UpdateCategoryInput): CategoryDTO
     deleteCategoryById(id: ID!): Boolean
     changeCategoryStatus(id: ID!): Boolean
 
-    createTheme(input: CreateThemeInput): Theme
-    updateThemeById(input: UpdateThemeInput): Theme
+    createTheme(input: CreateThemeInput): ThemeDTO
+    updateThemeById(input: UpdateThemeInput): ThemeDTO
     deleteThemeById(id: ID!): Boolean
     changeThemeStatus(id: ID!): Boolean
-    changeThemePopularity(id: ID, themePopularity: Boolean ): Boolean
+    changeThemePopularity(id: ID, themePopularity: Boolean): Boolean
 
-    createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
-    updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsInput
+    createFrequentlyAskedQuestion(input: CreateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsDTO
+    updateFrequentlyAskedQuestion(input: updateFrequentlyAskedQuestionsInput): FrequentlyAskedQuestionsDTO
     deleteFrequentlyAskedQuestionById(id: ID!): Boolean
 
     signUpAsUser(registerUserInput: RegisterUserInput): String
     signUpAsTranslator(registerUserInput: RegisterUserInput): String
     logIn(loginUserInput: LoginUserInput): String
 
-    addUser(userInput: UserInput): User
-    updateUser(id: ID, userInput: UserInput): User
+    addUser(userInput: UserInput): UserDTO
+    updateUser(id: ID, userInput: UserInput): UserDTO
     deleteUser(id: ID): Boolean
     changeIsActive(id: ID, isActive: Boolean): Boolean
     changeIsDebtor(id: ID, isDebtor: Boolean): Boolean
-    addFcmToken(fcmToken: String, id: ID): User
+    addFcmToken(fcmToken: String, id: ID): UserDTO
     deleteFcmToken(id: ID): Boolean
-    addApnToken(apnToken: String, id: ID): User
+    addApnToken(apnToken: String, id: ID): UserDTO
     deleteApnToken(id: ID): Boolean
 
-    addUserProfile(isFreeCallMade: Boolean, id: ID): UserProfile
-    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfile
+    addUserProfile(isFreeCallMade: Boolean, id: ID): UserProfileDTO
+    updateUserProfile(id: ID, isFreeCallMade: Boolean): UserProfileDTO
     deleteUserProfile(id: ID): Boolean
-    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfile
+    updateUserProfileByUserId(id: ID, isFreeCallMade: Boolean): UserProfileDTO
     changeIsFreeCallMade(id: ID, isFreeCallMade: Boolean): Boolean
-    changeBalanceByUserProfileId(id: ID, balance: Float): User
+    changeBalanceByUserProfileId(id: ID, balance: Float): UserDTO
 
-    addTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
-    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    addTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfileDTO
+    updateTranslatorProfile(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfileDTO
     deleteTranslatorProfile(id: ID): Boolean
-    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfile
+    updateTranslatorProfileByUserId(id: ID, translatorProfileInput: TranslatorProfileInput): TranslatorProfileDTO
     changeIsAvailable(id: ID, isAvailable: Boolean): Boolean
     changeIsOnline(id: ID, isOnline: Boolean): Boolean
-    changeBalanceForTranslatorProfileId(id: ID, balance: Float): User
-    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfile
+    changeBalanceForTranslatorProfileId(id: ID, balance: Float): UserDTO
+    addLanguageToTranslatorProfile(languageId: ID, translatorProfileId: ID): TranslatorProfileDTO
     deleteLanguageFromTranslatorProfile(languageId: ID, translatorProfileId: ID): Boolean
 
-    addLanguage(languageInput: LanguageInput): Language
-    updateLanguage(id: ID, languageInput: LanguageInput): Language
+    addLanguage(languageInput: LanguageInput): LanguageDTO
+    updateLanguage(id: ID, languageInput: LanguageInput): LanguageDTO
     deleteLanguage(id: ID): Boolean
 
-    addDeposit(createDepositsInput: CreateDepositsInput): Deposits
-    updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): Deposits
+    addDeposit(createDepositsInput: CreateDepositsInput): DepositsDTO
+    updateDeposit(id: ID!, updateDepositsInput: UpdateDepositsInput): DepositsDTO
     deleteDeposit(id: ID!): Boolean
 
-    addDebtor(createDebtorInput:CreateDebtorInput): Debtor
-    updateDebtor(id: ID!, updateDebtorInput: UpdateDebtorInput): Debtor
+    addDebtor(createDebtorInput: CreateDebtorInput): DebtorDTO
+    updateDebtor(id: ID!, updateDebtorInput: UpdateDebtorInput): DebtorDTO
     deleteDebtor(id: ID!): Boolean
 
-    addNotification(createNotificationInput: CreateNotificationInput): Notification
-    updateNotification(id:ID!, updateNotificationInput: UpdateNotificationInput):Notification
-    deleteNotification(id:ID!): Boolean
+    addNotification(createNotificationInput: CreateNotificationInput): NotificationDTO
+    updateNotification(id: ID!, updateNotificationInput: UpdateNotificationInput): NotificationDTO
+    deleteNotification(id: ID!): Boolean
 
-    addWithdrawal(createWithdrawalInput: CreateWithdrawalsInput): Withdrawals
-    updateWithdrawal(id: ID!, updateWithdrawalInput: UpdateWithdrawalsInput): Withdrawals
+    addWithdrawal(createWithdrawalInput: CreateWithdrawalsInput): WithdrawalsDTO
+    updateWithdrawal(id: ID!, updateWithdrawalInput: UpdateWithdrawalsInput): WithdrawalsDTO
     deleteWithdrawal(id: ID!): Boolean
 
-    createCall(input : CreateCallInput) : Call
-    updateCall(id : ID!, input : CallUpdateInput) : Call
-    deleteCall(id : ID!) : Boolean
+    createCall(input: CreateCallInput): CallDTO
+    updateCall(id: ID!, input: CallUpdateInput): CallDTO
+    deleteCall(id: ID!): Boolean
 
-    updateRating(id: ID!, update : UpdateRatingInput): Rating
-    createRating(ratingInput : RatingInput): Rating
+    updateRating(id: ID!, update: UpdateRatingInput): RatingDTO
+    createRating(ratingInput: RatingInput): RatingDTO
     deleteRating(id: ID!): Boolean
 
-    addFile(file: Upload!): File
+    addFile(file: Upload!): FileDTO
 }
 
-type AppVersion {
+type AppVersionDTO {
     platform: EPlatform
     min: String
     latest: String
     createdAt: String
     updatedAt: String
 }
-type Coin {
+type CoinDTO {
     id: ID
     coin: String
     won: String
     createdAt: String
     updatedAt: String
 }
-type File {
+type FileDTO {
     id: ID
     path: String
     type: String
@@ -192,12 +193,12 @@ type File {
     createdAt: String
     updatedAt: String
 }
-type Category {
+type CategoryDTO {
     id: ID
     name: String
     isActive: Boolean
 }
-type Theme {
+type ThemeDTO {
     id: ID
     name: String
     koreanTitle: String
@@ -206,8 +207,8 @@ type Theme {
     description: String
     isPopular: Boolean
     isActive: Boolean
-    category: Category
-    icon: File
+    category: CategoryDTO
+    icon: FileDTO
     createdAt: String
     updatedAt: String
 }
@@ -215,24 +216,24 @@ type ThemePage {
     currentPage: Int
     totalPages: Int
     totalElements: Int
-    objectList: [Theme]
+    objectList: [ThemeDTO]
 }
-type CategoryPage{
+type CategoryPage {
     currentPage: Int
     totalPages: Int
     totalElements: Int
-    objectList: [Category]
+    objectList: [CategoryDTO]
 }
-type FrequentlyAskedQuestionsInput{
+type FrequentlyAskedQuestionsDTO {
     question: String
     answer: String
     Category: QuestionsCategories
 }
-type Language {
+type LanguageDTO {
     id: ID!
     name: String
 }
-type User {
+type UserDTO {
     id: ID!
     phone: String!
     firstName: String
@@ -245,28 +246,28 @@ type User {
     isActive: Boolean
     isDebtor: Boolean
     onBoardingStatus: Int
-    translatorProfile: TranslatorProfile
-    userProfile: UserProfile
+    translatorProfile: TranslatorProfileDTO
+    userProfile: UserProfileDTO
 }
 type UserPage {
-    content: [User]
+    content: [UserDTO]
     totalPages: Int
     totalElements: Int
     size: Int
     number: Int
 }
-type UserProfile {
+type UserProfileDTO {
     id: ID!
     isFreeCallMade: Boolean
 }
 type TranslatorPage {
-    content: [TranslatorProfile]
+    content: [TranslatorProfileDTO]
     totalPages: Int
     totalElements: Int
     size: Int
     number: Int
 }
-type TranslatorProfile {
+type TranslatorProfileDTO {
     id: ID!
     dateOfBirth: String
     email: String
@@ -274,10 +275,10 @@ type TranslatorProfile {
     isOnline: Boolean
     levelOfKorean: String
 }
-type Call {
+type CallDTO {
     id: ID
-    caller: User
-    recipient: User
+    caller: UserDTO
+    recipient: UserDTO
     createdAt: String
     duration: Int
     status: CallStatus
@@ -285,27 +286,27 @@ type Call {
     commission: Float
     translatorHasRated: Boolean
     userHasRated: Boolean
-    file: File
-    theme: Theme
+    file: FileDTO
+    theme: ThemeDTO
 }
-type Rating {
+type RatingDTO {
     id: ID!
-    whoUser: User!
-    toWhomUser: User!
+    whoUser: UserDTO!
+    toWhomUser: UserDTO!
     createdAt: String
     updatedAt: String
     ratings: Float
 }
-type Debtor {
+type DebtorDTO {
     id: ID!
     accountHolder: String!
     nameOfBank: String!
     isPaid: Boolean!
     createdAt: String
     updatedAt: String
-    user: User
+    user: UserDTO
 }
-type Deposits {
+type DepositsDTO {
     id: ID!
     accountHolder: String
     nameOfBank: String
@@ -314,15 +315,39 @@ type Deposits {
     status: PaymentStatus
     createdAt: String
     updatedAt: String
-    user: User
+    user: UserDTO
 }
-type Notification {
+type NotificationDTO {
     id: ID!
     title: String!
     text: String!
     date: String
     time: String
-    user: User!
+    user: UserDTO!
+}
+type WithdrawalsDTO {
+    id: ID!
+    accountNumber: String!
+    accountHolder: String!
+    sum: Float!
+    status: PaymentStatus
+    createdAt: String
+    updatedAt: String
+    user: UserDTO
+}
+type UsersAndWithdrawalsDTO {
+    user: UserDTO
+    withdrawals: [WithdrawalsDTO]
+}
+type PageInfo {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    pageSize: Int!
+}
+type CallPage {
+    content: [CallDTO!]!
+    pageInfo: PageInfo!
 }
 
 input CreateDebtorInput {
@@ -335,7 +360,6 @@ input UpdateDebtorInput {
     accountHolder: String!
     nameOfBank: String!
     isPaid: Boolean!
-
 }
 input CreateDepositsInput {
     accountHolder: String!
@@ -361,47 +385,18 @@ type PageOutput {
     currentPage: Int
     totalPages: Int
     totalElements: Int
-    objectList: [Call]
+    objectList: [CallDTO]
 }
-
 
 input CreateNotificationInput {
     title: String!
     text: String!
-
     userId: ID!
 }
 input UpdateNotificationInput {
     title: String!
     text: String!
 }
-
-
-type Withdrawals {
-    id: ID!
-    accountNumber: String!
-    accountHolder: String!
-    sum: Float!
-    status: PaymentStatus
-    createdAt: String
-    updatedAt: String
-    user: User
-}
-type UsersAndWithdrawals {
-    user: User
-    withdrawals: [Withdrawals]
-}
-type PageInfo {
-    totalPages: Int!
-    totalElements: Int!
-    currentPage: Int!
-    pageSize: Int!
-}
-type CallPage {
-    content: [Call!]!
-    pageInfo: PageInfo!
-}
-
 
 input CreateWithdrawalsInput {
     accountNumber: String!
@@ -415,7 +410,6 @@ input UpdateWithdrawalsInput {
     accountHolder: String!
     sum: Float
     status: PaymentStatus
-
 }
 input CreateCategoryInput {
     name: String!
@@ -435,7 +429,7 @@ input UpdateCoinInput {
     coin: Float
     won: Float
 }
-input CreateThemeInput{
+input CreateThemeInput {
     name: String!
     koreanTitle: String!
     price: Float!
@@ -446,7 +440,7 @@ input CreateThemeInput{
     categoryId: ID!
     icon: Upload
 }
-input UpdateThemeInput{
+input UpdateThemeInput {
     id: ID!
     name: String
     koreanTitle: String
@@ -521,8 +515,8 @@ input DepositsInput {
 }
 input CreateCallInput {
     caller: ID!
-    recipient : ID!
-    theme : ID!
+    recipient: ID!
+    theme: ID!
 }
 input CallUpdateInput {
     duration: Int!
@@ -532,10 +526,10 @@ input CallUpdateInput {
 input RatingInput {
     whoUserId: ID!
     toWhomUserId: ID!
-   ratings : Float
+    ratings: Float
 }
 input UpdateRatingInput {
-    ratings : Float!
+    ratings: Float!
 }
 input NotificationInput {
     title: String
@@ -566,8 +560,8 @@ enum QuestionsCategories {
     GROCERY
 }
 enum CallStatus {
-    MISSED_CALL,
-    INCOMING_CALL,
+    MISSED_CALL
+    INCOMING_CALL
     OUTGOING_CALL
 }
 enum ESort {
@@ -575,9 +569,9 @@ enum ESort {
     ASC
 }
 enum PaymentStatus {
-    PENDING,
-    COMPLETED,
-    FAILED,
+    PENDING
+    COMPLETED
+    FAILED
     CANCELLED
 }
 

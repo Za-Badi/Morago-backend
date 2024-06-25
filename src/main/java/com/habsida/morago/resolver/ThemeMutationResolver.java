@@ -1,8 +1,7 @@
 package com.habsida.morago.resolver;
 
-
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.habsida.morago.model.entity.Theme;
+import com.habsida.morago.model.dto.ThemeDTO;
 import com.habsida.morago.model.inputs.CreateThemeInput;
 import com.habsida.morago.model.inputs.UpdateThemeInput;
 import com.habsida.morago.serviceImpl.ThemeService;
@@ -17,14 +16,12 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
-
 @Controller
 @RequiredArgsConstructor
 public class ThemeMutationResolver implements GraphQLMutationResolver {
     private final ThemeService themeService;
 
-
-    public Theme createTheme(CreateThemeInput input, DataFetchingEnvironment env) throws IOException {
+    public ThemeDTO createTheme(CreateThemeInput input, DataFetchingEnvironment env) throws IOException {
         MultipartFile mFile = null;
         try {
             LinkedHashMap<String, Object> envInput = env.getArgument("input");
@@ -39,7 +36,7 @@ public class ThemeMutationResolver implements GraphQLMutationResolver {
         return themeService.createTheme(input, mFile);
     }
 
-    public Theme updateThemeById(UpdateThemeInput input,  DataFetchingEnvironment env) throws IOException {
+    public ThemeDTO updateThemeById(UpdateThemeInput input, DataFetchingEnvironment env) throws IOException {
         MultipartFile mFile = null;
         try {
             LinkedHashMap<String, Object> envInput = env.getArgument("input");
@@ -54,7 +51,6 @@ public class ThemeMutationResolver implements GraphQLMutationResolver {
         return themeService.updateTheme(input, mFile);
     }
 
-
     public Boolean deleteThemeById(Long id) {
         return themeService.removeThemeById(id);
     }
@@ -62,6 +58,7 @@ public class ThemeMutationResolver implements GraphQLMutationResolver {
     public Boolean changeThemeStatus(Long id) {
         return themeService.changeThemeStatus(id);
     }
+
     public Boolean changeThemePopularity(Long id, Boolean themePopularity) {
         return themeService.changeThemePopularity(id, themePopularity);
     }

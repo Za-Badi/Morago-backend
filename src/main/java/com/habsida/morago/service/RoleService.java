@@ -1,14 +1,13 @@
 package com.habsida.morago.service;
 
-import com.habsida.morago.model.entity.Role;
-
+import com.habsida.morago.model.dto.RoleDTO;
 import java.util.List;
 import java.util.Optional;
 
 public interface RoleService {
-    List<Role> getAllRoles();
+    List<RoleDTO> getAllRoles();
 
-    void add(Role role);
+    void add(RoleDTO roleDTO);
 
-    Optional<Role> getRoleById(Long id);
+    Optional<RoleDTO> getRoleById(Long id);
 }

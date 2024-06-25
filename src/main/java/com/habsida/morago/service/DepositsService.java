@@ -1,6 +1,6 @@
 package com.habsida.morago.service;
 
-import com.habsida.morago.model.entity.Deposits;
+import com.habsida.morago.model.dto.DepositsDTO;
 import com.habsida.morago.model.enums.PaymentStatus;
 import com.habsida.morago.model.inputs.CreateDepositsInput;
 import com.habsida.morago.model.inputs.UpdateDepositsInput;
@@ -8,20 +8,11 @@ import com.habsida.morago.model.inputs.UpdateDepositsInput;
 import java.util.List;
 
 public interface DepositsService {
-    public List<Deposits> getAllDeposits();
-
-    public Deposits getDepositById(Long id);
-
-    public Deposits addDeposit(CreateDepositsInput createDepositsInput);
-
-    public Deposits updateDeposit(Long id, UpdateDepositsInput updateDepositsInput);
-
+    public List<DepositsDTO> getAllDeposits();
+    public DepositsDTO getDepositById(Long id);
+    public DepositsDTO addDeposit(CreateDepositsInput createDepositsInput);
+    public DepositsDTO updateDeposit(Long id, UpdateDepositsInput updateDepositsInput);
     public void deleteDeposit(Long id);
-
-    public List<Deposits> getDepositsByStatus(PaymentStatus status);
-
-    List<Deposits> getDepositByUserId(Long userId);
-
-//    public List<Deposits> getDepositByUserId(User userId);
-
+    public List<DepositsDTO> getDepositsByStatus(PaymentStatus status);
+    public List<DepositsDTO> getDepositByUserId(Long userId);
 }

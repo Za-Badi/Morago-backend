@@ -1,5 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.model.dto.CallDTO;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.entity.User;
@@ -10,6 +11,7 @@ import com.habsida.morago.repository.ThemeRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.CallService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,25 +27,36 @@ public class CallServiceImpl implements CallService {
     private final CallRepository callRepository;
     private final UserRepository userRepository;
     private final ThemeRepository themeRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public List<Call> getAllCalls() {
-        return callRepository.findAll();
-    }
-    public List<Call> getAllFreeCall(){
-        return callRepository.getFreeCallIsMade();
+    public List<CallDTO> getAllCalls() {
+        List<Call> calls = callRepository.findAll();
+        return calls.stream()
+                .map(call -> modelMapper.map(call, CallDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Call getCallById(Long id) {
+    public List<CallDTO> getAllFreeCall() {
+        List<Call> calls = callRepository.getFreeCallIsMade();
+        return calls.stream()
+                .map(call -> modelMapper.map(call, CallDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CallDTO getCallById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID must not be null");
         }
-        return callRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("call not found " + id));
+        Call call = callRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Call not found with id: " + id));
+        return modelMapper.map(call, CallDTO.class);
     }
+
     @Override
-    public Call createCall(CreateCallInput input){
+    public CallDTO createCall(CreateCallInput input) {
         Long themeId = input.getTheme();
         Long callerId = input.getCaller();
         Long recipientId = input.getRecipient();
@@ -52,9 +65,12 @@ public class CallServiceImpl implements CallService {
             throw new IllegalArgumentException("ThemeId, callerId, and recipientId must not be null.");
         }
 
-        User caller = userRepository.findById(callerId).orElseThrow(()-> new IllegalArgumentException("user not found" +input.getCaller()));
-        User recipient = userRepository.findById(recipientId).orElseThrow(()-> new IllegalArgumentException("recipient not found" +input.getRecipient()));
-        Theme theme = themeRepository.findById(themeId).orElseThrow(()-> new IllegalArgumentException("theme not found " +input.getTheme()));
+        User caller = userRepository.findById(callerId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + callerId));
+        User recipient = userRepository.findById(recipientId)
+                .orElseThrow(() -> new IllegalArgumentException("Recipient not found with id: " + recipientId));
+        Theme theme = themeRepository.findById(themeId)
+                .orElseThrow(() -> new IllegalArgumentException("Theme not found with id: " + themeId));
 
         Call call = new Call();
         call.setCaller(caller);
@@ -62,70 +78,78 @@ public class CallServiceImpl implements CallService {
         call.setTheme(theme);
         call.setCreatedAt(LocalDateTime.now());
 
-        return callRepository.save(call);
+        Call savedCall = callRepository.save(call);
+        return modelMapper.map(savedCall, CallDTO.class);
     }
 
     @Override
     @Transactional
-    public Call updateCall(Long id, CallStatus status, Integer duration, Float commission){
+    public CallDTO updateCall(Long id, CallStatus status, Integer duration, Float commission) {
         Call call = callRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Calls not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Call not found with id: " + id));
 
         if (status != null && !status.toString().isEmpty()) {
             call.setStatus(status);
-        } else throw new IllegalArgumentException("status can't be null");
-
+        } else {
+            throw new IllegalArgumentException("Status can't be null or empty");
+        }
 
         if (duration != null) {
             if (duration == 0) {
                 throw new IllegalArgumentException("Duration must be greater than zero.");
-            } else if (duration > 0) {
+            } else {
                 call.setDuration(duration);
             }
         } else {
             throw new IllegalArgumentException("Duration cannot be null.");
         }
 
-
-        if (commission != null && commission >= 0.0f) {
-            call.setCommission(commission.doubleValue());
-        } else if (commission != null && commission <= 0.0f) {
-            throw new IllegalArgumentException("Commission must be greater than zero.");
+        if (commission != null) {
+            if (commission >= 0.0f) {
+                call.setCommission(commission.doubleValue());
+            } else {
+                throw new IllegalArgumentException("Commission must be greater than zero.");
+            }
         }
         call.setUpdatedAt(LocalDateTime.now());
 
-        return callRepository.save(call);
-
+        Call updatedCall = callRepository.save(call);
+        return modelMapper.map(updatedCall, CallDTO.class);
     }
+
     @Override
-    public void deleteCall(Long id)  {
+    public void deleteCall(Long id) {
         Call call = callRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Calls not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Call not found with id: " + id));
         callRepository.delete(call);
     }
 
+    @Override
+    public List<CallDTO> getCallsByUserId(Long userId) {
+        List<Call> calls = callRepository.findCallsByUserId(userId);
+        if (calls == null || calls.isEmpty()) {
+            throw new IllegalArgumentException("Calls not found for user with id: " + userId);
+        }
+        return calls.stream()
+                .map(call -> modelMapper.map(call, CallDTO.class))
+                .collect(Collectors.toList());
+    }
 
     @Override
-    public List<Call> getCallsByUserId(Long userId) {
-        List<Call> calls = callRepository.findCallsByUserId(userId);
-
-        if (calls == null || calls.isEmpty()) {
-            throw new IllegalArgumentException("user not found");
-        }
-        return calls;
+    public Page<CallDTO> getAllMissedCalls(Long userId, Pageable pageable) {
+        return callRepository.getAllMissedCalls(userId, pageable)
+                .map(call -> modelMapper.map(call, CallDTO.class));
     }
 
-    public Page<Call> getAllMissedCalls(Long userId, Pageable pageable) {
-        return callRepository.getAllMissedCalls(userId, pageable);
+    @Override
+    public Page<CallDTO> getCallsByOutgoingIncomingStatus(CallStatus status, Pageable pageable) {
+        return callRepository.getCallsByOutgoingIncomingStatus(status, pageable)
+                .map(call -> modelMapper.map(call, CallDTO.class));
     }
 
-    public Page<Call> getCallsByOutgoingIncomingStatus(CallStatus status, Pageable pageable) {
-        return callRepository.getCallsByOutgoingIncomingStatus(status, pageable);
+    @Override
+    public Page<CallDTO> getCallsByOutgoingIncoming(Pageable pageable) {
+        return callRepository.getCallsByOutgoingIncoming(pageable)
+                .map(call -> modelMapper.map(call, CallDTO.class));
     }
-
-    public Page<Call> getCallsByOutgoingIncoming(Pageable pageable) {
-        return callRepository.getCallsByOutgoingIncoming(pageable);
-    }
-
-
 }

@@ -1,18 +1,21 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.GraphqlException;
+import com.habsida.morago.model.dto.RatingDTO;
 import com.habsida.morago.model.entity.Rating;
-import com.habsida.morago.model.inputs.UpdateRatingInput;
-import com.habsida.morago.repository.CallRepository;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.RatingInput;
+import com.habsida.morago.model.inputs.UpdateRatingInput;
 import com.habsida.morago.repository.RatingRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.RatingService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,54 +23,65 @@ public class RatingServiceImpl implements RatingService {
 
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
-    private final CallRepository callRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public List<Rating> getAllRatings() {
-        return ratingRepository.findAll();
+    public List<RatingDTO> getAllRatings() {
+        return ratingRepository.findAll()
+                .stream()
+                .map(rating -> modelMapper.map(rating, RatingDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Rating getRatingById(Long id) {
-        return ratingRepository.findById(id).orElseThrow(() -> new RuntimeException("Rating not found with id " + id));
+    public RatingDTO getRatingById(Long id) {
+        Rating rating = ratingRepository.findById(id)
+                .orElseThrow(() -> new GraphqlException("Rating not found with id " + id));
+        return modelMapper.map(rating, RatingDTO.class);
     }
 
     @Override
-    public Rating createRating(RatingInput ratingInput) throws Exception {
-        User whoUser = userRepository.findById(ratingInput.getWhoUserId()).orElseThrow(() -> new IllegalArgumentException("user who has rated not found"));
-        User toWhom = userRepository.findById(ratingInput.getToWhomUserId()).orElseThrow(() -> new IllegalArgumentException("user who has been rated not found"));
+    public RatingDTO createRating(RatingInput ratingInput) throws Exception {
+        User whoUser = userRepository.findById(ratingInput.getWhoUserId())
+                .orElseThrow(() -> new GraphqlException("User who has rated not found"));
+        User toWhom = userRepository.findById(ratingInput.getToWhomUserId())
+                .orElseThrow(() -> new GraphqlException("User who has been rated not found"));
 
         Rating rating = new Rating();
         rating.setWhoUser(whoUser);
         rating.setToWhomUser(toWhom);
         rating.setRatings(ratingInput.getRatings());
         rating.setCreatedAt(LocalDateTime.now());
-        return ratingRepository.save(rating);
+        Rating savedRating = ratingRepository.save(rating);
+
+        return modelMapper.map(savedRating, RatingDTO.class);
     }
 
-
     @Override
-    public Rating updateRating(Long id, UpdateRatingInput update) {
-        Rating existingRating = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("rating not found"));
+    public RatingDTO updateRating(Long id, UpdateRatingInput update) {
+        Rating existingRating = ratingRepository.findById(id)
+                .orElseThrow(() -> new GraphqlException("Rating not found"));
 
         existingRating.setRatings(update.getRatings());
         existingRating.setUpdatedAt(LocalDateTime.now());
-        return ratingRepository.save(existingRating);
-    }
+        Rating updatedRating = ratingRepository.save(existingRating);
 
+        return modelMapper.map(updatedRating, RatingDTO.class);
+    }
 
     @Override
     public void deleteRating(Long id) {
         Rating rating = ratingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("rating not found"));
+                .orElseThrow(() -> new GraphqlException("Rating not found"));
         ratingRepository.delete(rating);
     }
+
     @Override
     public Double getAverageRating(Long toWhomUserId) {
         Double averageRating = ratingRepository.findAverageGradeByToWhomUserId(toWhomUserId);
 
-        if (averageRating == null && averageRating.isNaN() ) {
-            throw new IllegalArgumentException("rating with id " + toWhomUserId+ "not found");
+        if (averageRating == null || averageRating.isNaN()) {
+            throw new GraphqlException("Rating with id " + toWhomUserId + " not found");
         }
 
         return averageRating;

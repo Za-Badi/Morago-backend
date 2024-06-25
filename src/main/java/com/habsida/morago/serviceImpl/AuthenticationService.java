@@ -1,12 +1,14 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.ExceptionGraphql;
+import com.habsida.morago.model.dto.UserDTO;
 import com.habsida.morago.model.entity.*;
 import com.habsida.morago.model.inputs.LoginUserInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
 import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,8 +25,10 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
+    private final ModelMapper modelMapper;
+
     @Transactional
-    public User signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
+    public UserDTO signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
         if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
                 registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
             throw new ExceptionGraphql("Empty values are not allowed");
@@ -51,10 +55,12 @@ public class AuthenticationService {
         roles.add(userRole);
         user.setRoles(roles);
         user.setUserProfile(new UserProfile());
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser, UserDTO.class);
     }
+
     @Transactional
-    public User signUpAsTranslator(RegisterUserInput registerUserInput) throws ExceptionGraphql {
+    public UserDTO signUpAsTranslator(RegisterUserInput registerUserInput) throws ExceptionGraphql {
         if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
                 registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
             throw new ExceptionGraphql("Empty values are not allowed");
@@ -87,17 +93,20 @@ public class AuthenticationService {
         translatorProfile.setLanguages(languages);
         translatorProfile.setThemes(themes);
         user.setTranslatorProfile(translatorProfile);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser, UserDTO.class);
     }
+
     @Transactional
-    public User logIn(LoginUserInput loginUserInput) {
+    public UserDTO logIn(LoginUserInput loginUserInput) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginUserInput.getPhone(),
                         loginUserInput.getPassword()
                 )
         );
-        return userRepository.findByPhone(loginUserInput.getPhone())
+        User user = userRepository.findByPhone(loginUserInput.getPhone())
                 .orElseThrow();
+        return modelMapper.map(user, UserDTO.class);
     }
 }

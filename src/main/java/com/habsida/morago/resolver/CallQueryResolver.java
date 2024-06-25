@@ -1,7 +1,7 @@
 package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.habsida.morago.model.entity.Call;
+import com.habsida.morago.model.dto.CallDTO;
 import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.results.CallPage;
 import com.habsida.morago.model.results.PageInfo;
@@ -19,26 +19,21 @@ import java.util.List;
 public class CallQueryResolver implements GraphQLQueryResolver {
     private final CallService callService;
 
-    public List<Call> getAllCalls() {
+    public List<CallDTO> getAllCalls() {
         return callService.getAllCalls();
     }
 
-    public Call getCallById(Long id) throws Exception {
+    public CallDTO getCallById(Long id) throws Exception {
         return callService.getCallById(id);
     }
 
-    public List<Call> getAllFreeCalls() {
+    public List<CallDTO> getAllFreeCalls() {
         return callService.getAllFreeCall();
     }
 
-//    public List<Call> getCallsByStatus(CallStatus status) {
-//        return callService.getCallByStatus(status);
-//    }
-
-
     public CallPage getMissedCalls(Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Call> callPage = callService.getAllMissedCalls(userId, pageable);
+        Page<CallDTO> callPage = callService.getAllMissedCalls(userId, pageable);
 
         PageInfo pageInfo = new PageInfo(
                 callPage.getTotalPages(),
@@ -50,10 +45,9 @@ public class CallQueryResolver implements GraphQLQueryResolver {
         return new CallPage(callPage.getContent(), pageInfo);
     }
 
-
     public CallPage getCallsByOutgoingIncomingStatus(CallStatus status, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Call> callPage = callService.getCallsByOutgoingIncomingStatus(status, pageable);
+        Page<CallDTO> callPage = callService.getCallsByOutgoingIncomingStatus(status, pageable);
 
         PageInfo pageInfo = new PageInfo(
                 callPage.getTotalPages(),
@@ -62,12 +56,11 @@ public class CallQueryResolver implements GraphQLQueryResolver {
                 callPage.getSize()
         );
         return new CallPage(callPage.getContent(), pageInfo);
-
     }
 
     public CallPage getCallsByOutgoingIncoming(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Call> callPage = callService.getCallsByOutgoingIncoming(pageable);
+        Page<CallDTO> callPage = callService.getCallsByOutgoingIncoming(pageable);
 
         PageInfo pageInfo = new PageInfo(
                 callPage.getTotalPages(),
@@ -75,11 +68,10 @@ public class CallQueryResolver implements GraphQLQueryResolver {
                 callPage.getNumber(),
                 callPage.getSize()
         );
-         return new CallPage(callPage.getContent(), pageInfo);
-
+        return new CallPage(callPage.getContent(), pageInfo);
     }
-    public List<Call> getCallsByUserId(Long userId) {
+
+    public List<CallDTO> getCallsByUserId(Long userId) {
         return callService.getCallsByUserId(userId);
     }
-
 }

@@ -1,31 +1,26 @@
 package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.habsida.morago.model.entity.Debtor;
+import com.habsida.morago.model.dto.DebtorDTO;
 import com.habsida.morago.model.inputs.CreateDebtorInput;
 import com.habsida.morago.model.inputs.UpdateDebtorInput;
 import com.habsida.morago.service.DebtorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
+@RequiredArgsConstructor
 public class DebtorMutationResolver implements GraphQLMutationResolver {
 
     private final DebtorService debtorService;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    public DebtorMutationResolver(DebtorService debtorService) {
-        this.debtorService = debtorService;
-    }
-
-    public Debtor addDebtor(CreateDebtorInput createDebtorInput) {
+    public DebtorDTO addDebtor(CreateDebtorInput createDebtorInput) {
         return debtorService.addDebtor(createDebtorInput);
     }
 
-    public Debtor updateDebtor(Long id, UpdateDebtorInput updateDebtorInput) {
+    public DebtorDTO updateDebtor(Long id, UpdateDebtorInput updateDebtorInput) {
         return debtorService.updateDebtor(id, updateDebtorInput);
     }
 
@@ -33,5 +28,4 @@ public class DebtorMutationResolver implements GraphQLMutationResolver {
         debtorService.deleteDebtor(id);
         return true;
     }
-
 }

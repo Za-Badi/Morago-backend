@@ -1,5 +1,6 @@
 package com.habsida.morago.resolver;
 
+import com.habsida.morago.model.dto.NotificationDTO;
 import com.habsida.morago.model.entity.Notification;
 import com.habsida.morago.model.inputs.CreateNotificationInput;
 import com.habsida.morago.model.inputs.UpdateNotificationInput;
@@ -17,23 +18,23 @@ public class NotificationResolver {
         this.notificationService = notificationService;
     }
 
-    public List<Notification> getAllNotification() {
+    public List<NotificationDTO> getAllNotification() {
         return notificationService.getAllNotification();
     }
 
-    public Notification getNotificationById(Long id) {
+    public NotificationDTO getNotificationById(Long id) {
         return notificationService.getNotificationById(id);
     }
 
-    public List<Notification> getNotificationsByUserId(Long userId){
+    public List<NotificationDTO> getNotificationsByUserId(Long userId){
         return notificationService.getNotificationByUserId(userId);
     }
 
-    public Notification addNotification(CreateNotificationInput createNotificationInput) {
+    public NotificationDTO addNotification(CreateNotificationInput createNotificationInput) {
         return notificationService.addNotification(createNotificationInput);
     }
 
-    public Notification updateNotification(Long id, UpdateNotificationInput updateNotificationInput) {
+    public NotificationDTO updateNotification(Long id, UpdateNotificationInput updateNotificationInput) {
         return notificationService.updateNotification(id, updateNotificationInput);
     }
 
@@ -42,7 +43,7 @@ public class NotificationResolver {
         return true;
     }
 
-    public List<Notification> getNotificationByUserId(Long userId){
+    public List<NotificationDTO> getNotificationByUserId(Long userId){
         return notificationService.getNotificationByUserId(userId);
     }
 }

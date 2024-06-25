@@ -1,6 +1,6 @@
 package com.habsida.morago.resolver;
 
-import com.habsida.morago.model.entity.Withdrawals;
+import com.habsida.morago.model.dto.WithdrawalsDTO;
 import com.habsida.morago.model.enums.PaymentStatus;
 import com.habsida.morago.model.inputs.CreateWithdrawalInput;
 import com.habsida.morago.model.inputs.UpdateWithdrawalInput;
@@ -17,27 +17,27 @@ public class WithdrawalsResolver {
         this.withdrawalService = withdrawalService;
     }
 
-    public List<Withdrawals> getAllWithdrawals() {
+    public List<WithdrawalsDTO> getAllWithdrawals() {
         return withdrawalService.getAllWithdrawals();
     }
 
-    public Withdrawals getWithdrawalsById(Long id) {
+    public WithdrawalsDTO getWithdrawalsById(Long id) {
         return withdrawalService.getWithdrawalById(id);
     }
 
-    public List<Withdrawals> getWithdrawalsByStatus(PaymentStatus status){
+    public List<WithdrawalsDTO> getWithdrawalsByStatus(PaymentStatus status){
         return withdrawalService.getWithdrawalsByStatus(status);
     }
 
-    public List<Withdrawals> getWithdrawalsByUserId(Long userId){
+    public List<WithdrawalsDTO> getWithdrawalsByUserId(Long userId){
         return withdrawalService.getWithdrawalsByUserId(userId);
     }
 
-    public Withdrawals addWithdrawal(CreateWithdrawalInput withdrawalDto) {
+    public WithdrawalsDTO addWithdrawal(CreateWithdrawalInput withdrawalDto) {
         return withdrawalService.addWithdrawal(withdrawalDto);
     }
 
-    public Withdrawals updateWithdrawal(Long id, UpdateWithdrawalInput updateWithdrawalInput) {
+    public WithdrawalsDTO updateWithdrawal(Long id, UpdateWithdrawalInput updateWithdrawalInput) {
         return withdrawalService.updateWithdrawal(id, updateWithdrawalInput);
     }
 

@@ -1,7 +1,7 @@
 package com.habsida.morago.serviceImpl;
 
-
 import com.habsida.morago.exceptions.GraphqlException;
+import com.habsida.morago.model.dto.WithdrawalsDTO;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.enums.PaymentStatus;
@@ -10,36 +10,41 @@ import com.habsida.morago.model.inputs.UpdateWithdrawalInput;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.WithdrawalRepository;
 import com.habsida.morago.service.WithdrawalService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WithdrawalServiceImpl implements WithdrawalService {
 
-    private WithdrawalRepository withdrawalRepository;
-    ;
-    private UserRepository userRepository;
+    private final WithdrawalRepository withdrawalRepository;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
-    public WithdrawalServiceImpl(WithdrawalRepository withdrawalRepository, UserRepository userRepository) {
+    public WithdrawalServiceImpl(WithdrawalRepository withdrawalRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.withdrawalRepository = withdrawalRepository;
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
-    public List<Withdrawals> getAllWithdrawals() {
-        return withdrawalRepository.findAll();
+    public List<WithdrawalsDTO> getAllWithdrawals() {
+        return withdrawalRepository.findAll().stream()
+                .map(withdrawals -> modelMapper.map(withdrawals, WithdrawalsDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Withdrawals getWithdrawalById(Long id) {
-        return withdrawalRepository.findById(id)
+    public WithdrawalsDTO getWithdrawalById(Long id) {
+        Withdrawals withdrawals = withdrawalRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
+        return modelMapper.map(withdrawals, WithdrawalsDTO.class);
     }
 
-
     @Override
-    public Withdrawals addWithdrawal(CreateWithdrawalInput createWithdrawalInput) {
+    public WithdrawalsDTO addWithdrawal(CreateWithdrawalInput createWithdrawalInput) {
         User user = userRepository.findById(createWithdrawalInput.getUserId())
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createWithdrawalInput.getUserId()));
 
@@ -50,18 +55,19 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         withdrawals.setStatus(createWithdrawalInput.getStatus());
         withdrawals.setUser(user);
 
-        return withdrawalRepository.save(withdrawals);
+        Withdrawals savedWithdrawals = withdrawalRepository.save(withdrawals);
+        return modelMapper.map(savedWithdrawals, WithdrawalsDTO.class);
     }
 
     @Override
-    public Withdrawals updateWithdrawal(Long id, UpdateWithdrawalInput updateWithdrawalInput) {
+    public WithdrawalsDTO updateWithdrawal(Long id, UpdateWithdrawalInput updateWithdrawalInput) {
         Withdrawals withdrawals = withdrawalRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
 
         if (updateWithdrawalInput.getAccountNumber() != null && !updateWithdrawalInput.getAccountNumber().isEmpty()) {
             withdrawals.setAccountNumber(updateWithdrawalInput.getAccountNumber());
         }
-        if (updateWithdrawalInput.getAccountNumber() != null && !updateWithdrawalInput.getAccountHolder().isEmpty()) {
+        if (updateWithdrawalInput.getAccountHolder() != null && !updateWithdrawalInput.getAccountHolder().isEmpty()) {
             withdrawals.setAccountHolder(updateWithdrawalInput.getAccountHolder());
         }
         if (updateWithdrawalInput.getSum() != null) {
@@ -71,34 +77,35 @@ public class WithdrawalServiceImpl implements WithdrawalService {
             withdrawals.setStatus(updateWithdrawalInput.getStatus());
         }
 
-        return withdrawalRepository.save(withdrawals);
-
+        Withdrawals updatedWithdrawals = withdrawalRepository.save(withdrawals);
+        return modelMapper.map(updatedWithdrawals, WithdrawalsDTO.class);
     }
 
     @Override
-    public void deleteWithdrawal(Long id)  {
+    public void deleteWithdrawal(Long id) {
         Withdrawals withdrawals = withdrawalRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
         withdrawalRepository.deleteById(id);
-
     }
 
-
     @Override
-    public List<Withdrawals> getWithdrawalsByStatus(PaymentStatus status) {
+    public List<WithdrawalsDTO> getWithdrawalsByStatus(PaymentStatus status) {
         List<Withdrawals> withdrawalsByStatus = withdrawalRepository.findByStatus(status);
-        if (withdrawalsByStatus.isEmpty()){
-            throw new GraphqlException("Deposits not found for status: " + status);
+        if (withdrawalsByStatus.isEmpty()) {
+            throw new GraphqlException("Withdrawals not found for status: " + status);
         }
-        return withdrawalsByStatus;
+        return withdrawalsByStatus.stream()
+                .map(withdrawals -> modelMapper.map(withdrawals, WithdrawalsDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Withdrawals> getWithdrawalsByUserId(Long userId) {
+    public List<WithdrawalsDTO> getWithdrawalsByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
         List<Withdrawals> withdrawalsByUserId = withdrawalRepository.findByUserId(userId);
-
-        return withdrawalsByUserId;
+        return withdrawalsByUserId.stream()
+                .map(withdrawals -> modelMapper.map(withdrawals, WithdrawalsDTO.class))
+                .collect(Collectors.toList());
     }
 }
