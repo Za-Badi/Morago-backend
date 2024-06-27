@@ -376,10 +376,6 @@ input UpdateDepositsInput {
     coin: Float
     won: Float
 }
-input SearchUsersInput {
-    firstName: String
-    phone: String
-}
 
 type PageOutput {
     currentPage: Int

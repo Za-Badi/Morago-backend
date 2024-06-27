@@ -46,10 +46,10 @@ public class AuthenticationService {
         user.setImage(null);
         user.setTranslatorProfile(null);
         List<Role> roles = new ArrayList<>();
-        Role userRole = roleRepository.findByName("ROLE_USER")
+        Role userRole = roleRepository.findByName("USER")
                 .orElseGet(() -> {
                     Role newRole = new Role();
-                    newRole.setName("ROLE_USER");
+                    newRole.setName("USER");
                     return roleRepository.save(newRole);
                 });
         roles.add(userRole);
@@ -79,10 +79,10 @@ public class AuthenticationService {
         user.setImage(null);
         user.setUserProfile(null);
         List<Role> roles = new ArrayList<>();
-        Role translatorRole = roleRepository.findByName("ROLE_TRANSLATOR")
+        Role translatorRole = roleRepository.findByName("TRANSLATOR")
                 .orElseGet(() -> {
                     Role newRole = new Role();
-                    newRole.setName("ROLE_TRANSLATOR");
+                    newRole.setName("TRANSLATOR");
                     return roleRepository.save(newRole);
                 });
         roles.add(translatorRole);
