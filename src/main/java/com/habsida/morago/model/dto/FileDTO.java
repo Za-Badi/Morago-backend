@@ -1,9 +1,12 @@
 package com.habsida.morago.model.dto;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Data
+@RequiredArgsConstructor
 public class FileDTO {
     private Long id;
     private String path;
@@ -11,5 +14,6 @@ public class FileDTO {
     private String originalTitle;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private UserDTO user;
+//    private UserDTO user;
 }
+
