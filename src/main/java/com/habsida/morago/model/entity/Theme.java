@@ -40,7 +40,7 @@ public class Theme {
     private Boolean isActive;
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "icon_id")
     private File icon;
     @CreatedDate

@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
 public class FileDTO {
     private Long id;
     private String path;

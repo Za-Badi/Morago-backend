@@ -2,6 +2,7 @@ package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.habsida.morago.model.dto.ThemeDTO;
+import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.inputs.CreateThemeInput;
 import com.habsida.morago.model.inputs.UpdateThemeInput;
 import com.habsida.morago.serviceImpl.ThemeService;
@@ -38,6 +39,7 @@ public class ThemeMutationResolver implements GraphQLMutationResolver {
 
     public ThemeDTO updateThemeById(UpdateThemeInput input, DataFetchingEnvironment env) throws IOException {
         MultipartFile mFile = null;
+        ThemeDTO theme = themeService.getThemeById(input.getId());
         try {
             LinkedHashMap<String, Object> envInput = env.getArgument("input");
             Part part = (Part) envInput.get("icon");

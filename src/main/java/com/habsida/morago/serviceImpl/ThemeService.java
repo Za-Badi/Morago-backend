@@ -108,12 +108,14 @@ public class ThemeService {
             theme.setIsActive(input.getIsActive());
         }
         if (icon != null) {
+            String iconUrl = theme.getIcon().getPath();
             try {
                 FileDTO fileDTO = fileService.uploadFile(icon);
                 theme.setIcon(modelMapper.map(fileDTO, File.class));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            fileService.deleteByS3BucketURL(iconUrl);
         }
         Theme updatedTheme = repository.save(theme);
         return modelMapper.map(updatedTheme, ThemeDTO.class);
@@ -127,10 +129,10 @@ public class ThemeService {
     public Boolean removeThemeById(Long id) {
         Theme theme = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Theme Not Found with ID " + id));
         File icon = theme.getIcon();
-        repository.delete(theme);
         if (icon != null) {
-            fileService.deleteById(icon.getId());
+            fileService.deleteByS3BucketURL(theme.getIcon().getPath());
         }
+        repository.delete(theme);
         return true;
     }
 

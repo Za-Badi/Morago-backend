@@ -46,4 +46,8 @@ public class FileService {
         fileUtil.deleteFileFromS3Bucket(file.getPath());
         repository.deleteById(id);
     }
+
+    public void deleteByS3BucketURL(String path) {
+       fileUtil.deleteFileFromS3Bucket(path);
+    }
 }
