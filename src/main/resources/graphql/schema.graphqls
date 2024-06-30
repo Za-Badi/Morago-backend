@@ -168,7 +168,7 @@ type Mutation {
     createRating(ratingInput: RatingInput): RatingDTO
     deleteRating(id: ID!): Boolean
 
-#    addFile(file: Upload!): FileDTO
+    addFile(file: Upload!): FileDTO
 }
 
 type AppVersionDTO {
