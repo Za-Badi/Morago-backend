@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "translator_profiles")
 @Setter
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode

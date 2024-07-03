@@ -12,6 +12,7 @@ import com.habsida.morago.model.inputs.UsersAndWithdrawals;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.UserRepositoryPaged;
 import com.habsida.morago.repository.WithdrawalRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
@@ -128,16 +130,16 @@ public class UserService {
         if (userRepository.findByPhone(userInput.getPhone()).isPresent()) {
             throw new ExceptionGraphql("Phone number is already used: " + userInput.getPhone());
         }
-        User user = new User();
-        user.setPhone(phoneInput);
-        user.setPassword(passwordEncoder.encode(userInput.getPassword()));
-        user.setFirstName(userInput.getFirstName());
-        user.setLastName(userInput.getLastName());
-        user.setImage(null);
-        user.setTranslatorProfile(null);
-        user.setUserProfile(null);
-        List<Role> roles = new ArrayList<>();
-        user.setRoles(roles);
+        User user = User.builder()
+            .phone(phoneInput)
+            .password(passwordEncoder.encode(userInput.getPassword()))
+            .firstName(userInput.getFirstName())
+            .lastName(userInput.getLastName())
+            .image(null)
+            .translatorProfile(null)
+            .userProfile(null)
+            .roles(new ArrayList<>())
+            .build();
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDTO.class);
     }

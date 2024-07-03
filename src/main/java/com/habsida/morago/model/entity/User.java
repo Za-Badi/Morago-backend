@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name = "users")
 @Setter
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode

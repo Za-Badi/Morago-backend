@@ -7,6 +7,7 @@ import com.habsida.morago.model.inputs.LoginUserInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
 import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.repository.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Builder
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -40,21 +42,19 @@ public class AuthenticationService {
         if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
             throw new ExceptionGraphql("Phone number is already used: " + registerUserInput.getPhone());
         }
-        User user = new User();
-        user.setPhone(phoneInput);
-        user.setPassword(passwordEncoder.encode(registerUserInput.getPassword()));
-        user.setImage(null);
-        user.setTranslatorProfile(null);
-        List<Role> roles = new ArrayList<>();
         Role userRole = roleRepository.findByName("USER")
-                .orElseGet(() -> {
-                    Role newRole = new Role();
-                    newRole.setName("USER");
-                    return roleRepository.save(newRole);
-                });
-        roles.add(userRole);
-        user.setRoles(roles);
-        user.setUserProfile(new UserProfile());
+            .orElseGet(() -> {
+            Role newRole = Role.builder().name("USER").build();
+                return roleRepository.save(newRole);
+            });
+        User user = User.builder()
+                .phone(phoneInput)
+                .password(passwordEncoder.encode(registerUserInput.getPassword()))
+                .image(null)
+                .translatorProfile(null)
+                .userProfile(new UserProfile())
+                .roles(new ArrayList<>(List.of(userRole)))
+                .build();
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDTO.class);
     }
@@ -72,27 +72,23 @@ public class AuthenticationService {
         if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
             throw new ExceptionGraphql("Phone number is already used: " + registerUserInput.getPhone());
         }
-        User user = new User();
-        user.setPhone(phoneInput);
-        user.setPhone(registerUserInput.getPhone());
-        user.setPassword(passwordEncoder.encode(registerUserInput.getPassword()));
-        user.setImage(null);
-        user.setUserProfile(null);
-        List<Role> roles = new ArrayList<>();
         Role translatorRole = roleRepository.findByName("TRANSLATOR")
-                .orElseGet(() -> {
-                    Role newRole = new Role();
-                    newRole.setName("TRANSLATOR");
-                    return roleRepository.save(newRole);
-                });
-        roles.add(translatorRole);
-        user.setRoles(roles);
-        List<Language> languages = new ArrayList<>();
-        List<Theme> themes = new ArrayList<>();
-        TranslatorProfile translatorProfile = new TranslatorProfile();
-        translatorProfile.setLanguages(languages);
-        translatorProfile.setThemes(themes);
-        user.setTranslatorProfile(translatorProfile);
+            .orElseGet(() -> {
+            Role newRole = Role.builder().name("TRANSLATOR").build();
+                return roleRepository.save(newRole);
+            });
+        TranslatorProfile translatorProfile = TranslatorProfile.builder()
+            .languages(new ArrayList<>())
+            .themes(new ArrayList<>())
+            .build();
+        User user = User.builder()
+            .phone(phoneInput)
+            .password(passwordEncoder.encode(registerUserInput.getPassword()))
+            .image(null)
+            .userProfile(null)
+            .translatorProfile(translatorProfile)
+            .roles(new ArrayList<>(List.of(translatorRole)))
+            .build();
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDTO.class);
     }
