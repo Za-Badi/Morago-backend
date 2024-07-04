@@ -3,7 +3,6 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.dto.UserDTO;
 import com.habsida.morago.model.dto.WithdrawalsDTO;
-import com.habsida.morago.model.entity.Role;
 import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.inputs.UserInput;
 import com.habsida.morago.model.entity.User;
