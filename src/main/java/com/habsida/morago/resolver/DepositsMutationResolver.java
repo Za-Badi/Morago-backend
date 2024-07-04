@@ -5,15 +5,12 @@ import com.habsida.morago.model.dto.DepositsDTO;
 import com.habsida.morago.model.inputs.CreateDepositsInput;
 import com.habsida.morago.model.inputs.UpdateDepositsInput;
 import com.habsida.morago.service.DepositsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DepositsMutationResolver implements GraphQLMutationResolver {
-
     private final DepositsService depositsService;
 
-    @Autowired
     public DepositsMutationResolver(DepositsService depositsService) {
         this.depositsService = depositsService;
     }
