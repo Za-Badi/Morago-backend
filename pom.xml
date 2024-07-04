@@ -46,6 +46,7 @@
         </dependency>
 
 
+
         <!-- Start Dependency for security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,6 +54,18 @@
         </dependency>
 
         <!-- End Dependency for security-->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Start dependency for DB -->
         <dependency>
             <groupId>mysql</groupId>

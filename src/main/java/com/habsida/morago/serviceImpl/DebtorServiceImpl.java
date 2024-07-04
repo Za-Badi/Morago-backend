@@ -12,6 +12,7 @@ import com.habsida.morago.service.DebtorService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class DebtorServiceImpl implements DebtorService {
         this.modelMapper = modelMapper;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<DebtorDTO> getAllDebtors() {
         List<Debtor> debtors = debtorRepository.findAll();
         return debtors.stream()
@@ -37,14 +38,14 @@ public class DebtorServiceImpl implements DebtorService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public DebtorDTO getDebtorById(Long id) {
         Debtor debtor = debtorRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Debtor not found for id: " + id));
         return modelMapper.map(debtor, DebtorDTO.class);
     }
 
-    @Override
+    @Transactional
     public DebtorDTO addDebtor(CreateDebtorInput createDebtorInput) {
         Debtor debtor = new Debtor();
         debtor.setAccountHolder(createDebtorInput.getAccountHolder());
@@ -57,7 +58,7 @@ public class DebtorServiceImpl implements DebtorService {
         return modelMapper.map(savedDebtor, DebtorDTO.class);
     }
 
-    @Override
+    @Transactional
     public DebtorDTO updateDebtor(Long id, UpdateDebtorInput updateDebtorInput) {
         Debtor debtor = debtorRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Debtor not found for id: " + id));
@@ -76,14 +77,14 @@ public class DebtorServiceImpl implements DebtorService {
         return modelMapper.map(updatedDebtor, DebtorDTO.class);
     }
 
-    @Override
+    @Transactional
     public void deleteDebtor(Long id) {
         Debtor debtor = debtorRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Debtor not found for id: " + id));
         debtorRepository.deleteById(id);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<DebtorDTO> getDebtorByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));

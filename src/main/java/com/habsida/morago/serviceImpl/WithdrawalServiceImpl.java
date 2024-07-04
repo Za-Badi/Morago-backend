@@ -12,6 +12,7 @@ import com.habsida.morago.repository.WithdrawalRepository;
 import com.habsida.morago.service.WithdrawalService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,21 +30,21 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         this.modelMapper = modelMapper;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<WithdrawalsDTO> getAllWithdrawals() {
         return withdrawalRepository.findAll().stream()
                 .map(withdrawals -> modelMapper.map(withdrawals, WithdrawalsDTO.class))
                 .collect(Collectors.toList());
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public WithdrawalsDTO getWithdrawalById(Long id) {
         Withdrawals withdrawals = withdrawalRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
         return modelMapper.map(withdrawals, WithdrawalsDTO.class);
     }
 
-    @Override
+    @Transactional
     public WithdrawalsDTO addWithdrawal(CreateWithdrawalInput createWithdrawalInput) {
         User user = userRepository.findById(createWithdrawalInput.getUserId())
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createWithdrawalInput.getUserId()));
@@ -59,7 +60,7 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         return modelMapper.map(savedWithdrawals, WithdrawalsDTO.class);
     }
 
-    @Override
+    @Transactional
     public WithdrawalsDTO updateWithdrawal(Long id, UpdateWithdrawalInput updateWithdrawalInput) {
         Withdrawals withdrawals = withdrawalRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
@@ -81,14 +82,14 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         return modelMapper.map(updatedWithdrawals, WithdrawalsDTO.class);
     }
 
-    @Override
+    @Transactional
     public void deleteWithdrawal(Long id) {
         Withdrawals withdrawals = withdrawalRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
         withdrawalRepository.deleteById(id);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<WithdrawalsDTO> getWithdrawalsByStatus(PaymentStatus status) {
         List<Withdrawals> withdrawalsByStatus = withdrawalRepository.findByStatus(status);
         if (withdrawalsByStatus.isEmpty()) {
@@ -99,7 +100,7 @@ public class WithdrawalServiceImpl implements WithdrawalService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<WithdrawalsDTO> getWithdrawalsByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));

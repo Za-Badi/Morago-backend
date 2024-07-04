@@ -11,6 +11,7 @@ import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.NotificationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
         this.modelMapper = modelMapper;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<NotificationDTO> getAllNotification() {
         return notificationRepository.findAll()
                 .stream()
@@ -40,14 +41,14 @@ public class NotificationServiceImpl implements NotificationService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public NotificationDTO getNotificationById(Long id) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Notification not found for id: " + id));
         return modelMapper.map(notification, NotificationDTO.class);
     }
 
-    @Override
+    @Transactional
     public NotificationDTO addNotification(CreateNotificationInput createNotificationInput) {
         User user = userRepository.findById(createNotificationInput.getUserId())
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createNotificationInput.getUserId()));
@@ -63,7 +64,7 @@ public class NotificationServiceImpl implements NotificationService {
         return modelMapper.map(savedNotification, NotificationDTO.class);
     }
 
-    @Override
+    @Transactional
     public NotificationDTO updateNotification(Long id, UpdateNotificationInput updateNotificationInput) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Notification not found for id: " + id));
@@ -81,14 +82,14 @@ public class NotificationServiceImpl implements NotificationService {
         return modelMapper.map(updatedNotification, NotificationDTO.class);
     }
 
-    @Override
+    @Transactional
     public void deleteNotification(Long id) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Notification not found for id: " + id));
         notificationRepository.deleteById(id);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<NotificationDTO> getNotificationByUserId(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
