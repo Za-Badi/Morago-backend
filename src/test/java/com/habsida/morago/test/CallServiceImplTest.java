@@ -72,7 +72,6 @@ public class CallServiceImplTest {
         when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
 
         CallDTO result = callService.getCallById(1L);
-
         assertNotNull(result);
     }
 

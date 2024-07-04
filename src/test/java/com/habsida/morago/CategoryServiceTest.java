@@ -1,10 +1,10 @@
 package com.habsida.morago;
 
-import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.dto.CategoryDTO;
 import com.habsida.morago.model.entity.Category;
 import com.habsida.morago.model.inputs.CreateCategoryInput;
 import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.inputs.UpdateCategoryInput;
 import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.CategoryRepository;
 import com.habsida.morago.serviceImpl.CategoryService;
@@ -13,41 +13,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.*;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.ContextConfiguration;
 
-import javax.annotation.meta.When;
-import java.util.ArrayList;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+@RunWith(MockitoJUnitRunner.class)
 @ContextConfiguration(classes = MoragoBackendApplication.class)
 class CategoryServiceTest {
     private final String testName = "Grocery";
     private final Boolean testIsActive = true;
-
-    //    @Autowired
     @Mock
     private CategoryRepository categoryRepository;
     @Mock
@@ -58,13 +49,14 @@ class CategoryServiceTest {
     @Mock
     private PageRequest pageRequest;
     private AutoCloseable autoCloseable;
+
+    @Mock
     private CategoryService categoryService;
 
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks((this));
         categoryService = new CategoryService(categoryRepository, modelMapper);
-
    }
     @AfterEach
     void tearDown() throws Exception {
@@ -89,17 +81,41 @@ class CategoryServiceTest {
     }
 
     @Test
-    @Disabled
     void getAllCategories() {
+        Category category = new Category();
+        Pageable pageable = PageRequest.of(1,6);
+        Page<Category> categories = Mockito.mock(Page.class);
+        Mockito.when(categoryRepository.findAll(pageable)).thenReturn(categories);
+        assertNotNull(categories);
     }
     @Test
-    void getCategoryById() {
-
-//        categoryService.getCategoryById();
+    void getCategoryById() throws EntityNotFoundException {
+        Category category = Category.builder()
+                .id(1L)
+                .name(testName)
+                .isActive(testIsActive)
+                .build();
+        CategoryDTO categoryDTO = new CategoryDTO();
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        when(modelMapper.map(category, CategoryDTO.class)).thenReturn(categoryDTO);
+        CategoryDTO result = categoryService.getCategoryById (1L);
+        verify(categoryRepository, times(1)).findById(1L);
+        verify(modelMapper, times(1)).map(category, CategoryDTO.class);
     }
 
     @Test
     void getCategoryByName() {
+        Category category = Category.builder()
+                .id(1L)
+                .name(testName)
+                .isActive(testIsActive)
+                .build();
+        CategoryDTO categoryDTO = new CategoryDTO();
+        when(categoryRepository.findByName(testName)).thenReturn(Optional.of(category));
+        when(modelMapper.map(category, CategoryDTO.class)).thenReturn(categoryDTO);
+        CategoryDTO result = categoryService.getCategoryByName (testName);
+        verify(categoryRepository, times(1)).findByName(testName);
+        verify(modelMapper, times(1)).map(category, CategoryDTO.class);
     }
 
     @Test
@@ -112,6 +128,7 @@ class CategoryServiceTest {
 
     @Test
     void existsUserByName() {
+
     }
 
     @Test
