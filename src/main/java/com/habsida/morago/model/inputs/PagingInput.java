@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.habsida.morago.model.enums.ESort;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @RequiredArgsConstructor(onConstructor = @__(@JsonCreator))
 public class PagingInput {
     private Integer pageNo = 0;
