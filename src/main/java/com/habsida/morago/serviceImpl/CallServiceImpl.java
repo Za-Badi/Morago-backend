@@ -30,6 +30,7 @@ public class CallServiceImpl implements CallService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public List<CallDTO> getAllCalls() {
         List<Call> calls = callRepository.findAll();
         return calls.stream()
@@ -38,6 +39,7 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
+    @Transactional
     public List<CallDTO> getAllFreeCall() {
         List<Call> calls = callRepository.getFreeCallIsMade();
         return calls.stream()
@@ -46,6 +48,7 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
+    @Transactional
     public CallDTO getCallById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID must not be null");
@@ -56,6 +59,7 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
+    @Transactional
     public CallDTO createCall(CreateCallInput input) {
         Long themeId = input.getTheme();
         Long callerId = input.getCaller();
@@ -118,13 +122,13 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
+    @Transactional
     public void deleteCall(Long id) {
-        Call call = callRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Call not found with id: " + id));
-        callRepository.delete(call);
+        callRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public List<CallDTO> getCallsByUserId(Long userId) {
         List<Call> calls = callRepository.findCallsByUserId(userId);
         if (calls == null || calls.isEmpty()) {
@@ -136,18 +140,21 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
+    @Transactional
     public Page<CallDTO> getAllMissedCalls(Long userId, Pageable pageable) {
         return callRepository.getAllMissedCalls(userId, pageable)
                 .map(call -> modelMapper.map(call, CallDTO.class));
     }
 
     @Override
+    @Transactional
     public Page<CallDTO> getCallsByOutgoingIncomingStatus(CallStatus status, Pageable pageable) {
         return callRepository.getCallsByOutgoingIncomingStatus(status, pageable)
                 .map(call -> modelMapper.map(call, CallDTO.class));
     }
 
     @Override
+    @Transactional
     public Page<CallDTO> getCallsByOutgoingIncoming(Pageable pageable) {
         return callRepository.getCallsByOutgoingIncoming(pageable)
                 .map(call -> modelMapper.map(call, CallDTO.class));

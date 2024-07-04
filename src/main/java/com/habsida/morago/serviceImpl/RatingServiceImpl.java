@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class RatingServiceImpl implements RatingService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public List<RatingDTO> getAllRatings() {
         return ratingRepository.findAll()
                 .stream()
@@ -34,6 +36,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    @Transactional
     public RatingDTO getRatingById(Long id) {
         Rating rating = ratingRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Rating not found with id " + id));
@@ -41,6 +44,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    @Transactional
     public RatingDTO createRating(RatingInput ratingInput) throws Exception {
         User whoUser = userRepository.findById(ratingInput.getWhoUserId())
                 .orElseThrow(() -> new GraphqlException("User who has rated not found"));
@@ -58,6 +62,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    @Transactional
     public RatingDTO updateRating(Long id, UpdateRatingInput update) {
         Rating existingRating = ratingRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Rating not found"));
@@ -70,13 +75,13 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
+    @Transactional
     public void deleteRating(Long id) {
-        Rating rating = ratingRepository.findById(id)
-                .orElseThrow(() -> new GraphqlException("Rating not found"));
-        ratingRepository.delete(rating);
+        ratingRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public Double getAverageRating(Long toWhomUserId) {
         Double averageRating = ratingRepository.findAverageGradeByToWhomUserId(toWhomUserId);
 
