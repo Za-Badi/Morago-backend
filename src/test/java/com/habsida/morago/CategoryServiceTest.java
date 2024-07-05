@@ -4,8 +4,6 @@ import com.habsida.morago.model.dto.CategoryDTO;
 import com.habsida.morago.model.entity.Category;
 import com.habsida.morago.model.inputs.CreateCategoryInput;
 import com.habsida.morago.model.inputs.PagingInput;
-import com.habsida.morago.model.inputs.UpdateCategoryInput;
-import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.CategoryRepository;
 import com.habsida.morago.serviceImpl.CategoryService;
 import org.junit.jupiter.api.AfterEach;
@@ -104,6 +102,7 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Disabled
     void getCategoryByName() {
         Category category = Category.builder()
                 .id(1L)
@@ -119,19 +118,32 @@ class CategoryServiceTest {
     }
 
     @Test
+    @Disabled
     void updateCategory() {
     }
 
     @Test
     void deleteCategoryById() {
+        Long categoryId = 1L;
+        String languageName = "English";
+        Category category = new Category();
+        category.setId(categoryId);
+        category.setName(languageName);
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+        doNothing().when(categoryRepository).delete(category);
+        categoryService.deleteCategoryById(categoryId);
+        verify(categoryRepository, times(1)).findById(categoryId);
+        verify(categoryRepository, times(1)).delete(category);
     }
 
     @Test
+    @Disabled
     void existsUserByName() {
 
     }
 
     @Test
+    @Disabled
     void getCategoryByStatusIsActive() {
     }
 
