@@ -1,14 +1,14 @@
 package com.habsida.morago.model.inputs;
 
-import com.habsida.morago.model.entity.Language;
-import com.habsida.morago.model.entity.User;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class TranslatorProfileInput {
     private String dateOfBirth;
     private String email;

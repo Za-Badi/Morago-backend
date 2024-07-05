@@ -1,10 +1,12 @@
 package com.habsida.morago.model.inputs;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
 @Getter
 @Setter
 public class UserInput {

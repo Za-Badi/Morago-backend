@@ -17,6 +17,7 @@ import java.util.List;
 @Table(name = "languages")
 @Setter
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
