@@ -1,4 +1,3 @@
-# src/main/resources/graphql/query_tests.graphql
 
 query getCoinById {
     getCoinById(id: 1) {
@@ -19,3 +18,169 @@ query getAllCoins {
         updatedAt
     }
 }
+
+
+query getAppVersionByPlatform {
+    getAppVersionByPlatform(platform: IOS) {
+        platform
+        min
+        latest
+        createdAt
+        updatedAt
+    }
+}
+
+
+
+query getAllAppVersions{
+    getAllAppVersions {
+        platform
+        min
+        latest
+        createdAt
+        updatedAt
+    }
+}
+
+
+query getAllCategoriesByPaging{
+    getAllCategoriesByPaging(input: { pageNo: 0, pageSize: 10, sortBy: "id", sort: DES }) {
+        currentPage
+        totalPages
+        totalElements
+        objectList {
+            id
+            name
+            isActive
+        }
+    }
+}
+
+
+query getCategoryById{
+    getCategoryById(id:1) {
+        id
+        name
+        isActive
+    }
+}
+
+
+
+query getCategoryByName{
+    getCategoryByName(name:"Author") {
+        id
+        name
+        isActive
+    }
+}
+
+query getCategoryByStatusIsActiveByPaging{
+    getCategoryByStatusIsActiveByPaging(input: { pageNo: 0, pageSize: 10, sortBy: "id", sort: DES }) {
+        currentPage
+        totalPages
+        totalElements
+        objectList {
+            id
+            name
+            isActive
+        }
+    }
+}
+
+
+
+
+
+query getAllThemesByPaging{
+    getAllThemesByPaging(input: { pageNo: 0, pageSize: 10, sortBy: "id", sort: DES }) {
+        currentPage
+        totalPages
+        totalElements
+        objectList {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+            category {
+                id
+                name
+            }
+            icon {
+                id
+                path
+            }
+        }
+    }
+}
+
+
+query getThemeById{
+    getThemeById(id: 1) {
+        id
+        name
+        koreanTitle
+        price
+        nightPrice
+        description
+        isPopular
+        isActive
+        createdAt
+        updatedAt
+        category {
+            id
+            name
+        }
+        icon {
+            id
+            path
+        }
+    }
+}
+
+
+
+
+query getThemesByCategoriesId{
+    getThemesByCategoriesId(input: { pageNo: 0, pageSize: 10, sortBy: "id", sort: DES }, id: 1) {
+        currentPage
+        totalPages
+        totalElements
+        objectList {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+            category {
+                id
+                name
+            }
+            icon {
+                id
+                path
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
