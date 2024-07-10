@@ -1,0 +1,21 @@
+# src/main/resources/graphql/query_tests.graphql
+
+query getCoinById {
+    getCoinById(id: 1) {
+        id
+        coin
+        won
+        createdAt
+        updatedAt
+    }
+}
+
+query getAllCoins {
+    getAllCoins {
+        id
+        coin
+        won
+        createdAt
+        updatedAt
+    }
+}
