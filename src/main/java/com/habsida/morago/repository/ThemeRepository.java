@@ -15,7 +15,7 @@ import java.util.Set;
 @Repository
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
     @EntityGraph(value = "themes.field")
-    @Query(value = "select * from themes WHERE name = :name", nativeQuery = true)
+    @Query("SELECT t FROM Theme t WHERE t.name = :name")
     Optional<Theme> findByName(String name);
 
     @NotNull

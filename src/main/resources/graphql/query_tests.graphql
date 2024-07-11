@@ -176,6 +176,248 @@ query getThemesByCategoriesId{
 }
 
 
+query getThemesByName{
+    getThemesByName(name: "exampleThemeName") {
+        id
+        name
+        koreanTitle
+        price
+        nightPrice
+        description
+        isPopular
+        isActive
+        createdAt
+        updatedAt
+        category {
+            id
+            name
+        }
+        icon {
+            id
+            path
+        }
+    }
+}
+
+
+query getAllFrequentlyAskedQuestionById{
+    getAllFrequentlyAskedQuestionById {
+        question
+        answer
+        Category
+    }
+}
+
+
+query getFrequentlyAskedQuestionById{
+    getFrequentlyAskedQuestionById(id: 1) {
+        question
+        answer
+        Category
+    }
+}
+
+query  getAllUsers{
+    getAllUsers {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+query getUserById{
+    getUserById(id: 1) {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+query getUserByPhone{
+    getUserByPhone(phone: "string") {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+
+query existsUserByPhone{
+    existsUserByPhone(phone: "string")
+}
+
+
+query getAllUsersPaged {
+    getAllUsersPaged(page: 1, size: 1) {
+        content {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+query searchUsers{
+    searchUsers(searchInput: "string", page: 1, size: 1) {
+        content {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+query searchUsers{
+    searchUsers(searchInput: "example", page: 0, size: 10) {
+        content {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+            translatorProfile {
+                id
+                dateOfBirth
+                email
+                isAvailable
+                isOnline
+                levelOfKorean
+            }
+            userProfile {
+                id
+                isFreeCallMade
+            }
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+
+query getAllUserProfiles{
+    getAllUserProfiles {
+        id
+        isFreeCallMade
+    }
+}
+
+query getUserProfileById{
+    getUserProfileById(id: 1) {
+        id
+        isFreeCallMade
+    }
+}
+
+query getAllTranslatorProfiles{
+    getAllTranslatorProfiles {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+
 
 
 
