@@ -227,7 +227,7 @@ type CategoryPage {
 type FrequentlyAskedQuestionsDTO {
     question: String
     answer: String
-    Category: QuestionsCategories
+    category: QuestionsCategories
 }
 type LanguageDTO {
     id: ID!
@@ -451,13 +451,13 @@ input UpdateThemeInput {
 input CreateFrequentlyAskedQuestionsInput {
     question: String!
     answer: String!
-    Category: QuestionsCategories!
+    category: QuestionsCategories!
 }
 input updateFrequentlyAskedQuestionsInput {
     id: ID!
     question: String
     answer: String
-    Category: QuestionsCategories
+    category: QuestionsCategories
 }
 input PageInput {
     pageNo: Int
@@ -550,8 +550,8 @@ enum Status {
     CANCELED
 }
 enum QuestionsCategories {
-    Restaurant
-    Law
+    RESTAURANT
+    LAW
     ENTERTAINMENT
     GROCERY
 }

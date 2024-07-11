@@ -1,0 +1,996 @@
+mutation {
+    createAppVersion(platform: IOS, min: "string", latest: "string") {
+        platform
+        min
+        latest
+        createdAt
+        updatedAt
+    }
+}
+
+mutation {
+    updateAppVersion(platform: IOS, min: "string", latest: "edit") {
+        platform
+        min
+        latest
+        createdAt
+        updatedAt
+    }
+}
+
+mutation {
+    deleteAppVersion(platform: IOS)
+}
+
+mutation {
+    createCoin(input: {coin: 4000.0, won: 12000.0}) {
+        id
+        coin
+        won
+        createdAt
+        updatedAt
+    }
+}
+
+mutation {
+    updateCoin(input: {id:1, coin: 10000, won: 5800}) {
+        id
+        coin
+        won
+        createdAt
+        updatedAt
+    }
+}
+
+mutation {
+    deleteCoin(id: 1)
+}
+
+mutation {
+    createCategory(input: { name: "string", isActive: true }) {
+        id
+        name
+        isActive
+    }
+}
+
+mutation {
+    updateCategory(input: {id:1, name: "edit", isActive: false}) {
+        id
+        name
+        isActive
+    }
+}
+
+mutation {
+    changeCategoryStatus(id: 1)
+}
+
+mutation {
+    deleteCategoryById(id: 1)
+}
+
+mutation {
+    createTheme(
+        input: {
+            name: "string"
+            koreanTitle: "string"
+            price:100.0
+            nightPrice: 200.0
+            description: "string"
+            isPopular: true
+            isActive: true
+            categoryId: 1
+        }
+    ) {
+        id
+        name
+        koreanTitle
+        price
+        nightPrice
+        description
+        isPopular
+        isActive
+        category {
+            id
+            name
+            isActive
+        }
+        icon {
+            id
+            path
+            type
+            originalTitle
+            createdAt
+            updatedAt
+        }
+        createdAt
+        updatedAt
+    }
+}
+
+
+#mutation {
+#    updateThemeById(input: {id:1, name: "test_create_theme", koreanTitle: "korean_test", price: 250, nightPrice: 300, description: "edit", isPopular: false, isActive: false, categoryId: 1}) {
+#        id
+#        name
+#        koreanTitle
+#        price
+#        nightPrice
+#        description
+#        isPopular
+#        isActive
+#        category {
+#            id
+#            name
+#            isActive
+#        }
+#        icon {
+#            id
+#            path
+#            type
+#            originalTitle
+#            createdAt
+#            updatedAt
+#        }
+#        createdAt
+#        updatedAt
+#    }
+#}
+
+mutation {
+    deleteThemeById(id: 1)
+}
+
+mutation {
+    changeThemeStatus(id: 1)
+}
+
+mutation {
+    changeThemePopularity(id: 1, themePopularity: true)
+}
+
+mutation {
+    createFrequentlyAskedQuestion(
+        input: { question: "string", answer: "string", category: LAW }
+    ) {
+        question
+        answer
+        category
+    }
+}
+
+mutation {
+    updateFrequentlyAskedQuestion(input: {id: 1, question :"edit", answer: "edit" , category: ENTERTAINMENT}) {
+        question
+        answer
+        category
+    }
+}
+
+mutation {
+    deleteFrequentlyAskedQuestionById(id: 1)
+}
+
+mutation {
+    signUpAsUser(registerUserInput: { phone: "0111", password: "string" })
+}
+
+
+mutation {
+    signUpAsTranslator(registerUserInput: { phone: "0112", password: "string" })
+}
+
+***
+mutation {
+    logIn(loginUserInput: { phone: "0111", password: "string" })
+}
+***
+
+mutation {
+    addUser(
+        userInput: {
+            phone: "0113"
+            password: "string"
+            firstName: "string"
+            lastName: "string"
+        }
+    ) {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+mutation {
+    updateUser(
+        id: 1
+        userInput: {
+            phone: "0114"
+            password: "string"
+            firstName: "string"
+            lastName: "string"
+        }
+    ) {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+mutation {
+    deleteUser(id: 3)
+}
+
+mutation {
+    changeIsActive(id: 1, isActive: false)
+}
+
+mutation {
+    changeIsDebtor(id: 1, isDebtor: true)
+}
+
+mutation {
+    addFcmToken(fcmToken: "string", id: 1) {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+ mutation {
+   deleteFcmToken(id: 1)
+ }
+
+mutation {
+    addApnToken(apnToken: "string", id: 1) {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+ mutation {
+   deleteApnToken(id: 1)
+ }
+
+mutation {
+    addUserProfile(isFreeCallMade: true, id: 3) {
+        id
+        isFreeCallMade
+    }
+}
+
+
+mutation {
+    updateUserProfile(id: 1, isFreeCallMade: true) {
+        id
+        isFreeCallMade
+    }
+}
+
+ mutation {
+   deleteUserProfile(id: 2)
+ }
+
+mutation {
+    updateUserProfileByUserId(id: 3, isFreeCallMade: true) {
+        id
+        isFreeCallMade
+    }
+}
+
+mutation {
+    changeIsFreeCallMade(id: 1, isFreeCallMade: true)
+}
+
+mutation {
+    changeBalanceByUserProfileId(id: 1, balance: 200) {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+mutation {
+    addTranslatorProfile(id: 4, translatorProfileInput: {}) {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+mutation {
+    updateTranslatorProfileByUserId(id: 2, translatorProfileInput: {dateOfBirth: "1990-1-1",
+        email: "translator@mail.com",
+        isAvailable: true,
+        isOnline: true,
+        levelOfKorean: "good"}) {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+ mutation {
+   deleteTranslatorProfile(id: 2)
+ }
+
+mutation {
+    updateTranslatorProfileByUserId(id: 4, translatorProfileInput: {dateOfBirth: "1980-1-1"}) {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+mutation {
+    changeIsAvailable(id: 1, isAvailable: false)
+}
+
+mutation {
+    changeIsOnline(id: 1, isOnline: false)
+}
+
+mutation {
+    changeBalanceForTranslatorProfileId(id: 1, balance: 100) {
+        id
+        phone
+        firstName
+        lastName
+        balance
+        fcmToken
+        apnToken
+        ratings
+        totalRatings
+        isActive
+        isDebtor
+        onBoardingStatus
+        translatorProfile {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        userProfile {
+            id
+            isFreeCallMade
+        }
+    }
+}
+
+mutation {
+    addLanguage(languageInput: { name: "English" }) {
+        id
+        name
+    }
+}
+
+mutation {
+    updateLanguage(id: 2, languageInput: { name: "Spanish" }) {
+        id
+        name
+    }
+}
+
+mutation {
+    addLanguageToTranslatorProfile(
+        languageId: 2
+        translatorProfileId: 1
+    ) {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+mutation {
+    deleteLanguageFromTranslatorProfile(
+        languageId: 2
+        translatorProfileId: 1
+    )
+}
+
+mutation {
+    deleteLanguage(id: 2)
+}
+
+mutation {
+    addDeposit(
+        createDepositsInput: { accountHolder: "string", nameOfBank: "string", coin: 100, won: 100, status: COMPLETED, userId: 1}
+    ) {
+        id
+        accountHolder
+        nameOfBank
+        coin
+        won
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+            userProfile{
+                id
+            }
+        }
+    }
+}
+
+mutation {
+    updateDeposit(
+        id: 1
+        updateDepositsInput: { accountHolder: "edit", nameOfBank: "string", status: PENDING, coin: 1000, won: 3000}
+    ) {
+        id
+        accountHolder
+        nameOfBank
+        coin
+        won
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+    }
+}
+
+mutation {
+    deleteDeposit(id: 1)
+}
+
+mutation {
+    addDebtor(
+        createDebtorInput: {
+            accountHolder: "string"
+            nameOfBank: "string"
+            isPaid: true, userId: 2
+        }
+    ) {
+        id
+        accountHolder
+        nameOfBank
+        isPaid
+        createdAt
+        updatedAt
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+    }
+}
+
+mutation {
+    updateDebtor(
+        id: 1
+        updateDebtorInput: {
+            accountHolder: "edit"
+            nameOfBank: "edit"
+            isPaid: true
+        }
+    ) {
+        id
+        accountHolder
+        nameOfBank
+        isPaid
+        createdAt
+        updatedAt
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+            translatorProfile{
+                id
+            }
+
+        }
+    }
+}
+
+mutation {
+    deleteDebtor(id: 1)
+}
+
+mutation {
+    addNotification(
+        createNotificationInput: { title: "string", text: "string", userId: 3 }
+    ) {
+        id
+        title
+        text
+        date
+        time
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+
+        }
+    }
+}
+
+
+mutation {
+    updateNotification(
+        id: 1
+        updateNotificationInput: { title: "edit", text: "edit" }
+    ) {
+        id
+        title
+        text
+        date
+        time
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+
+        }
+    }
+}
+
+mutation {
+    deleteNotification(id: 1)
+}
+
+
+mutation {
+    addWithdrawal(
+        createWithdrawalInput: { accountNumber: "string", accountHolder: "string", sum: 40000, status: CANCELLED, userId: 4 }
+    ) {
+        id
+        accountNumber
+        accountHolder
+        sum
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+    }
+}
+
+
+mutation {
+    updateWithdrawal(
+        id: 1
+        updateWithdrawalInput: { accountNumber: "edit", accountHolder: "edit", sum: 20000, status: COMPLETED }
+    ) {
+        id
+        accountNumber
+        accountHolder
+        sum
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+    }
+}
+
+
+mutation {
+    deleteWithdrawal(id: 1)
+}
+
+
+mutation {
+    createCall(input: {caller: 1, recipient: 2, theme: 1}) {
+        id
+        caller {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        recipient {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        duration
+        status
+        sum
+        commission
+        translatorHasRated
+        userHasRated
+        file {
+            id
+            path
+            type
+            originalTitle
+            createdAt
+            updatedAt
+        }
+        theme {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+        }
+    }
+}
+
+
+mutation {
+    updateCall(id: 1, input: { duration: 20, status: OUTGOING_CALL, commission: 3200}) {
+        id
+        caller {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        recipient {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        duration
+        status
+        sum
+        commission
+        translatorHasRated
+        userHasRated
+        file {
+            id
+            path
+            type
+            originalTitle
+            createdAt
+            updatedAt
+        }
+        theme {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+        }
+    }
+}
+
+mutation {
+    deleteCall(id: 1)
+}
+
+
+mutation {
+    createRating(ratingInput: {whoUserId: 1, toWhomUserId: 2, ratings: 100}) {
+        id
+        whoUser {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        toWhomUser {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        updatedAt
+        ratings
+    }
+}
+
+
+mutation {
+    updateRating(id: 1, update: {ratings: 80}) {
+        id
+        whoUser {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        toWhomUser {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        updatedAt
+        ratings
+    }
+}
+
+mutation {
+    deleteRating(id: 1)
+}
+
+
+# mutation {
+#   addFile(file: "_____") {
+#     id
+#     path
+#     type
+#     originalTitle
+#     createdAt
+#     updatedAt
+#   }
+# }

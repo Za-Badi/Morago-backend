@@ -11,8 +11,7 @@ import javax.persistence.Enumerated;
 @Setter
 @Getter
 public class CreateFrequentlyAskedQuestionsInput {
-    private String question = "";
-    private String answer = "";
-    @Enumerated(EnumType.STRING)
-    private QuestionsCategories Category;
+    private String question;
+    private String answer;
+    private QuestionsCategories category;
 }
