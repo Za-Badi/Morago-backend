@@ -417,6 +417,204 @@ query getAllTranslatorProfiles{
     }
 }
 
+query getAllTranslatorProfilesPaged {
+    getAllTranslatorProfilesPaged(page: 1, size: 1) {
+        content {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+query getTranslatorProfileById{
+    getTranslatorProfileById(id: 1) {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+
+query getTranslatorProfilesByIsOnlineAndThemeId{
+    getTranslatorProfilesByIsOnlineAndThemeId(isOnline: true, id: 2) {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+query getTranslatorProfilesByIsOnlineAndThemeIdPaged{
+    getTranslatorProfilesByIsOnlineAndThemeIdPaged(
+        page: 1
+        size: 1
+        id: 1
+        isOnline: true
+    ) {
+        content {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+query getTranslatorProfilesByThemeId{
+    getTranslatorProfilesByThemeId(id: 2) {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+query getTranslatorProfilesByThemeIdPaged {
+    getTranslatorProfilesByThemeIdPaged(page: 1, size: 1, id: 1) {
+        content {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+
+query getTranslatorProfilesByThemeName {
+    getTranslatorProfilesByThemeName(name: "Theme") {
+        id
+        dateOfBirth
+        email
+        isAvailable
+        isOnline
+        levelOfKorean
+    }
+}
+
+query getTranslatorProfilesByThemeNamePaged {
+    getTranslatorProfilesByThemeNamePaged(page: 1, size: 1, name: "Theme") {
+        content {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+query searchTranslators {
+    searchTranslators(searchInput: "string", page: 1, size: 1) {
+        content {
+            id
+            dateOfBirth
+            email
+            isAvailable
+            isOnline
+            levelOfKorean
+        }
+        totalPages
+        totalElements
+        size
+        number
+    }
+}
+
+
+query getAllLanguages{
+    getAllLanguages {
+        id
+        name
+    }
+}
+
+
+query getLanguageById{
+    getLanguageById(id: 2) {
+        id
+        name
+    }
+}
+
+query getAllDebtors {
+    getAllDebtors {
+        id
+        accountHolder
+        nameOfBank
+        isPaid
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+query getDebtorById{
+    getDebtorById(id: 1) {
+        id
+        accountHolder
+        nameOfBank
+        isPaid
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+query getDebtorByUserI{
+    getDebtorByUserId(userId: 1) {
+        id
+        accountHolder
+        nameOfBank
+        isPaid
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+
+
+
+
 
 
 
