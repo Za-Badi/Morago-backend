@@ -612,6 +612,631 @@ query getDebtorByUserI{
 }
 
 
+query  getAllDeposits{
+    getAllDeposits {
+        id
+        accountHolder
+        nameOfBank
+        coin
+        won
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+
+query  getDepositById{
+    getDepositById(id: 1) {
+        id
+        accountHolder
+        nameOfBank
+        coin
+        won
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+
+query getDepositsByStatus{
+    getDepositsByStatus(status: PENDING) {
+        id
+        accountHolder
+        nameOfBank
+        coin
+        won
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+
+query getDepositsByUserId{
+    getDepositsByUserId(userId: 2) {
+        id
+        accountHolder
+        nameOfBank
+        coin
+        won
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+query getAllNotification{
+    getAllNotification {
+        id
+        title
+        text
+        date
+        time
+        user {
+            id
+        }
+    }
+}
+
+query getNotificationById{
+    getNotificationById(id: 1) {
+        id
+        title
+        text
+        date
+        time
+        user {
+            id
+        }
+    }
+}
+
+
+query getNotificationsByUserId{
+    getNotificationsByUserId(userId: 1) {
+        id
+        title
+        text
+        date
+        time
+        user {
+            id
+        }
+    }
+}
+
+
+query getAllWithdrawals{
+    getAllWithdrawals {
+        id
+        accountNumber
+        accountHolder
+        sum
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+query getWithdrawalsById{
+    getWithdrawalsById(id: 1) {
+        id
+        accountNumber
+        accountHolder
+        sum
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+query getWithdrawalsByStatus{
+    getWithdrawalsByStatus(status: PENDING) {
+        id
+        accountNumber
+        accountHolder
+        sum
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+
+query getWithdrawalsByUserId{
+    getWithdrawalsByUserId(userId: 1) {
+        id
+        accountNumber
+        accountHolder
+        sum
+        status
+        createdAt
+        updatedAt
+        user {
+            id
+        }
+    }
+}
+
+
+query getUsersAndWithdrawals{
+    getUsersAndWithdrawals {
+        user {
+            id
+
+        }
+        withdrawals {
+            id
+        }
+    }
+}
+
+
+query getAllCalls{
+    getAllCalls {
+        id
+        caller {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        recipient {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        duration
+        status
+        sum
+        commission
+        translatorHasRated
+        userHasRated
+        file {
+            id
+            path
+            type
+            originalTitle
+            createdAt
+            updatedAt
+        }
+        theme {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+        }
+    }
+}
+
+
+
+query getCallById{
+    getCallById(id: 1) {
+        id
+        caller {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        recipient {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        duration
+        status
+        sum
+        commission
+        translatorHasRated
+        userHasRated
+        file {
+            id
+            path
+            type
+            originalTitle
+            createdAt
+            updatedAt
+        }
+        theme {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+        }
+    }
+}
+
+
+
+query getAllFreeCalls{
+    getAllFreeCalls {
+        id
+        caller {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        recipient {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        duration
+        status
+        sum
+        commission
+        translatorHasRated
+        userHasRated
+        file {
+            id
+            path
+            type
+            originalTitle
+            createdAt
+            updatedAt
+        }
+        theme {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+        }
+    }
+}
+
+
+
+query getCallsByUserId{
+    getCallsByUserId(userid: 1) {
+        id
+        caller {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        recipient {
+            id
+            phone
+            firstName
+            lastName
+            balance
+            fcmToken
+            apnToken
+            ratings
+            totalRatings
+            isActive
+            isDebtor
+            onBoardingStatus
+        }
+        createdAt
+        duration
+        status
+        sum
+        commission
+        translatorHasRated
+        userHasRated
+        file {
+            id
+            path
+            type
+            originalTitle
+            createdAt
+            updatedAt
+        }
+        theme {
+            id
+            name
+            koreanTitle
+            price
+            nightPrice
+            description
+            isPopular
+            isActive
+            createdAt
+            updatedAt
+        }
+    }
+}
+
+
+query getMissedCalls{
+    getMissedCalls(userId: 1, page: 1, size: 1) {
+        content {
+            id
+            caller {
+                id
+                phone
+                firstName
+                lastName
+                balance
+                fcmToken
+                apnToken
+                ratings
+                totalRatings
+                isActive
+                isDebtor
+                onBoardingStatus
+            }
+            recipient {
+                id
+                phone
+                firstName
+                lastName
+                balance
+                fcmToken
+                apnToken
+                ratings
+                totalRatings
+                isActive
+                isDebtor
+                onBoardingStatus
+            }
+            createdAt
+            duration
+            status
+            sum
+            commission
+            translatorHasRated
+            userHasRated
+        }
+        pageInfo {
+            totalPages
+            totalElements
+            currentPage
+            pageSize
+        }
+    }
+}
+
+
+
+query getCallsByOutgoingIncoming{
+    getCallsByOutgoingIncoming(page: 1, size: 1) {
+        content {
+            id
+            caller {
+                id
+                phone
+                firstName
+                lastName
+                balance
+                fcmToken
+                apnToken
+                ratings
+                totalRatings
+                isActive
+                isDebtor
+                onBoardingStatus
+            }
+            recipient {
+                id
+                phone
+                firstName
+                lastName
+                balance
+                fcmToken
+                apnToken
+                ratings
+                totalRatings
+                isActive
+                isDebtor
+                onBoardingStatus
+            }
+            createdAt
+            duration
+            status
+            sum
+            commission
+            translatorHasRated
+            userHasRated
+        }
+        pageInfo {
+            totalPages
+            totalElements
+            currentPage
+            pageSize
+        }
+    }
+}
+
+
+
+
+query getCallsByOutgoingIncomingStatus{
+    getCallsByOutgoingIncomingStatus(status: MISSED_CALL, page: 1, size: 1) {
+        content {
+            id
+            caller {
+                id
+                phone
+                firstName
+                lastName
+                balance
+                fcmToken
+                apnToken
+                ratings
+                totalRatings
+                isActive
+                isDebtor
+                onBoardingStatus
+            }
+            recipient {
+                id
+                phone
+                firstName
+                lastName
+                balance
+                fcmToken
+                apnToken
+                ratings
+                totalRatings
+                isActive
+                isDebtor
+                onBoardingStatus
+            }
+            createdAt
+            duration
+            status
+            sum
+            commission
+            translatorHasRated
+            userHasRated
+        }
+        pageInfo {
+            totalPages
+            totalElements
+            currentPage
+            pageSize
+        }
+    }
+}
+
+
+
+query getAllRatings{
+    getAllRatings {
+        id
+        whoUser {
+            id
+        }
+        toWhomUser {
+            id
+        }
+        createdAt
+        updatedAt
+        ratings
+    }
+}
+
+
+query getRatingById{
+    getRatingById(id: 1) {
+        id
+        whoUser {
+            id
+        }
+        toWhomUser {
+            id
+        }
+        createdAt
+        updatedAt
+        ratings
+    }
+}
+
+query getAverageRating{
+    getAverageRating(toWhomUserId: 2)
+}
+
+
+
 
 
 
