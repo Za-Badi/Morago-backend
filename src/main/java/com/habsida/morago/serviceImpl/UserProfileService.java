@@ -80,6 +80,9 @@ public class UserProfileService {
     public UserProfileDTO updateUserProfileByUserId(Long id, Boolean isFreeCallMade) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
+        if (user.getUserProfile() == null) {
+            throw new ExceptionGraphql("User doesn't hava a User Profile attached");
+        }
         UserProfile userProfile = user.getUserProfile();
         userProfile.setIsFreeCallMade(isFreeCallMade);
         UserProfile updatedUserProfile = userProfileRepository.save(userProfile);

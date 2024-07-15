@@ -70,17 +70,17 @@ mutation {
     deleteCategoryById(id: 1)
 }
 
-mutation {
+
+mutation ($input: Upload) {
     createTheme(
         input: {
             name: "string"
-            koreanTitle: "string"
-            price:100.0
-            nightPrice: 200.0
+            koreanTitle: "string", price: 1000, nightPrice: 2000,
             description: "string"
             isPopular: true
-            isActive: true
-            categoryId: 1
+            isActive: true,
+            categoryId: 3,
+            icon: $input
         }
     ) {
         id
@@ -109,34 +109,17 @@ mutation {
     }
 }
 
-
-#mutation {
-#    updateThemeById(input: {id:1, name: "test_create_theme", koreanTitle: "korean_test", price: 250, nightPrice: 300, description: "edit", isPopular: false, isActive: false, categoryId: 1}) {
-#        id
-#        name
-#        koreanTitle
-#        price
-#        nightPrice
-#        description
-#        isPopular
-#        isActive
-#        category {
-#            id
-#            name
-#            isActive
-#        }
-#        icon {
-#            id
-#            path
-#            type
-#            originalTitle
-#            createdAt
-#            updatedAt
-#        }
-#        createdAt
-#        updatedAt
-#    }
-#}
+mutation ($input: Upload){
+    updateThemeById(input: {id: 3, name: "edit"
+        koreanTitle: "edit", price: 5000, nightPrice: 12000,
+        description: "update"
+        isPopular: true
+        isActive: true, icon: $input}) {
+        id
+        name
+        isActive
+    }
+}
 
 mutation {
     deleteThemeById(id: 1)
@@ -344,7 +327,6 @@ mutation {
         isFreeCallMade
     }
 }
-
 
 mutation {
     updateUserProfile(id: 1, isFreeCallMade: true) {
@@ -678,7 +660,6 @@ mutation {
     }
 }
 
-
 mutation {
     updateNotification(
         id: 1
@@ -711,7 +692,6 @@ mutation {
     deleteNotification(id: 1)
 }
 
-
 mutation {
     addWithdrawal(
         createWithdrawalInput: { accountNumber: "string", accountHolder: "string", sum: 40000, status: CANCELLED, userId: 4 }
@@ -739,7 +719,6 @@ mutation {
         }
     }
 }
-
 
 mutation {
     updateWithdrawal(
@@ -770,11 +749,9 @@ mutation {
     }
 }
 
-
 mutation {
     deleteWithdrawal(id: 1)
 }
-
 
 mutation {
     createCall(input: {caller: 1, recipient: 2, theme: 1}) {
@@ -836,7 +813,6 @@ mutation {
         }
     }
 }
-
 
 mutation {
     updateCall(id: 1, input: { duration: 20, status: OUTGOING_CALL, commission: 3200}) {
@@ -903,7 +879,6 @@ mutation {
     deleteCall(id: 1)
 }
 
-
 mutation {
     createRating(ratingInput: {whoUserId: 1, toWhomUserId: 2, ratings: 100}) {
         id
@@ -940,7 +915,6 @@ mutation {
         ratings
     }
 }
-
 
 mutation {
     updateRating(id: 1, update: {ratings: 80}) {
@@ -983,14 +957,13 @@ mutation {
     deleteRating(id: 1)
 }
 
-
-# mutation {
-#   addFile(file: "_____") {
-#     id
-#     path
-#     type
-#     originalTitle
-#     createdAt
-#     updatedAt
-#   }
-# }
+ mutation {
+   addFile(file: "_____") {
+     id
+     path
+     type
+     originalTitle
+     createdAt
+     updatedAt
+   }
+ }
