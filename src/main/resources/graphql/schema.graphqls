@@ -163,6 +163,8 @@ type Mutation {
     createCall(input: CreateCallInput): CallDTO
     updateCall(id: ID!, input: CallUpdateInput): CallDTO
     deleteCall(id: ID!): Boolean
+    endCall(callId: ID!, status: CallStatus!, duration: Int!): Boolean
+    rateCall(userId: ID!, callId: ID!, grade: Float!): Boolean
 
     updateRating(id: ID!, update: UpdateRatingInput): RatingDTO
     createRating(ratingInput: RatingInput): RatingDTO
@@ -513,6 +515,7 @@ input CreateCallInput {
     caller: ID!
     recipient: ID!
     theme: ID!
+    channelName: String
 }
 input CallUpdateInput {
     duration: Int!
@@ -559,6 +562,7 @@ enum CallStatus {
     MISSED_CALL
     INCOMING_CALL
     OUTGOING_CALL
+    COMPLETED
 }
 enum ESort {
     DES
@@ -569,6 +573,12 @@ enum PaymentStatus {
     COMPLETED
     FAILED
     CANCELLED
+}
+
+enum UserStatus {
+    ONLINE
+    OFFLINE
+    BUSY
 }
 
 #scalar FileUpload

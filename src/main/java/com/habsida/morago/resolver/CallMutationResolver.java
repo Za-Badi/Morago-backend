@@ -15,7 +15,7 @@ public class CallMutationResolver implements GraphQLMutationResolver {
     private final CallService callService;
 
     public CallDTO createCall(CreateCallInput input) throws Exception {
-        return callService.createCall(input);
+        return callService.createCall(input.getChannelName(), input.getCaller(), input.getRecipient(), input.getTheme());
     }
 
     public CallDTO updateCall(Long id, CallUpdateInput input) {
@@ -25,6 +25,16 @@ public class CallMutationResolver implements GraphQLMutationResolver {
 
     public Boolean deleteCall(Long id) throws Exception {
         callService.deleteCall(id);
+        return true;
+    }
+
+    public Boolean endCall(Long callId, CallStatus status, Integer duration) {
+        callService.endCall(callId, status, duration);
+        return true;
+    }
+
+    public Boolean rateCall(Long userId, Long callId, double grade) {
+        callService.rateCall(userId, callId, grade);
         return true;
     }
 }

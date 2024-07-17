@@ -10,11 +10,10 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class CreateCallInput {
-
+    private String channelName;
     private Long caller;
-
     private Long recipient;
-
     private Long theme;
 }

@@ -11,8 +11,10 @@ import java.util.List;
 public interface CallService {
     public List<CallDTO> getAllCalls();
     public CallDTO getCallById(Long id) throws Exception;
-    public CallDTO createCall(CreateCallInput callInput) throws Exception;
+    public CallDTO createCall(String channelName, Long translatorId, Long userId, Long themeId) throws Exception; // New method
     public CallDTO updateCall(Long id, CallStatus status, Integer duration, Float commission);
+    public void endCall(Long callId, CallStatus status, Integer duration); // New method
+    public void rateCall(Long userId, Long callId, double grade); // New method
     public void deleteCall(Long id) throws Exception;
     public List<CallDTO> getCallsByUserId(Long userId);
     public List<CallDTO> getAllFreeCall();

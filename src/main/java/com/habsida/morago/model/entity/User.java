@@ -1,5 +1,6 @@
 package com.habsida.morago.model.entity;
 
+import com.habsida.morago.model.enums.UserStatus;
 import lombok.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedDate;
@@ -53,6 +54,9 @@ public class User implements UserDetails {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private UserStatus status;
     @Column(name = "is_active")
     private Boolean isActive;
     @Column(name = "is_debtor")

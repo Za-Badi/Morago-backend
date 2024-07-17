@@ -16,4 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByPhoneWithRoles(@Param("phone") String phone);
 
     Optional<User> findById(Long id);
+
+    @Query("SELECT u FROM User u JOIN u.translatorProfile tp JOIN tp.themes t " +
+            "WHERE t.id = :themeId AND u.status = 'ONLINE' " +
+            "ORDER BY u.ratings DESC")
+    Optional<User> findAvailableTranslatorByThemeId(@Param("themeId") Long themeId);
 }

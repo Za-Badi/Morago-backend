@@ -9,26 +9,34 @@ import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Theme;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.enums.CallStatus;
+import com.habsida.morago.model.enums.UserStatus;
 import com.habsida.morago.model.inputs.CreateCallInput;
 import com.habsida.morago.repository.CallRepository;
 import com.habsida.morago.repository.ThemeRepository;
 import com.habsida.morago.repository.UserRepository;
+import com.habsida.morago.service.DepositsService;
+import com.habsida.morago.service.NotificationService;
 import com.habsida.morago.serviceImpl.CallServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@ExtendWith(MockitoExtension.class)
 public class CallServiceImplTest {
 
     @Mock
@@ -41,16 +49,87 @@ public class CallServiceImplTest {
     private ThemeRepository themeRepository;
 
     @Mock
+    private NotificationService notificationService;
+
+    @Mock
+    private DepositsService depositsService;
+
+    @Mock
     private ModelMapper modelMapper;
 
     @InjectMocks
     private CallServiceImpl callService;
 
+    private User user;
+    private User translator;
+    private Theme theme;
+    private Call call;
+
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public void setUp() {
+        user = new User();
+        user.setId(1L);
+        user.setFirstName("User");
+
+        translator = new User();
+        translator.setId(2L);
+        translator.setFirstName("Translator");
+        translator.setStatus(UserStatus.ONLINE);
+
+        theme = new Theme();
+        theme.setId(1L);
+        theme.setPrice(BigDecimal.valueOf(10));
+
+        call = new Call();
+        call.setId(1L);
+        call.setCaller(user);
+        call.setRecipient(translator);
+        call.setTheme(theme);
+        call.setCreatedAt(LocalDateTime.now());
+        call.setStatus(CallStatus.OUTGOING_CALL);
     }
 
+    @Test
+    public void testCreateCall() throws Exception {
+        CreateCallInput input = new CreateCallInput("channel1", user.getId(), translator.getId(), theme.getId());
+
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(translator.getId())).thenReturn(Optional.of(translator));
+        when(themeRepository.findById(theme.getId())).thenReturn(Optional.of(theme));
+        when(callRepository.save(any(Call.class))).thenReturn(call);
+        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
+
+        CallDTO result = callService.createCall(input.getChannelName(), input.getCaller(), input.getRecipient(), input.getTheme());
+
+        assertNotNull(result);
+        verify(notificationService, times(1)).notifyCallCreation(translator, user);
+        verify(userRepository, times(1)).save(translator);
+    }
+
+    @Test
+    public void testEndCall() {
+        when(callRepository.findById(call.getId())).thenReturn(Optional.of(call));
+        when(themeRepository.findById(theme.getId())).thenReturn(Optional.of(theme));
+
+        callService.endCall(call.getId(), CallStatus.COMPLETED, 30);
+
+        verify(callRepository, times(1)).save(call);
+        verify(depositsService, times(1)).addDeposit(any());
+        verify(notificationService, times(1)).notifyCallEnd(user, translator, call);
+        assertEquals(UserStatus.ONLINE, translator.getStatus());
+    }
+
+    @Test
+    public void testRateCall() {
+        when(callRepository.findById(call.getId())).thenReturn(Optional.of(call));
+        when(userRepository.save(translator)).thenReturn(translator);
+
+        callService.rateCall(user.getId(), call.getId(), 5.0);
+
+        verify(callRepository, times(1)).save(call);
+        verify(userRepository, times(1)).save(translator);
+        assertTrue(call.getUserHasRated());
+    }
     @Test
     void testGetAllCalls() {
         Call call = new Call();
@@ -74,29 +153,6 @@ public class CallServiceImplTest {
         CallDTO result = callService.getCallById(1L);
         assertNotNull(result);
     }
-
-    @Test
-    void testCreateCall() {
-        CreateCallInput input = new CreateCallInput();
-        input.setTheme(1L);
-        input.setCaller(1L);
-        input.setRecipient(2L);
-
-        User caller = new User();
-        User recipient = new User();
-        Theme theme = new Theme();
-
-        when(userRepository.findById(1L)).thenReturn(Optional.of(caller));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(recipient));
-        when(themeRepository.findById(1L)).thenReturn(Optional.of(theme));
-        when(callRepository.save(any(Call.class))).thenReturn(new Call());
-        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
-
-        CallDTO result = callService.createCall(input);
-
-        assertNotNull(result);
-    }
-
     @Test
     void testUpdateCall() {
         Call call = new Call();

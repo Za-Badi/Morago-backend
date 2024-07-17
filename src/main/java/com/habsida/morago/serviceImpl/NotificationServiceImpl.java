@@ -2,6 +2,7 @@ package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GraphqlException;
 import com.habsida.morago.model.dto.NotificationDTO;
+import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Notification;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.CreateNotificationInput;
@@ -97,5 +98,41 @@ public class NotificationServiceImpl implements NotificationService {
         return notifications.stream()
                 .map(notification -> modelMapper.map(notification, NotificationDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void notifyCallCreation(User translator, User user) {
+        // Create notification for the translator
+        CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
+        translatorNotificationInput.setUserId(translator.getId());
+        translatorNotificationInput.setTitle("New Call Request");
+        translatorNotificationInput.setText("You have a new call request from " + user.getFirstName());
+        addNotification(translatorNotificationInput);
+
+        // Create notification for the user
+        CreateNotificationInput userNotificationInput = new CreateNotificationInput();
+        userNotificationInput.setUserId(user.getId());
+        userNotificationInput.setTitle("Call Request Sent");
+        userNotificationInput.setText("Your call request has been sent to " + translator.getFirstName());
+        addNotification(userNotificationInput);
+    }
+
+    @Override
+    @Transactional
+    public void notifyCallEnd(User caller, User translator, Call call) {
+        // Create notification for the caller
+        CreateNotificationInput callerNotificationInput = new CreateNotificationInput();
+        callerNotificationInput.setUserId(caller.getId());
+        callerNotificationInput.setTitle("Call Ended");
+        callerNotificationInput.setText("Your call with " + translator.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.");
+        addNotification(callerNotificationInput);
+
+        // Create notification for the translator
+        CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
+        translatorNotificationInput.setUserId(translator.getId());
+        translatorNotificationInput.setTitle("Call Ended");
+        translatorNotificationInput.setText("Your call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.");
+        addNotification(translatorNotificationInput);
     }
 }
