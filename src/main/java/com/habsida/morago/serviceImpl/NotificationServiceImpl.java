@@ -9,7 +9,9 @@ import com.habsida.morago.model.inputs.CreateNotificationInput;
 import com.habsida.morago.model.inputs.UpdateNotificationInput;
 import com.habsida.morago.repository.NotificationRepository;
 import com.habsida.morago.repository.UserRepository;
+import com.habsida.morago.service.CallService;
 import com.habsida.morago.service.NotificationService;
+import com.habsida.morago.service.SmsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +27,15 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final SmsService smsService;
 
     public NotificationServiceImpl(NotificationRepository notificationRepository,
                                    UserRepository userRepository,
-                                   ModelMapper modelMapper) {
+                                   ModelMapper modelMapper, SmsService smsService) {
         this.notificationRepository = notificationRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.smsService = smsService;
     }
 
     @Transactional(readOnly = true)
@@ -107,15 +111,20 @@ public class NotificationServiceImpl implements NotificationService {
         CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
         translatorNotificationInput.setUserId(translator.getId());
         translatorNotificationInput.setTitle("New Call Request");
-        translatorNotificationInput.setText("You have a new call request from " + user.getFirstName());
+        String translatorNotificationText = "You have a new call request from " + user.getFirstName();
+        translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
+        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+
 
         // Create notification for the user
         CreateNotificationInput userNotificationInput = new CreateNotificationInput();
         userNotificationInput.setUserId(user.getId());
         userNotificationInput.setTitle("Call Request Sent");
-        userNotificationInput.setText("Your call request has been sent to " + translator.getFirstName());
+        String userNotificationText = "Your call request has been sent to " + translator.getFirstName();
+        userNotificationInput.setText(userNotificationText);
         addNotification(userNotificationInput);
+        smsService.sendSms(user.getPhone(), userNotificationText);
     }
 
     @Override
@@ -125,14 +134,18 @@ public class NotificationServiceImpl implements NotificationService {
         CreateNotificationInput callerNotificationInput = new CreateNotificationInput();
         callerNotificationInput.setUserId(caller.getId());
         callerNotificationInput.setTitle("Call Ended");
-        callerNotificationInput.setText("Your call with " + translator.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.");
+        String userNotificationText = "Your call with " + translator.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
+        callerNotificationInput.setText(userNotificationText);
         addNotification(callerNotificationInput);
+        smsService.sendSms(caller.getPhone(), userNotificationText);
 
         // Create notification for the translator
         CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
         translatorNotificationInput.setUserId(translator.getId());
         translatorNotificationInput.setTitle("Call Ended");
-        translatorNotificationInput.setText("Your call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.");
+        String translatorNotificationText = "Your call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
+        translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
+        smsService.sendSms(translator.getPhone(), translatorNotificationText);
     }
 }
