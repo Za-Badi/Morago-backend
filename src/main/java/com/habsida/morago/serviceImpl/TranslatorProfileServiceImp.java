@@ -256,10 +256,13 @@ public class TranslatorProfileServiceImp {
     public TranslatorProfileDTO updateTranslatorProfileByUserId(Long id, TranslatorProfileInput translatorProfileInput) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
-        Long newId = user.getTranslatorProfile().getId();
-        if (newId == null) {
-            throw new ExceptionGraphql("User doesn't have Translator Profile");
+        if (user.getTranslatorProfile() == null) {
+            throw new ExceptionGraphql("User doesn't hava a Translator Profile attached");
         }
+        Long newId = user.getTranslatorProfile().getId();
+//        if (newId == null) {
+//            throw new ExceptionGraphql("User doesn't have Translator Profile");
+//        }
         TranslatorProfile translatorProfile = translatorProfileRepository.findById(newId)
                 .orElseThrow(() -> new ExceptionGraphql("TranslatorProfile not found with id: " + newId));
         if (translatorProfileInput.getDateOfBirth() != null && !translatorProfileInput.getDateOfBirth().isBlank()) {
