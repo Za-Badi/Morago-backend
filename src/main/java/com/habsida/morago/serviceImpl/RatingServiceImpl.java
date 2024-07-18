@@ -2,10 +2,12 @@ package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GraphqlException;
 import com.habsida.morago.model.dto.RatingDTO;
+import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Rating;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.RatingInput;
 import com.habsida.morago.model.inputs.UpdateRatingInput;
+import com.habsida.morago.repository.CallRepository;
 import com.habsida.morago.repository.RatingRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.RatingService;
@@ -25,6 +27,7 @@ public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final CallRepository callRepository;
 
     @Override
     @Transactional
@@ -90,5 +93,29 @@ public class RatingServiceImpl implements RatingService {
         }
 
         return averageRating;
+    }
+
+    @Override
+    @Transactional
+    public void rateCall(Long userId, Long callId, Double grade) throws Exception {
+        Call call = callRepository.findById(callId)
+                .orElseThrow(() -> new GraphqlException("Call that has been rated not found"));
+        User whoUser = userRepository.findById(userId)
+                .orElseThrow(() -> new GraphqlException("User who has rated not found"));
+        User toWhom = userRepository.findById(call.getRecipient().getId())
+                .orElseThrow(() -> new GraphqlException("User who has been rated not found"));
+
+        if (!(whoUser.getTranslatorProfile() != null && call.getTranslatorHasRated())
+            || !(whoUser.getUserProfile() != null && call.getUserHasRated())) {
+
+            RatingInput ratingInput = new RatingInput();
+            ratingInput.setWhoUserId(userId);
+            ratingInput.setToWhomUserId(toWhom.getId());
+            ratingInput.setRatings(grade);
+
+            createRating(ratingInput);
+        } else {
+            throw new Exception("You have already rated");
+        }
     }
 }

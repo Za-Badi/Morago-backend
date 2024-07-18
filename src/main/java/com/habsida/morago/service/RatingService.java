@@ -13,4 +13,5 @@ public interface RatingService {
     void deleteRating(Long id) throws Exception;
     Double getAverageRating(Long toWhomUserId);
     RatingDTO updateRating(Long id, UpdateRatingInput updateRating) throws Exception;
+    void rateCall(Long userId, Long callId, Double grade) throws Exception;
 }
