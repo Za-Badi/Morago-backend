@@ -148,6 +148,7 @@ public class ThemeService {
         return PageUtil.buildPage(pagedRequest.map(theme -> modelMapper.map(theme, ThemeDTO.class)));
     }
 
+    @Transactional
     public ThemeDTO getThemeByName(String name) {
         Theme theme = repository.findByName(name).orElseThrow(() -> new EntityNotFoundException("Entity Not Found with name " + name));
         return modelMapper.map(theme, ThemeDTO.class);
