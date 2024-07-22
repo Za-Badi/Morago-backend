@@ -70,6 +70,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "translator_profile_id")
     private TranslatorProfile translatorProfile;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "consultant_profile_id")
+    private ConsultantProfile consultantProfile;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_profile_id")
     private UserProfile userProfile;
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

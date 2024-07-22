@@ -83,6 +83,18 @@ type Query {
     getAllRatings: [RatingDTO]
     getRatingById(id: ID!): RatingDTO
     getAverageRating(toWhomUserId: ID!): Float
+
+    # Consultant Profile Queries
+    getAllConsultantProfiles: [ConsultantProfileDTO]
+    getAllConsultantProfilesPaged(page: Int, size: Int): ConsultantPage
+    getConsultantProfileById(id: ID): ConsultantProfileDTO
+    getConsultantProfilesByIsOnlineAndLanguageId(isOnline: Boolean, id: ID): [ConsultantProfileDTO]
+    getConsultantProfilesByIsOnlineAndLanguageIdPaged(page: Int, size: Int, id: ID, isOnline: Boolean): ConsultantPage
+    getConsultantProfilesByLanguageId(id: ID): [ConsultantProfileDTO]
+    getConsultantProfilesByLanguageIdPaged(page: Int, size: Int, id: ID): ConsultantPage
+    getConsultantProfilesByLanguageName(name: String): [ConsultantProfileDTO]
+    getConsultantProfilesByLanguageNamePaged(page: Int, size: Int, name: String): ConsultantPage
+    searchConsultants(searchInput: String, page: Int, size: Int): ConsultantPage
 }
 
 type Mutation {
@@ -169,6 +181,17 @@ type Mutation {
     updateRating(id: ID!, update: UpdateRatingInput): RatingDTO
     createRating(ratingInput: RatingInput): RatingDTO
     deleteRating(id: ID!): Boolean
+
+    # Consultant Profile Mutations
+    addConsultantProfile(id: ID, consultantProfileInput: ConsultantProfileInput): ConsultantProfileDTO
+    updateConsultantProfile(id: ID, consultantProfileInput: ConsultantProfileInput): ConsultantProfileDTO
+    deleteConsultantProfile(id: ID): Boolean
+    updateConsultantProfileByUserId(id: ID, consultantProfileInput: ConsultantProfileInput): ConsultantProfileDTO
+    changeIsAvailableForConsultant(id: ID, isAvailable: Boolean): Boolean
+    changeIsOnlineForConsultant(id: ID, isOnline: Boolean): Boolean
+    changeBalanceForConsultantProfileId(id: ID, balance: Float): UserDTO
+    addLanguageToConsultantProfile(languageId: ID, consultantProfileId: ID): ConsultantProfileDTO
+    deleteLanguageFromConsultantProfile(languageId: ID, consultantProfileId: ID): Boolean
 
 #    addFile(file: Upload!): FileDTO
 }
@@ -277,6 +300,23 @@ type TranslatorProfileDTO {
     isOnline: Boolean
     levelOfKorean: String
 }
+
+type ConsultantProfileDTO {
+    id: ID!
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+}
+
+type ConsultantPage {
+    content: [ConsultantProfileDTO]
+    totalPages: Int
+    totalElements: Int
+    size: Int
+    number: Int
+}
+
 type CallDTO {
     id: ID
     caller: UserDTO
@@ -485,6 +525,15 @@ input TranslatorProfileInput {
     levelOfKorean: String
     languages: [ID]
 }
+
+input ConsultantProfileInput {
+    dateOfBirth: String
+    email: String
+    isAvailable: Boolean
+    isOnline: Boolean
+    languages: [ID]
+}
+
 input LanguageInput {
     name: String!
 }
