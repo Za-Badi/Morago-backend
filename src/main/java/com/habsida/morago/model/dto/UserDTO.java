@@ -1,5 +1,6 @@
 package com.habsida.morago.model.dto;
 
+import com.habsida.morago.model.enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class UserDTO {
     private FileDTO image;
     private TranslatorProfileDTO translatorProfile;
     private UserProfileDTO userProfile;
+    private ConsultantProfileDTO consultantProfile;
     private List <RoleDTO> roles;
     private List deposits;
     private List debtors;
@@ -38,4 +40,5 @@ public class UserDTO {
     private List notifications;
     private List givenRatings;
     private List receivedRatings;
+    private UserStatus status;
 }

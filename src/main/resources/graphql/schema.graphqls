@@ -123,6 +123,7 @@ type Mutation {
 
     signUpAsUser(registerUserInput: RegisterUserInput): String
     signUpAsTranslator(registerUserInput: RegisterUserInput): String
+    signUpAsConsultant(registerUserInput: RegisterUserInput): String
     logIn(loginUserInput: LoginUserInput): String
 
     addUser(userInput: UserInput): UserDTO
@@ -273,6 +274,8 @@ type UserDTO {
     onBoardingStatus: Int
     translatorProfile: TranslatorProfileDTO
     userProfile: UserProfileDTO
+    consultantProfile: ConsultantProfileDTO
+    status: String
 }
 type UserPage {
     content: [UserDTO]

@@ -33,8 +33,6 @@ public class ConsultantProfile {
     private Boolean isAvailable;
     @Column(name = "is_online")
     private Boolean isOnline;
-    @Column(name = "specialization", length = 200)
-    private String specialization;
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

@@ -93,6 +93,56 @@ public class AuthenticationService {
         return modelMapper.map(savedUser, UserDTO.class);
     }
 
+
+    @Transactional
+    public UserDTO signUpAsConsultant(RegisterUserInput registerUserInput) throws ExceptionGraphql {
+        // Validate input
+        if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
+                registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
+            throw new ExceptionGraphql("Empty values are not allowed");
+        }
+
+        // Sanitize phone number
+        String phoneInput = registerUserInput.getPhone().replaceAll("\\D", "");
+        if (phoneInput.isBlank()) {
+            throw new ExceptionGraphql("Phone number must contain at least one digit");
+        }
+
+        // Check if phone number already exists
+        if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
+            throw new ExceptionGraphql("Phone number is already used: " + registerUserInput.getPhone());
+        }
+
+        // Find or create consultant role
+        Role consultantRole = roleRepository.findByName("CONSULTANT")
+                .orElseGet(() -> {
+                    Role newRole = Role.builder().name("CONSULTANT").build();
+                    return roleRepository.save(newRole);
+                });
+
+        // Create consultant profile
+        ConsultantProfile consultantProfile = ConsultantProfile.builder()
+                // Add additional consultant-specific fields if necessary
+                .build();
+
+        // Create user with consultant profile
+        User user = User.builder()
+                .phone(phoneInput)
+                .password(passwordEncoder.encode(registerUserInput.getPassword()))
+                .image(null)
+                .userProfile(null)
+                .consultantProfile(consultantProfile)
+                .roles(new ArrayList<>(List.of(consultantRole)))
+                .build();
+
+        // Save user to repository
+        User savedUser = userRepository.save(user);
+
+        // Map saved user to UserDTO and return
+        return modelMapper.map(savedUser, UserDTO.class);
+    }
+
+
     @Transactional
     public UserDTO logIn(LoginUserInput loginUserInput) {
         authenticationManager.authenticate(

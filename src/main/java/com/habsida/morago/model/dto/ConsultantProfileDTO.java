@@ -19,7 +19,6 @@ public class ConsultantProfileDTO {
     private String email;
     private Boolean isAvailable;
     private Boolean isOnline;
-    private String specialization;
     private LocalDateTime updatedAt;
     private List<LanguageDTO> languages;
     private List<ThemeDTO> themes;

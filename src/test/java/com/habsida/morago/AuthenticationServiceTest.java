@@ -2,10 +2,7 @@ package com.habsida.morago;
 
 import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.dto.UserDTO;
-import com.habsida.morago.model.entity.Role;
-import com.habsida.morago.model.entity.TranslatorProfile;
-import com.habsida.morago.model.entity.User;
-import com.habsida.morago.model.entity.UserProfile;
+import com.habsida.morago.model.entity.*;
 import com.habsida.morago.model.inputs.LoginUserInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
 import com.habsida.morago.repository.RoleRepository;
@@ -103,6 +100,45 @@ public class AuthenticationServiceTest {
         assertEquals(user.getPassword(), "encodedPassword");
         verify(userRepository, times(1)).save(any(User.class));
     }
+
+    @Test
+    public void testSignUpAsConsultant() throws ExceptionGraphql {
+        RegisterUserInput registerUserInput = new RegisterUserInput();
+        registerUserInput.setPhone("0110");
+        registerUserInput.setPassword("password");
+
+        Role consultantRole = new Role();
+        consultantRole.setName("CONSULTANT");
+
+        ConsultantProfile consultantProfile = new ConsultantProfile();
+        consultantProfile.setLanguages(new ArrayList<>());
+        consultantProfile.setThemes(new ArrayList<>());
+
+        User user = User.builder()
+                .phone("0110")
+                .password("encodedPassword")
+                .image(null)
+                .userProfile(null)
+                .translatorProfile(null)
+                .consultantProfile(consultantProfile)
+                .roles(new ArrayList<>(List.of(consultantRole)))
+                .build();
+
+        UserDTO userDTO = new UserDTO();
+
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        when(userRepository.findByPhone(anyString())).thenReturn(Optional.empty());
+        when(roleRepository.findByName(anyString())).thenReturn(Optional.of(consultantRole));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(modelMapper.map(any(User.class), eq(UserDTO.class))).thenReturn(userDTO);
+
+        UserDTO result = authenticationService.signUpAsConsultant(registerUserInput);
+        assertNotNull(result);
+        assertEquals(user.getPhone(), registerUserInput.getPhone());
+        assertEquals(user.getPassword(), "encodedPassword");
+        verify(userRepository, times(1)).save(any(User.class));
+    }
+
     @Test
     public void testLogIn() {
         LoginUserInput loginUserInput = new LoginUserInput();
