@@ -26,6 +26,10 @@ public class Call {
     @JoinColumn(name = "recipient_id", nullable = false)
     private User recipient;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consultant_id", nullable = true)
+    private User recipientConsultant;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -48,6 +52,8 @@ public class Call {
     @Column(name = "translator_has_rated")
     private Boolean translatorHasRated;
     //    @Column(name = "user_has_rated", columnDefinition = "bit(1)")
+    @Column(name = "consultant_has_rated", nullable = true)
+    private Boolean consultantHasRated;
     @Column(name = "user_has_rated")
     private Boolean userHasRated;
 

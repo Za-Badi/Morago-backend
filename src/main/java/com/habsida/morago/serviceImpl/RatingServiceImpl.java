@@ -94,28 +94,4 @@ public class RatingServiceImpl implements RatingService {
 
         return averageRating;
     }
-
-    @Override
-    @Transactional
-    public void rateCall(Long userId, Long callId, Double grade) throws Exception {
-        Call call = callRepository.findById(callId)
-                .orElseThrow(() -> new GraphqlException("Call that has been rated not found"));
-        User whoUser = userRepository.findById(userId)
-                .orElseThrow(() -> new GraphqlException("User who has rated not found"));
-        User toWhom = userRepository.findById(call.getRecipient().getId())
-                .orElseThrow(() -> new GraphqlException("User who has been rated not found"));
-
-        if (!(whoUser.getTranslatorProfile() != null && call.getTranslatorHasRated())
-            || !(whoUser.getUserProfile() != null && call.getUserHasRated())) {
-
-            RatingInput ratingInput = new RatingInput();
-            ratingInput.setWhoUserId(userId);
-            ratingInput.setToWhomUserId(toWhom.getId());
-            ratingInput.setRatings(grade);
-
-            createRating(ratingInput);
-        } else {
-            throw new Exception("You have already rated");
-        }
-    }
 }

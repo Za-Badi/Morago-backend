@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface CallRepository extends JpaRepository<Call, Long> {
 
-    @Query("SELECT c FROM Call c WHERE c.caller.id = :userId OR c.recipient.id = :userId")
+    @Query("SELECT c FROM Call c WHERE c.caller.id = :userId OR c.recipient.id = :userId OR c.recipientConsultant.id = :userId")
     List<Call> findCallsByUserId(@Param("userId") Long userId);
 
     @Query("SELECT c FROM Call c WHERE c.status = 'INCOMING_CALL' OR c.status = 'OUTGOING_CALL'")
@@ -21,11 +21,11 @@ public interface CallRepository extends JpaRepository<Call, Long> {
     @Query("SELECT c FROM Call c WHERE c.status = :status")
     Page<Call> getCallsByOutgoingIncomingStatus(@Param("status") CallStatus status, Pageable pageable);
 
-    @Query("SELECT c FROM Call c WHERE c.status = 'MISSED_CALL' AND c.caller.id = :userId OR c.recipient.id = :userId")
+    @Query("SELECT c FROM Call c WHERE c.status = 'MISSED_CALL' AND c.caller.id = :userId OR c.recipient.id = :userId  OR c.recipientConsultant.id = :userId")
     Page<Call> getAllMissedCalls(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT c FROM Call c " +
-            "WHERE c.caller.id = :userId OR c.recipient.id = :userId")
+            "WHERE c.caller.id = :userId OR c.recipient.id = :userId  OR c.recipientConsultant.id = :userId")
     Page<Call> findAllCallsByUserId(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT c FROM Call c WHERE c.commission = 0 OR c.commission is NULL")

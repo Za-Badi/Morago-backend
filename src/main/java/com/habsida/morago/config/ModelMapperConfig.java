@@ -49,6 +49,7 @@ public class ModelMapperConfig {
                 map().setSum(source.getSum());
                 map().setCommission(source.getCommission());
                 map().setTranslatorHasRated(source.getTranslatorHasRated());
+                map().setConsultantHasRated(source.getConsultantHasRated());
                 map().setUserHasRated(source.getUserHasRated());
 
             }

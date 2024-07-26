@@ -148,4 +148,66 @@ public class NotificationServiceImpl implements NotificationService {
         addNotification(translatorNotificationInput);
         smsService.sendSms(translator.getPhone(), translatorNotificationText);
     }
+
+    @Override
+    @Transactional
+    public void notifyConsultantCallCreation(User translator, User user, User consultant) {
+        // Create notification for the translator
+        CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
+        translatorNotificationInput.setUserId(translator.getId());
+        translatorNotificationInput.setTitle("New Call Request");
+        String translatorNotificationText = "You have a new consultation call request from " + user.getFirstName();
+        translatorNotificationInput.setText(translatorNotificationText);
+        addNotification(translatorNotificationInput);
+        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+
+        // Create notification for the consultant
+        CreateNotificationInput consultantNotificationInput = new CreateNotificationInput();
+        translatorNotificationInput.setUserId(consultant.getId());
+        consultantNotificationInput.setTitle("New Call Request");
+        String consultantNotificationText = "You have a new consultation call request from " + user.getFirstName();
+        consultantNotificationInput.setText(consultantNotificationText);
+        addNotification(consultantNotificationInput);
+        smsService.sendSms(consultant.getPhone(), consultantNotificationText);
+
+        // Create notification for the user
+        CreateNotificationInput userNotificationInput = new CreateNotificationInput();
+        userNotificationInput.setUserId(user.getId());
+        userNotificationInput.setTitle("Call Request Sent");
+        String userNotificationText = "Your consultation call request has been sent to translator: " + translator.getFirstName() + " and consultant: " + consultant.getFirstName();
+        userNotificationInput.setText(userNotificationText);
+        addNotification(userNotificationInput);
+        smsService.sendSms(user.getPhone(), userNotificationText);
+    }
+
+    @Override
+    @Transactional
+    public void notifyConsultantCallEnd(User caller, User translator, User consultant, Call call) {
+        // Create notification for the caller
+        CreateNotificationInput callerNotificationInput = new CreateNotificationInput();
+        callerNotificationInput.setUserId(caller.getId());
+        callerNotificationInput.setTitle("Call Ended");
+        String userNotificationText = "Your consultation call with translator: " + translator.getFirstName() + " and consultant: " + consultant.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
+        callerNotificationInput.setText(userNotificationText);
+        addNotification(callerNotificationInput);
+        smsService.sendSms(caller.getPhone(), userNotificationText);
+
+        // Create notification for the translator
+        CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
+        translatorNotificationInput.setUserId(translator.getId());
+        translatorNotificationInput.setTitle("Call Ended");
+        String translatorNotificationText = "Your consultation call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
+        translatorNotificationInput.setText(translatorNotificationText);
+        addNotification(translatorNotificationInput);
+        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+
+        // Create notification for the consultant
+        CreateNotificationInput consultantNotificationInput = new CreateNotificationInput();
+        consultantNotificationInput.setUserId(consultant.getId());
+        consultantNotificationInput.setTitle("Call Ended");
+        String consultantNotificationText = "Your consultation call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
+        consultantNotificationInput.setText(consultantNotificationText);
+        addNotification(consultantNotificationInput);
+        smsService.sendSms(translator.getPhone(), consultantNotificationText);
+    }
 }

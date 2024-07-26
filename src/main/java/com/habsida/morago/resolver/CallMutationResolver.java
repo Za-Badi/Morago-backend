@@ -5,6 +5,7 @@ import com.habsida.morago.model.dto.CallDTO;
 import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.inputs.CallUpdateInput;
 import com.habsida.morago.model.inputs.CreateCallInput;
+import com.habsida.morago.model.inputs.CreateConsultantCallInput;
 import com.habsida.morago.service.CallService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,20 @@ public class CallMutationResolver implements GraphQLMutationResolver {
 
     public Boolean rateCall(Long userId, Long callId, double grade) {
         callService.rateCall(userId, callId, grade);
+        return true;
+    }
+
+    public CallDTO createConsultantCall(CreateConsultantCallInput input) throws Exception {
+        return callService.createConsultantCall(input.getChannelName(), input.getCaller(), input.getRecipient(), input.getRecipientConsultant(), input.getTheme());
+    }
+
+    public Boolean endConsultantCall(Long callId, CallStatus status, Integer duration) {
+        callService.endConsultantCall(callId, status, duration);
+        return true;
+    }
+
+    public Boolean rateConsultantCall(Long userId, Long callId, double translatorGrade, double consultantGrade) {
+        callService.rateConsultantCall(userId, callId, translatorGrade, consultantGrade);
         return true;
     }
 }

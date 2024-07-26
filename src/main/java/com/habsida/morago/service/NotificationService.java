@@ -28,4 +28,8 @@ public interface NotificationService {
     // New method to notify users about the end of a call
     public void notifyCallEnd(User caller, User translator, Call call);
 
+    public void notifyConsultantCallCreation(User translator, User user, User consultant);
+
+    public void notifyConsultantCallEnd(User caller, User translator, User consultant, Call call);
+
 }
