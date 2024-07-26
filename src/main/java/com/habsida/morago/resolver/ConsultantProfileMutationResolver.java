@@ -31,12 +31,12 @@ public class ConsultantProfileMutationResolver implements GraphQLMutationResolve
         return consultantProfileServiceImp.updateConsultantProfileByUserId(id, consultantProfileInput);
     }
 
-    public Boolean changeIsAvailable(Long id, Boolean isAvailable) throws ExceptionGraphql {
-        return consultantProfileServiceImp.changeIsAvailable(id, isAvailable);
+    public Boolean changeIsAvailableForConsultant(Long id, Boolean isAvailable) throws ExceptionGraphql {
+        return consultantProfileServiceImp.changeIsAvailableForConsultant(id, isAvailable);
     }
 
-    public Boolean changeIsOnline(Long id, Boolean isOnline) throws ExceptionGraphql {
-        return consultantProfileServiceImp.changeIsOnline(id, isOnline);
+    public Boolean changeIsOnlineForConsultant(Long id, Boolean isOnline) throws ExceptionGraphql {
+        return consultantProfileServiceImp.changeIsOnlineForConsultant(id, isOnline);
     }
 
     public ConsultantProfileDTO addLanguageToConsultantProfile(Long languageId, Long consultantProfileId) throws ExceptionGraphql {

@@ -281,7 +281,7 @@ public class ConsultantProfileServiceImp {
     }
 
     @Transactional
-    public Boolean changeIsAvailable(Long id, Boolean isAvailable) throws ExceptionGraphql {
+    public Boolean changeIsAvailableForConsultant(Long id, Boolean isAvailable) throws ExceptionGraphql {
         ConsultantProfile consultantProfile = consultantProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("Consultant Profile not found with id: " + id));
         consultantProfile.setIsAvailable(isAvailable);
@@ -290,7 +290,7 @@ public class ConsultantProfileServiceImp {
     }
 
     @Transactional
-    public Boolean changeIsOnline(Long id, Boolean isOnline) throws ExceptionGraphql {
+    public Boolean changeIsOnlineForConsultant(Long id, Boolean isOnline) throws ExceptionGraphql {
         ConsultantProfile consultantProfile = consultantProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("Consultant Profile not found with id: " + id));
         consultantProfile.setIsOnline(isOnline);
