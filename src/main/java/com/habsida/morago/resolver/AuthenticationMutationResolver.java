@@ -38,4 +38,14 @@ public class AuthenticationMutationResolver implements GraphQLMutationResolver {
         UserDTO authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
+
+    // New method to sign up as a Consultant
+    public String signUpAsConsultant(RegisterUserInput registerUserInput) throws ExceptionGraphql {
+        UserDTO user = authenticationService.signUpAsConsultant(registerUserInput);
+        LoginUserInput loginUserInput = new LoginUserInput();
+        loginUserInput.setPhone(user.getPhone());
+        loginUserInput.setPassword(registerUserInput.getPassword());
+        UserDTO authenticatedUser = authenticationService.logIn(loginUserInput);
+        return jwtService.generateToken(authenticatedUser);
+    }
 }
