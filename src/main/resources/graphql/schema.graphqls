@@ -194,6 +194,10 @@ type Mutation {
     addLanguageToConsultantProfile(languageId: ID, consultantProfileId: ID): ConsultantProfileDTO
     deleteLanguageFromConsultantProfile(languageId: ID, consultantProfileId: ID): Boolean
 
+    # Consultant Call Mutations
+    createConsultantCall(input: CreateConsultantCallInput): CallDTO
+    endConsultantCall(callId: ID!, status: CallStatus!, duration: Int!): Boolean
+    rateConsultantCall(userId: ID!, callId: ID!, translatorGrade: Float!, consultantGrade: Float!): Boolean
 #    addFile(file: Upload!): FileDTO
 }
 
@@ -324,12 +328,14 @@ type CallDTO {
     id: ID
     caller: UserDTO
     recipient: UserDTO
+    recipientConsultant: UserDTO
     createdAt: String
     duration: Int
     status: CallStatus
     sum: Float
     commission: Float
     translatorHasRated: Boolean
+    consultantHasRated: Boolean
     userHasRated: Boolean
     file: FileDTO
     theme: ThemeDTO
@@ -565,6 +571,13 @@ input DepositsInput {
 input CreateCallInput {
     caller: ID!
     recipient: ID!
+    theme: ID!
+    channelName: String
+}
+input CreateConsultantCallInput {
+    caller: ID!
+    recipient: ID!
+    recipientConsultant: ID!
     theme: ID!
     channelName: String
 }

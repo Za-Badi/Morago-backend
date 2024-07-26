@@ -21,4 +21,7 @@ public interface CallService {
     public Page<CallDTO> getCallsByOutgoingIncomingStatus(CallStatus status, Pageable pageable);
     public Page<CallDTO> getCallsByOutgoingIncoming(Pageable pageable);
     public Page<CallDTO> getAllMissedCalls(Long userId, Pageable pageable);
+    public CallDTO createConsultantCall(String channelName, Long translatorId, Long userId, Long consultantId, Long themeId) throws Exception;
+    public void endConsultantCall(Long callId, CallStatus status, Integer duration);
+    public void rateConsultantCall(Long userId, Long callId, double translatorGrade, double consultantGrade);
 }

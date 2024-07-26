@@ -9,6 +9,7 @@ public class CallDTO {
     private Long id;
     private UserDTO caller;
     private UserDTO recipient;
+    private UserDTO recipientConsultant;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer duration;
@@ -16,6 +17,7 @@ public class CallDTO {
     private Double sum;
     private Double commission;
     private Boolean translatorHasRated;
+    private Boolean consultantHasRated;
     private Boolean userHasRated;
     private FileDTO file;
     private ThemeDTO theme;

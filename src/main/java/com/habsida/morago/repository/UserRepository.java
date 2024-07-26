@@ -21,4 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE t.id = :themeId AND u.status = 'ONLINE' " +
             "ORDER BY u.ratings DESC")
     Optional<User> findAvailableTranslatorByThemeId(@Param("themeId") Long themeId);
+
+    @Query("SELECT u FROM User u JOIN u.consultantProfile tp JOIN tp.themes t " +
+            "WHERE t.id = :themeId AND u.status = 'ONLINE' " +
+            "ORDER BY u.ratings DESC")
+    Optional<User> findAvailableConsultantByThemeId(@Param("themeId") Long themeId);
 }

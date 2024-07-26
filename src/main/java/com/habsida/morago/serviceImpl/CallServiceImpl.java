@@ -1,5 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.GraphqlException;
 import com.habsida.morago.model.dto.CallDTO;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Theme;
@@ -192,18 +193,48 @@ public class CallServiceImpl implements CallService {
     public void rateCall(Long userId, Long callId, double grade) {
         Call call = callRepository.findById(callId)
                 .orElseThrow(() -> new IllegalArgumentException("Call not found with id: " + callId));
-        if (call.getUserHasRated()) {
-            throw new IllegalArgumentException("User has already rated this call.");
+        User whoUser = userRepository.findById(userId)
+                .orElseThrow(() -> new GraphqlException("User who has rated not found"));
+
+        if (whoUser.getUserProfile() != null) {
+            if (call.getUserHasRated()) {
+                throw new IllegalArgumentException("User has already rated this call.");
+            } else {
+                call.setUserHasRated(true);
+                // Update the ratings for the translator
+                User translator = call.getRecipient();
+                translator.setRatings((translator.getRatings() * translator.getTotalRatings() + grade) / (translator.getTotalRatings() + 1));
+                translator.setTotalRatings(translator.getTotalRatings() + 1);
+                userRepository.save(translator);
+
+                callRepository.save(call);
+            }
         }
-        call.setUserHasRated(true);
 
-        // Update the ratings for the translator
-        User translator = call.getRecipient();
-        translator.setRatings((translator.getRatings() * translator.getTotalRatings() + grade) / (translator.getTotalRatings() + 1));
-        translator.setTotalRatings(translator.getTotalRatings() + 1);
+        if (whoUser.getTranslatorProfile() != null || whoUser.getConsultantProfile() != null) {
+                if (whoUser.getTranslatorProfile() != null) {
+                    if (call.getTranslatorHasRated()) {
+                        throw new IllegalArgumentException("User has already rated this call.");
+                    } else {
+                        call.setTranslatorHasRated(true);
+                    }
+                }
+                if (whoUser.getConsultantProfile() != null) {
+                    if (call.getConsultantHasRated()) {
+                        throw new IllegalArgumentException("User has already rated this call.");
+                    } else {
+                        call.setConsultantHasRated(true);
+                    }
+                }
 
-        userRepository.save(translator);
-        callRepository.save(call);
+                // Update the ratings for the caller
+                User caller = call.getCaller();
+                caller.setRatings((caller.getRatings() * caller.getTotalRatings() + grade) / (caller.getTotalRatings() + 1));
+                caller.setTotalRatings(caller.getTotalRatings() + 1);
+
+                userRepository.save(caller);
+                callRepository.save(call);
+        }
     }
     @Override
     @Transactional
@@ -242,5 +273,118 @@ public class CallServiceImpl implements CallService {
     public Page<CallDTO> getCallsByOutgoingIncoming(Pageable pageable) {
         return callRepository.getCallsByOutgoingIncoming(pageable)
                 .map(call -> modelMapper.map(call, CallDTO.class));
+    }
+
+    @Override
+    @Transactional
+    public CallDTO createConsultantCall(String channelName, Long translatorId, Long userId, Long consultantId, Long themeId) throws Exception {
+        // Retrieve user and theme
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        Theme theme = themeRepository.findById(themeId)
+                .orElseThrow(() -> new IllegalArgumentException("Theme not found with id: " + themeId));
+
+        // Attempt to find the specified translator and check status
+        User translator = userRepository.findById(translatorId)
+                .orElseThrow(() -> new IllegalArgumentException("Translator not found with id: " + translatorId));
+        if (translator.getStatus() != UserStatus.ONLINE) {
+            translator = findNextAvailableTranslator(themeId);
+        }
+
+        // Attempt to find the specified consultant and check status
+        User consultant = userRepository.findById(consultantId)
+                .orElseThrow(() -> new IllegalArgumentException("Consultant not found with id: " + consultantId));
+        if (consultant.getStatus() != UserStatus.ONLINE) {
+            consultant = findNextAvailableConsultant(themeId);
+        }
+
+        // Create call
+        Call call = new Call();
+        call.setCaller(user);
+        call.setRecipient(translator);
+        call.setRecipientConsultant(consultant);
+        call.setTheme(theme);
+        call.setCreatedAt(LocalDateTime.now());
+        call.setStatus(CallStatus.OUTGOING_CALL);
+        callRepository.save(call);
+
+        // Notify users
+        notificationService.notifyConsultantCallCreation(translator, user, consultant);
+
+        // Update translator and consultant status
+        translator.setStatus(UserStatus.BUSY);
+        userRepository.save(translator);
+        consultant.setStatus(UserStatus.BUSY);
+        userRepository.save(consultant);
+
+        return modelMapper.map(call, CallDTO.class);
+    }
+
+    private User findNextAvailableConsultant(Long themeId) {
+        return userRepository.findAvailableConsultantByThemeId(themeId)
+                .orElseThrow(() -> new IllegalArgumentException("No available consultant found for theme id: " + themeId));
+    }
+
+    @Override
+    @Transactional
+    public void endConsultantCall(Long callId, CallStatus status, Integer duration) {
+        Call call = callRepository.findById(callId)
+                .orElseThrow(() -> new IllegalArgumentException("Call not found with id: " + callId));
+        call.setStatus(status);
+        call.setDuration(duration);
+        call.setUpdatedAt(LocalDateTime.now());
+
+        // Financial transactions
+        double translatorCallCost = calculateCallCost(duration, call.getTheme().getPrice());
+        double consultantCallCost = calculateCallCost(duration, call.getTheme().getPrice().multiply(new BigDecimal(2)));
+        double totalCallCost = translatorCallCost + consultantCallCost;
+        deductUserBalance(call.getCaller(), totalCallCost);
+        // For translator
+        addTranslatorBalance(call.getRecipient(), translatorCallCost * 0.85);
+//      // For consultant
+        addTranslatorBalance(call.getRecipientConsultant(), consultantCallCost * 0.85);
+
+        // Update translator status
+        call.getRecipient().setStatus(UserStatus.ONLINE);
+        userRepository.save(call.getRecipient());
+        call.getRecipientConsultant().setStatus(UserStatus.ONLINE);
+        userRepository.save(call.getRecipientConsultant());
+
+        callRepository.save(call);
+
+        // Notify users about call end
+        notificationService.notifyConsultantCallEnd(call.getCaller(), call.getRecipient(), call.getRecipientConsultant() , call);
+    }
+
+    @Override
+    @Transactional
+    public void rateConsultantCall(Long userId, Long callId, double translatorGrade, double consultantGrade) {
+        Call call = callRepository.findById(callId)
+                .orElseThrow(() -> new IllegalArgumentException("Call not found with id: " + callId));
+        User whoUser = userRepository.findById(userId)
+                .orElseThrow(() -> new GraphqlException("User who has rated not found"));
+
+        if (whoUser.getUserProfile() != null) {
+            if (call.getUserHasRated()) {
+                throw new IllegalArgumentException("User has already rated this call.");
+            } else {
+                call.setUserHasRated(true);
+                // Update the ratings for the translator
+                User translator = call.getRecipient();
+                translator.setRatings((translator.getRatings() * translator.getTotalRatings() + translatorGrade) / (translator.getTotalRatings() + 1));
+                translator.setTotalRatings(translator.getTotalRatings() + 1);
+                userRepository.save(translator);
+
+                // Update the ratings for the consultant
+                User consultant = call.getRecipientConsultant();
+                consultant.setRatings((consultant.getRatings() * consultant.getTotalRatings() + consultantGrade) / (consultant.getTotalRatings() + 1));
+                consultant.setTotalRatings(consultant.getTotalRatings() + 1);
+                userRepository.save(consultant);
+
+                callRepository.save(call);
+            }
+        } else {
+            throw new GraphqlException("User does not have a User profile.");
+        }
     }
 }
