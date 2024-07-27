@@ -10,5 +10,5 @@ public class LanguageDTO {
     private LocalDateTime createdAt;
     private String name;
     private LocalDateTime updatedAt;
-    private List translatorProfiles;
+    private List <TranslatorProfileDTO>  translatorProfiles;
 }

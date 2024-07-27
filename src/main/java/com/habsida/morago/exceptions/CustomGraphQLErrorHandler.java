@@ -32,38 +32,20 @@ public class CustomGraphQLErrorHandler implements GraphQLErrorHandler {
     private GraphQLError processError(GraphQLError error) {
         if (error instanceof ExceptionWhileDataFetching) {
             Throwable exception = ((ExceptionWhileDataFetching) error).getException();
-            if (exception instanceof AccessDeniedException) {
-                return new ExceptionGraphql(((AccessDeniedException) exception).getMessage());
-            }
-            if (exception instanceof BadCredentialsException) {
-                return new ExceptionGraphql(((BadCredentialsException) exception).getMessage());
-            }
-            if (exception instanceof AccountStatusException) {
-                return new ExceptionGraphql(((AccountStatusException)exception).getMessage());
-            }
-            if (exception instanceof SignatureException) {
-                return new ExceptionGraphql(((SignatureException) exception).getMessage());
-            }
-            if (exception instanceof ExpiredJwtException) {
-                return new ExceptionGraphql(((ExpiredJwtException) exception).getMessage());
-            }
-            if (exception instanceof AuthenticationException) {
-                return new ExceptionGraphql(((AuthenticationException) exception).getMessage());
-            }
-            if (exception instanceof NullPointerException) {
-                return new ExceptionGraphql(((NullPointerException) exception).getMessage());
-            }
-            if (exception instanceof EntityNotFoundException) {
-                return new ExceptionGraphql(((EntityNotFoundException) exception).getMessage());
+            if (exception instanceof AccessDeniedException ||
+                    exception instanceof BadCredentialsException ||
+                    exception instanceof AccountStatusException ||
+                    exception instanceof SignatureException ||
+                    exception instanceof ExpiredJwtException ||
+                    exception instanceof AuthenticationException ||
+                    exception instanceof NullPointerException ||
+                    exception instanceof EntityNotFoundException ||
+                    exception instanceof IllegalArgumentException ||
+                    exception instanceof IOException) {
+                return new ExceptionGraphql(exception.getMessage());
             }
             if (exception instanceof ExceptionGraphql) {
-                return new ExceptionGraphql(((ExceptionGraphql) exception).getMessage());
-            }
-            if (exception instanceof IllegalArgumentException) {
-                return new ExceptionGraphql(((IllegalArgumentException) exception).getMessage());
-            }
-            if (exception instanceof IOException) {
-                return new ExceptionGraphql(((IOException) exception).getMessage());
+                return (ExceptionGraphql) exception;
             }
         }
         return defaultHandler.processErrors(List.of(error)).get(0);

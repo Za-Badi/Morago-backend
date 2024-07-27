@@ -2,7 +2,7 @@ package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.habsida.morago.exceptions.ExceptionGraphql;
-import com.habsida.morago.model.dto.UserDTO;
+import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.LoginUserInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
 import com.habsida.morago.serviceImpl.AuthenticationService;
@@ -17,35 +17,34 @@ public class AuthenticationMutationResolver implements GraphQLMutationResolver {
     private final JwtService jwtService;
 
     public String signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
-        UserDTO user = authenticationService.signUpAsUser(registerUserInput);
+        User user = authenticationService.signUpAsUser(registerUserInput);
         LoginUserInput loginUserInput = new LoginUserInput();
         loginUserInput.setPhone(user.getPhone());
         loginUserInput.setPassword(registerUserInput.getPassword());
-        UserDTO authenticatedUser = authenticationService.logIn(loginUserInput);
+        User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
 
     public String signUpAsTranslator(RegisterUserInput registerUserInput) throws ExceptionGraphql {
-        UserDTO user = authenticationService.signUpAsTranslator(registerUserInput);
+        User user = authenticationService.signUpAsTranslator(registerUserInput);
         LoginUserInput loginUserInput = new LoginUserInput();
         loginUserInput.setPhone(user.getPhone());
         loginUserInput.setPassword(registerUserInput.getPassword());
-        UserDTO authenticatedUser = authenticationService.logIn(loginUserInput);
+        User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
 
     public String logIn(LoginUserInput loginUserInput) {
-        UserDTO authenticatedUser = authenticationService.logIn(loginUserInput);
+        User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
 
-    // New method to sign up as a Consultant
     public String signUpAsConsultant(RegisterUserInput registerUserInput) throws ExceptionGraphql {
-        UserDTO user = authenticationService.signUpAsConsultant(registerUserInput);
+        User user = authenticationService.signUpAsConsultant(registerUserInput);
         LoginUserInput loginUserInput = new LoginUserInput();
         loginUserInput.setPhone(user.getPhone());
         loginUserInput.setPassword(registerUserInput.getPassword());
-        UserDTO authenticatedUser = authenticationService.logIn(loginUserInput);
+        User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
 }

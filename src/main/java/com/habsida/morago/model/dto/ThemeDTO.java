@@ -19,5 +19,5 @@ public class ThemeDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private CategoryDTO category;
-    private List translatorProfiles;
+    private List <TranslatorProfileDTO> translatorProfiles;
 }

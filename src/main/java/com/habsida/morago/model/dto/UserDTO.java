@@ -16,7 +16,6 @@ import java.util.List;
 public class UserDTO {
     private Long id;
     private String phone;
-    private String password;
     private String firstName;
     private String lastName;
     private Double balance;
@@ -34,11 +33,11 @@ public class UserDTO {
     private UserProfileDTO userProfile;
     private ConsultantProfileDTO consultantProfile;
     private List <RoleDTO> roles;
-    private List deposits;
-    private List debtors;
-    private List withdrawals;
-    private List notifications;
-    private List givenRatings;
-    private List receivedRatings;
+    private List <DepositsDTO> deposits;
+    private List <DebtorDTO> debtors;
+    private List <WithdrawalsDTO> withdrawals;
+    private List <NotificationDTO> notifications;
+    private List <RatingDTO>  givenRatings;
+    private List <RatingDTO> receivedRatings;
     private UserStatus status;
 }

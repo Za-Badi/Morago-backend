@@ -3,10 +3,17 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.model.dto.AppVersionDTO;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
+import com.habsida.morago.model.enums.ESort;
+import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.AppVersionRepository;
+import com.habsida.morago.util.ModelMapperUtil;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -16,7 +23,31 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AppVersionService {
     private final AppVersionRepository repository;
-    private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
+
+    @Transactional(readOnly = true)
+    public AppVersionDTO getAppVersionByPlatform(EPlatform platform) {
+        AppVersion appVersion = repository.findByPlatform(platform)
+                .orElseThrow(() -> new EntityNotFoundException("No App Version with platform: " + platform));
+        return modelMapperUtil.map(appVersion, AppVersionDTO.class);
+    }
+
+    @Transactional(readOnly = true)
+    public PageOutput<AppVersionDTO> getAll(PagingInput pagingInput) {
+        Sort.Direction sortDirection = pagingInput.getSort() == ESort.DES ? Sort.Direction.DESC : Sort.Direction.ASC;
+        PageRequest pageRequest = PageRequest.of(pagingInput.getPageNo(), pagingInput.getPageSize(), Sort.by(sortDirection, pagingInput.getSortBy()));
+        Page<AppVersion> page = repository.findAll(pageRequest);
+        List<AppVersionDTO> content = page.getContent().stream()
+                .map(appVersion -> modelMapperUtil.map(appVersion, AppVersionDTO.class))
+                .collect(Collectors.toList());
+
+        return new PageOutput<>(
+                page.getNumber(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                content
+        );
+    }
 
     public AppVersionDTO createAppVersion(EPlatform platform, String min, String latest) {
         AppVersion appVersion = new AppVersion();
@@ -32,34 +63,28 @@ public class AppVersionService {
             throw new NullPointerException("Latest version is required");
         }
         AppVersion savedAppVersion = repository.save(appVersion);
-        return modelMapper.map(savedAppVersion, AppVersionDTO.class);
+        return modelMapperUtil.map(savedAppVersion, AppVersionDTO.class);
     }
 
-    public AppVersionDTO getAppVersionByPlatform(EPlatform platform) {
-        AppVersion appVersion = repository.findByPlatform(platform)
-                .orElseThrow(() -> new EntityNotFoundException("No App Version with platform: " + platform));
-        return modelMapper.map(appVersion, AppVersionDTO.class);
-    }
 
+
+    @Transactional
     public AppVersionDTO updateAppVersion(EPlatform platform, String min, String latest) {
         AppVersion appVersion = repository.findByPlatform(platform)
                 .orElseThrow(() -> new EntityNotFoundException("No App Version with platform: " + platform));
-        if (min != null && !min.isEmpty()) {
+        if (min != null && !min.isBlank()) {
             appVersion.setMin(min);
         }
-        if (latest != null && !latest.isEmpty()) {
+        if (latest != null && !latest.isBlank()) {
             appVersion.setLatest(latest);
         }
         AppVersion updatedAppVersion = repository.save(appVersion);
-        return modelMapper.map(updatedAppVersion, AppVersionDTO.class);
+        return modelMapperUtil.map(updatedAppVersion, AppVersionDTO.class);
     }
 
-    public List<AppVersionDTO> getAll() {
-        return repository.findAll().stream()
-                .map(appVersion -> modelMapper.map(appVersion, AppVersionDTO.class))
-                .collect(Collectors.toList());
-    }
 
+
+    @Transactional
     public Boolean delete(EPlatform platform) {
         AppVersion appVersion = repository.findByPlatform(platform)
                 .orElseThrow(() -> new EntityNotFoundException("No App Version with platform: " + platform));

@@ -178,7 +178,6 @@ public class ModelMapperTest {
 
         assertEquals(user.getId(), userDTO.getId());
         assertEquals(user.getPhone(), userDTO.getPhone());
-        assertEquals(user.getPassword(), userDTO.getPassword());
         assertEquals(user.getFirstName(), userDTO.getFirstName());
         assertEquals(user.getLastName(), userDTO.getLastName());
         assertEquals(user.getBalance(), userDTO.getBalance());
@@ -379,7 +378,6 @@ public class ModelMapperTest {
         if (user != null && userDTO != null) {
             assertEquals(user.getId(), userDTO.getId());
             assertEquals(user.getPhone(), userDTO.getPhone());
-            assertEquals(user.getPassword(), userDTO.getPassword());
             assertEquals(user.getFirstName(), userDTO.getFirstName());
             assertEquals(user.getLastName(), userDTO.getLastName());
             assertEquals(user.getBalance(), userDTO.getBalance());

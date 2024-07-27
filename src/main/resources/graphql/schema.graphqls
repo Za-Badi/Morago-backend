@@ -8,7 +8,7 @@ type Query {
     getAllCoins: [CoinDTO]
 
     getAppVersionByPlatform(platform: EPlatform!): AppVersionDTO
-    getAllAppVersions: [AppVersionDTO]
+    getAllAppVersions(pagingInput: PagingInput): PageOutput
 
     getAllCategoriesByPaging(input: PagingInput): CategoryPage
     getCategoryById(id: ID!): CategoryDTO
@@ -276,10 +276,6 @@ type UserDTO {
     isActive: Boolean
     isDebtor: Boolean
     onBoardingStatus: Int
-    translatorProfile: TranslatorProfileDTO
-    userProfile: UserProfileDTO
-    consultantProfile: ConsultantProfileDTO
-    status: String
 }
 type UserPage {
     content: [UserDTO]
@@ -390,6 +386,8 @@ type UsersAndWithdrawalsDTO {
     user: UserDTO
     withdrawals: [WithdrawalsDTO]
 }
+
+
 type PageInfo {
     totalPages: Int!
     totalElements: Int!
@@ -432,8 +430,13 @@ type PageOutput {
     currentPage: Int
     totalPages: Int
     totalElements: Int
-    objectList: [CallDTO]
+    objectList: [PageObject]
 }
+
+union PageObject = AppVersionDTO | CategoryDTO | ThemeDTO | CallDTO |
+    ConsultantProfileDTO | TranslatorProfileDTO | UserDTO | LanguageDTO |
+    CoinDTO | DebtorDTO | DepositsDTO | FileDTO | FrequentlyAskedQuestionsDTO |
+    NotificationDTO | RatingDTO | UserProfileDTO | WithdrawalsDTO
 
 input CreateNotificationInput {
     title: String!

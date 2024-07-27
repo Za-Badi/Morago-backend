@@ -12,5 +12,5 @@ public class CategoryDTO {
     private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Set themes;
+    private Set <ThemeDTO> themes;
 }

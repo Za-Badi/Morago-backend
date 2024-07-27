@@ -21,7 +21,7 @@ public class TranslatorProfileDTO {
     private Boolean isOnline;
     private String levelOfKorean;
     private LocalDateTime updatedAt;
-    private List languages;
-    private List themes;
+    private List <LanguageDTO> languages;
+    private List <ThemeDTO> themes;
     private UserDTO user;
 }

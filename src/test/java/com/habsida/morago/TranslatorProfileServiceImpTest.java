@@ -423,7 +423,6 @@ public class TranslatorProfileServiceImpTest {
                 .isAvailable(updatedTranslatorProfile.getIsAvailable())
                 .isOnline(updatedTranslatorProfile.getIsOnline())
                 .levelOfKorean(updatedTranslatorProfile.getLevelOfKorean())
-                .languages(Arrays.asList(language1.getName(), language2.getName()))
                 .build());
         TranslatorProfileDTO updatedProfileDTO = translatorProfileServiceImp.updateTranslatorProfileByUserId(userId, translatorProfileInput);
         assertNotNull(updatedProfileDTO);

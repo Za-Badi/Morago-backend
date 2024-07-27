@@ -1,13 +1,12 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.model.dto.UserDTO;
+import com.habsida.morago.model.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -39,17 +38,13 @@ public class JwtService {
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
-    public String generateToken(UserDTO userDTO) {
-        UserDetails userDetails = mapUserDTOToUserDetails(userDTO);
-        return generateToken(userDetails);
-    }
-
-    private UserDetails mapUserDTOToUserDetails(UserDTO userDTO) {
-        return User.builder()
-                .username(userDTO.getPhone())
-                .password(userDTO.getPassword()) // assuming password is also included in UserDTO
-                .roles(userDTO.getRoles().stream().map(role -> role.getName()).toArray(String[]::new))
+    public String generateToken(User user) {
+        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(user.getPhone())
+                .password(user.getPassword())
+                .roles(user.getRoles().stream().map(role -> role.getName()).toArray(String[]::new))
                 .build();
+        return generateToken(userDetails);
     }
 
     public Long getExpirationTime() {
