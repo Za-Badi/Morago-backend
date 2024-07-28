@@ -5,10 +5,10 @@ schema {
 
 type Query {
     getCoinById(id: ID!): CoinDTO
-    getAllCoins: [CoinDTO]
+    getAllCoins(pagingInput: PagingInput): CoinPageOutput
 
     getAppVersionByPlatform(platform: EPlatform!): AppVersionDTO
-    getAllAppVersions(pagingInput: PagingInput): PageOutput
+    getAllAppVersions(pagingInput: PagingInput): AppVersionPageOutput
 
     getAllCategoriesByPaging(input: PagingInput): CategoryPage
     getCategoryById(id: ID!): CategoryDTO
@@ -426,17 +426,19 @@ input UpdateDepositsInput {
     won: Float
 }
 
-type PageOutput {
+type CoinPageOutput {
     currentPage: Int
     totalPages: Int
     totalElements: Int
-    objectList: [PageObject]
+    objectList: [CoinDTO]
 }
 
-union PageObject = AppVersionDTO | CategoryDTO | ThemeDTO | CallDTO |
-    ConsultantProfileDTO | TranslatorProfileDTO | UserDTO | LanguageDTO |
-    CoinDTO | DebtorDTO | DepositsDTO | FileDTO | FrequentlyAskedQuestionsDTO |
-    NotificationDTO | RatingDTO | UserProfileDTO | WithdrawalsDTO
+type AppVersionPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [AppVersionDTO]
+}
 
 input CreateNotificationInput {
     title: String!

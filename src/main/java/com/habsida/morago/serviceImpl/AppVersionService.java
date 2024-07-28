@@ -3,21 +3,17 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.model.dto.AppVersionDTO;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
-import com.habsida.morago.model.enums.ESort;
 import com.habsida.morago.model.inputs.PagingInput;
-import com.habsida.morago.model.results.PageOutput;
+import com.habsida.morago.model.results.AppVersionPageOutput;
 import com.habsida.morago.repository.AppVersionRepository;
 import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,19 +29,13 @@ public class AppVersionService {
     }
 
     @Transactional(readOnly = true)
-    public PageOutput<AppVersionDTO> getAll(PagingInput pagingInput) {
-        Sort.Direction sortDirection = pagingInput.getSort() == ESort.DES ? Sort.Direction.DESC : Sort.Direction.ASC;
-        PageRequest pageRequest = PageRequest.of(pagingInput.getPageNo(), pagingInput.getPageSize(), Sort.by(sortDirection, pagingInput.getSortBy()));
-        Page<AppVersion> page = repository.findAll(pageRequest);
-        List<AppVersionDTO> content = page.getContent().stream()
-                .map(appVersion -> modelMapperUtil.map(appVersion, AppVersionDTO.class))
-                .collect(Collectors.toList());
-
-        return new PageOutput<>(
+    public AppVersionPageOutput getAll(PagingInput pagingInput) {
+        Page<AppVersion> page = repository.findAll(PageUtil.buildPageable(pagingInput));
+        return new AppVersionPageOutput(
                 page.getNumber(),
                 page.getTotalPages(),
                 page.getTotalElements(),
-                content
+                page.map(appVersion -> modelMapperUtil.map(appVersion, AppVersionDTO.class)).getContent()
         );
     }
 
@@ -66,8 +56,6 @@ public class AppVersionService {
         return modelMapperUtil.map(savedAppVersion, AppVersionDTO.class);
     }
 
-
-
     @Transactional
     public AppVersionDTO updateAppVersion(EPlatform platform, String min, String latest) {
         AppVersion appVersion = repository.findByPlatform(platform)
@@ -81,8 +69,6 @@ public class AppVersionService {
         AppVersion updatedAppVersion = repository.save(appVersion);
         return modelMapperUtil.map(updatedAppVersion, AppVersionDTO.class);
     }
-
-
 
     @Transactional
     public Boolean delete(EPlatform platform) {
