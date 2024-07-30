@@ -6,11 +6,13 @@ import com.habsida.morago.model.dto.UserDTO;
 import com.habsida.morago.model.entity.*;
 import com.habsida.morago.model.inputs.ConsultantPage;
 import com.habsida.morago.model.inputs.ConsultantProfileInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.repository.*;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,27 +27,13 @@ public class ConsultantProfileServiceImp {
     private final LanguageRepository languageRepository;
     private final UserRepository userRepository;
     private final ConsultantProfileRepositoryPaged consultantProfileRepositoryPaged;
-    private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
 
     @Transactional(readOnly = true)
-    public List<ConsultantProfileDTO> getAllConsultantProfiles() {
-        return consultantProfileRepository.findAll()
-                .stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public ConsultantPage getAllConsultantProfilesPaged(Integer page, Integer size) {
-        if (page == null) {
-            page = 0;
-        }
-        if (size == null) {
-            size = 10;
-        }
-        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findAll(PageRequest.of(page, size));
+    public ConsultantPage getAllConsultantProfilesPaged(PagingInput pagingInput) {
+        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findAll(PageUtil.buildPageable(pagingInput));
         List<ConsultantProfileDTO> dtoList = consultantProfilePage.getContent().stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
         return new ConsultantPage(
                 dtoList,
@@ -60,28 +48,22 @@ public class ConsultantProfileServiceImp {
     public ConsultantProfileDTO getConsultantProfileById(Long id) throws ExceptionGraphql {
         ConsultantProfile consultantProfile = consultantProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("ConsultantProfile not found with id: " + id));
-        return modelMapper.map(consultantProfile, ConsultantProfileDTO.class);
+        return modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class);
     }
 
     @Transactional(readOnly = true)
     public List<ConsultantProfileDTO> getConsultantProfilesByIsOnlineAndLanguageId(Boolean isOnline, Long id) {
         return consultantProfileRepository.findByIsOnlineAndLanguagesId(isOnline, id)
                 .stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ConsultantPage getConsultantProfilesByIsOnlineAndLanguageIdPaged(Integer page, Integer size, Long id, Boolean isOnline) {
-        if (page == null) {
-            page = 0;
-        }
-        if (size == null) {
-            size = 10;
-        }
-        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByIsOnlineAndLanguagesId(isOnline, id, PageRequest.of(page, size));
+    public ConsultantPage getConsultantProfilesByIsOnlineAndLanguageIdPaged(PagingInput pagingInput, Long id, Boolean isOnline) {
+        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByIsOnlineAndLanguagesId(isOnline, id, PageUtil.buildPageable(pagingInput));
         List<ConsultantProfileDTO> dtoList = consultantProfilePage.getContent().stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
         return new ConsultantPage(
                 dtoList,
@@ -96,21 +78,15 @@ public class ConsultantProfileServiceImp {
     public List<ConsultantProfileDTO> getConsultantProfilesByLanguageId(Long id) {
         return consultantProfileRepository.findByLanguagesId(id)
                 .stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ConsultantPage getConsultantProfilesByLanguageIdPaged(Integer page, Integer size, Long id) {
-        if (page == null) {
-            page = 0;
-        }
-        if (size == null) {
-            size = 10;
-        }
-        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByLanguagesId(id, PageRequest.of(page, size));
+    public ConsultantPage getConsultantProfilesByLanguageIdPaged(PagingInput pagingInput, Long id) {
+        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByLanguagesId(id, PageUtil.buildPageable(pagingInput));
         List<ConsultantProfileDTO> dtoList = consultantProfilePage.getContent().stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
         return new ConsultantPage(
                 dtoList,
@@ -125,21 +101,15 @@ public class ConsultantProfileServiceImp {
     public List<ConsultantProfileDTO> getConsultantProfilesByLanguageName(String name) {
         return consultantProfileRepository.findByLanguagesName(name)
                 .stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public ConsultantPage getConsultantProfilesByLanguageNamePaged(Integer page, Integer size, String name) {
-        if (page == null) {
-            page = 0;
-        }
-        if (size == null) {
-            size = 10;
-        }
-        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByLanguagesName(name, PageRequest.of(page, size));
+    public ConsultantPage getConsultantProfilesByLanguageNamePaged(PagingInput pagingInput, String name) {
+        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByLanguagesName(name, PageUtil.buildPageable(pagingInput));
         List<ConsultantProfileDTO> dtoList = consultantProfilePage.getContent().stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
         return new ConsultantPage(
                 dtoList,
@@ -151,16 +121,10 @@ public class ConsultantProfileServiceImp {
     }
 
     @Transactional(readOnly = true)
-    public ConsultantPage searchConsultants(String searchInput, Integer page, Integer size) {
-        if (page == null) {
-            page = 0;
-        }
-        if (size == null) {
-            size = 10;
-        }
-        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.searchConsultantProfileByEmailOrDateOfBirthOrLanguages(searchInput, PageRequest.of(page, size));
+    public ConsultantPage searchConsultants(String searchInput, PagingInput pagingInput) {
+        Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.searchConsultantProfileByEmailOrDateOfBirthOrLanguages(searchInput, PageUtil.buildPageable(pagingInput));
         List<ConsultantProfileDTO> dtoList = consultantProfilePage.getContent().stream()
-                .map(consultantProfile -> modelMapper.map(consultantProfile, ConsultantProfileDTO.class))
+                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
                 .collect(Collectors.toList());
         return new ConsultantPage(
                 dtoList,
@@ -198,7 +162,7 @@ public class ConsultantProfileServiceImp {
         } else {
             throw new ExceptionGraphql("User already has a Consultant Profile attached");
         }
-        return modelMapper.map(user.getConsultantProfile(), ConsultantProfileDTO.class);
+        return modelMapperUtil.map(user.getConsultantProfile(), ConsultantProfileDTO.class);
     }
 
     @Transactional
@@ -227,7 +191,7 @@ public class ConsultantProfileServiceImp {
             }
             consultantProfile.setLanguages(languages);
         }
-        return modelMapper.map(consultantProfileRepository.save(consultantProfile), ConsultantProfileDTO.class);
+        return modelMapperUtil.map(consultantProfileRepository.save(consultantProfile), ConsultantProfileDTO.class);
     }
 
     @Transactional
@@ -277,7 +241,7 @@ public class ConsultantProfileServiceImp {
             }
             consultantProfile.setLanguages(languages);
         }
-        return modelMapper.map(consultantProfileRepository.save(consultantProfile), ConsultantProfileDTO.class);
+        return modelMapperUtil.map(consultantProfileRepository.save(consultantProfile), ConsultantProfileDTO.class);
     }
 
     @Transactional
@@ -310,7 +274,7 @@ public class ConsultantProfileServiceImp {
             throw new ExceptionGraphql("User already has this language");
         }
         consultantProfileRepository.save(consultantProfile);
-        return modelMapper.map(consultantProfile, ConsultantProfileDTO.class);
+        return modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class);
     }
 
     @Transactional
@@ -330,6 +294,6 @@ public class ConsultantProfileServiceImp {
         User user = userRepository.findById(consultantProfile.getUser().getId())
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
         user.setBalance(balance);
-        return modelMapper.map(userRepository.save(user), UserDTO.class);
+        return modelMapperUtil.map(userRepository.save(user), UserDTO.class);
     }
 }

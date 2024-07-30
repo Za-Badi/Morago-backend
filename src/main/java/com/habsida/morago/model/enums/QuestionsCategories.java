@@ -5,9 +5,8 @@ import lombok.Getter;
 @Getter
 public enum QuestionsCategories {
 
-    RESTAURANT,
-    LAW,
-    ENTERTAINMENT,
-    GROCERY
+    USER,
+    TRANSLATOR,
+    CONSULTANT
 
 }

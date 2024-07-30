@@ -21,8 +21,9 @@ type Query {
     getThemesByName(name: String): ThemeDTO
     getThemeByIsActiveStatus(input: PagingInput): ThemePage
 
-    getAllFrequentlyAskedQuestionById: [FrequentlyAskedQuestionsDTO]
+    getAllFrequentlyAskedQuestions(pagingInput: PagingInput): FrequentlyAskedQuestionPageOutput
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsDTO
+    getAllFrequentlyAskedQuestionsByCategory(pagingInput: PagingInput, category: QuestionsCategories): FrequentlyAskedQuestionPageOutput
 
     getAllUsers: [UserDTO]
     getUserById(id: ID!): UserDTO
@@ -85,16 +86,15 @@ type Query {
     getAverageRating(toWhomUserId: ID!): Float
 
     # Consultant Profile Queries
-    getAllConsultantProfiles: [ConsultantProfileDTO]
-    getAllConsultantProfilesPaged(page: Int, size: Int): ConsultantPage
-    getConsultantProfileById(id: ID): ConsultantProfileDTO
-    getConsultantProfilesByIsOnlineAndLanguageId(isOnline: Boolean, id: ID): [ConsultantProfileDTO]
-    getConsultantProfilesByIsOnlineAndLanguageIdPaged(page: Int, size: Int, id: ID, isOnline: Boolean): ConsultantPage
-    getConsultantProfilesByLanguageId(id: ID): [ConsultantProfileDTO]
-    getConsultantProfilesByLanguageIdPaged(page: Int, size: Int, id: ID): ConsultantPage
-    getConsultantProfilesByLanguageName(name: String): [ConsultantProfileDTO]
-    getConsultantProfilesByLanguageNamePaged(page: Int, size: Int, name: String): ConsultantPage
-    searchConsultants(searchInput: String, page: Int, size: Int): ConsultantPage
+    getAllConsultantProfilesPaged(pagingInput: PagingInput!): ConsultantPage
+    getConsultantProfileById(id: ID!): ConsultantProfileDTO
+    getConsultantProfilesByIsOnlineAndLanguageId(isOnline: Boolean!, id: ID!): [ConsultantProfileDTO]
+    getConsultantProfilesByIsOnlineAndLanguageIdPaged(pagingInput: PagingInput!, id: ID!, isOnline: Boolean!): ConsultantPage
+    getConsultantProfilesByLanguageId(id: ID!): [ConsultantProfileDTO]
+    getConsultantProfilesByLanguageIdPaged(pagingInput: PagingInput!, id: ID!): ConsultantPage
+    getConsultantProfilesByLanguageName(name: String!): [ConsultantProfileDTO]
+    getConsultantProfilesByLanguageNamePaged(pagingInput: PagingInput!, name: String!): ConsultantPage
+    searchConsultants(searchInput: String!, pagingInput: PagingInput!): ConsultantPage
 }
 
 type Mutation {
@@ -399,6 +399,28 @@ type CallPage {
     pageInfo: PageInfo!
 }
 
+
+type CoinPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [CoinDTO]
+}
+
+type AppVersionPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [AppVersionDTO]
+}
+
+type FrequentlyAskedQuestionPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [FrequentlyAskedQuestionsDTO]
+}
+
 input CreateDebtorInput {
     accountHolder: String!
     nameOfBank: String!
@@ -424,20 +446,6 @@ input UpdateDepositsInput {
     status: PaymentStatus
     coin: Float
     won: Float
-}
-
-type CoinPageOutput {
-    currentPage: Int
-    totalPages: Int
-    totalElements: Int
-    objectList: [CoinDTO]
-}
-
-type AppVersionPageOutput {
-    currentPage: Int
-    totalPages: Int
-    totalElements: Int
-    objectList: [AppVersionDTO]
 }
 
 input CreateNotificationInput {
@@ -622,10 +630,9 @@ enum Status {
     CANCELED
 }
 enum QuestionsCategories {
-    RESTAURANT
-    LAW
-    ENTERTAINMENT
-    GROCERY
+    USER
+    TRANSLATOR
+    CONSULTANT
 }
 enum CallStatus {
     MISSED_CALL
