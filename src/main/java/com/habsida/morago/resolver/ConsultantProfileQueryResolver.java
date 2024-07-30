@@ -24,25 +24,16 @@ public class ConsultantProfileQueryResolver implements GraphQLQueryResolver {
         return consultantProfileServiceImp.getConsultantProfileById(id);
     }
 
-    public List<ConsultantProfileDTO> getConsultantProfilesByIsOnlineAndLanguageId(Boolean isOnline, Long id) {
-        return consultantProfileServiceImp.getConsultantProfilesByIsOnlineAndLanguageId(isOnline, id);
-    }
 
     public ConsultantPage getConsultantProfilesByIsOnlineAndLanguageIdPaged(PagingInput pagingInput, Long id, Boolean isOnline) {
         return consultantProfileServiceImp.getConsultantProfilesByIsOnlineAndLanguageIdPaged(pagingInput, id, isOnline);
     }
 
-    public List<ConsultantProfileDTO> getConsultantProfilesByLanguageId(Long id) {
-        return consultantProfileServiceImp.getConsultantProfilesByLanguageId(id);
-    }
 
     public ConsultantPage getConsultantProfilesByLanguageIdPaged(PagingInput pagingInput, Long id) {
         return consultantProfileServiceImp.getConsultantProfilesByLanguageIdPaged(pagingInput, id);
     }
 
-    public List<ConsultantProfileDTO> getConsultantProfilesByLanguageName(String name) {
-        return consultantProfileServiceImp.getConsultantProfilesByLanguageName(name);
-    }
 
     public ConsultantPage getConsultantProfilesByLanguageNamePaged(PagingInput pagingInput, String name) {
         return consultantProfileServiceImp.getConsultantProfilesByLanguageNamePaged(pagingInput, name);

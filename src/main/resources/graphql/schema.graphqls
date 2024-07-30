@@ -37,17 +37,14 @@ type Query {
     testTranslator: [UserDTO]
     testAuthentication: [UserDTO]
 
-    getAllUserProfiles: [UserProfileDTO]
+    getAllUserProfiles(pagingInput: PagingInput!): UserProfilePageOutput!
     getUserProfileById(id: ID): UserProfileDTO
 
-    getAllTranslatorProfiles: [TranslatorProfileDTO]
+
     getAllTranslatorProfilesPaged(page: Int, size: Int): TranslatorPage
     getTranslatorProfileById(id: ID): TranslatorProfileDTO
-    getTranslatorProfilesByIsOnlineAndThemeId(isOnline: Boolean, id: ID): [TranslatorProfileDTO]
     getTranslatorProfilesByIsOnlineAndThemeIdPaged(page: Int, size: Int, id: ID, isOnline: Boolean): TranslatorPage
-    getTranslatorProfilesByThemeId(id: ID): [TranslatorProfileDTO]
     getTranslatorProfilesByThemeIdPaged(page: Int, size: Int, id: ID): TranslatorPage
-    getTranslatorProfilesByThemeName(name: String): [TranslatorProfileDTO]
     getTranslatorProfilesByThemeNamePaged(page: Int, size: Int, name: String): TranslatorPage
     searchTranslators(searchInput: String, page: Int, size: Int): TranslatorPage
 
@@ -88,11 +85,8 @@ type Query {
     # Consultant Profile Queries
     getAllConsultantProfilesPaged(pagingInput: PagingInput!): ConsultantPage
     getConsultantProfileById(id: ID!): ConsultantProfileDTO
-    getConsultantProfilesByIsOnlineAndLanguageId(isOnline: Boolean!, id: ID!): [ConsultantProfileDTO]
     getConsultantProfilesByIsOnlineAndLanguageIdPaged(pagingInput: PagingInput!, id: ID!, isOnline: Boolean!): ConsultantPage
-    getConsultantProfilesByLanguageId(id: ID!): [ConsultantProfileDTO]
     getConsultantProfilesByLanguageIdPaged(pagingInput: PagingInput!, id: ID!): ConsultantPage
-    getConsultantProfilesByLanguageName(name: String!): [ConsultantProfileDTO]
     getConsultantProfilesByLanguageNamePaged(pagingInput: PagingInput!, name: String!): ConsultantPage
     searchConsultants(searchInput: String!, pagingInput: PagingInput!): ConsultantPage
 }
@@ -426,6 +420,13 @@ type LanguagePageOutput {
     totalPages: Int
     totalElements: Int
     objectList: [LanguageDTO]
+}
+
+type UserProfilePageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [UserProfileDTO]
 }
 
 input CreateDebtorInput {

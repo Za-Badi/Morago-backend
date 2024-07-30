@@ -3,15 +3,19 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.dto.ConsultantProfileDTO;
 import com.habsida.morago.model.dto.UserDTO;
-import com.habsida.morago.model.entity.*;
+import com.habsida.morago.model.entity.ConsultantProfile;
+import com.habsida.morago.model.entity.Language;
+import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.ConsultantPage;
 import com.habsida.morago.model.inputs.ConsultantProfileInput;
 import com.habsida.morago.model.inputs.PagingInput;
-import com.habsida.morago.repository.*;
+import com.habsida.morago.repository.ConsultantProfileRepository;
+import com.habsida.morago.repository.ConsultantProfileRepositoryPaged;
+import com.habsida.morago.repository.LanguageRepository;
+import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.util.ModelMapperUtil;
 import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,14 +56,6 @@ public class ConsultantProfileServiceImp {
     }
 
     @Transactional(readOnly = true)
-    public List<ConsultantProfileDTO> getConsultantProfilesByIsOnlineAndLanguageId(Boolean isOnline, Long id) {
-        return consultantProfileRepository.findByIsOnlineAndLanguagesId(isOnline, id)
-                .stream()
-                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public ConsultantPage getConsultantProfilesByIsOnlineAndLanguageIdPaged(PagingInput pagingInput, Long id, Boolean isOnline) {
         Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByIsOnlineAndLanguagesId(isOnline, id, PageUtil.buildPageable(pagingInput));
         List<ConsultantProfileDTO> dtoList = consultantProfilePage.getContent().stream()
@@ -75,14 +71,6 @@ public class ConsultantProfileServiceImp {
     }
 
     @Transactional(readOnly = true)
-    public List<ConsultantProfileDTO> getConsultantProfilesByLanguageId(Long id) {
-        return consultantProfileRepository.findByLanguagesId(id)
-                .stream()
-                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public ConsultantPage getConsultantProfilesByLanguageIdPaged(PagingInput pagingInput, Long id) {
         Page<ConsultantProfile> consultantProfilePage = consultantProfileRepositoryPaged.findByLanguagesId(id, PageUtil.buildPageable(pagingInput));
         List<ConsultantProfileDTO> dtoList = consultantProfilePage.getContent().stream()
@@ -95,14 +83,6 @@ public class ConsultantProfileServiceImp {
                 consultantProfilePage.getSize(),
                 consultantProfilePage.getNumber()
         );
-    }
-
-    @Transactional(readOnly = true)
-    public List<ConsultantProfileDTO> getConsultantProfilesByLanguageName(String name) {
-        return consultantProfileRepository.findByLanguagesName(name)
-                .stream()
-                .map(consultantProfile -> modelMapperUtil.map(consultantProfile, ConsultantProfileDTO.class))
-                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -138,30 +118,19 @@ public class ConsultantProfileServiceImp {
     @Transactional
     public ConsultantProfileDTO addConsultantProfile(Long id, ConsultantProfileInput consultantProfileInput) throws ExceptionGraphql {
         ConsultantProfile consultantProfile = new ConsultantProfile();
-        consultantProfile.setDateOfBirth(consultantProfileInput.getDateOfBirth());
-        consultantProfile.setEmail(consultantProfileInput.getEmail());
-        consultantProfile.setIsAvailable(consultantProfileInput.getIsAvailable());
-        consultantProfile.setIsOnline(consultantProfileInput.getIsOnline());
-        List<Language> languages = new ArrayList<>();
-        if (consultantProfileInput.getLanguages() != null) {
-            for (Long languageId : consultantProfileInput.getLanguages()) {
-                Language language = languageRepository.findById(languageId)
-                        .orElseThrow(() -> new ExceptionGraphql("Language not found with id: " + languageId));
-                languages.add(language);
-            }
-        }
-        consultantProfile.setLanguages(languages);
+        modelMapperUtil.map(consultantProfileInput, consultantProfile);
+        consultantProfile.setLanguages(fetchLanguages(consultantProfileInput.getLanguages()));
+
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
         if (user.getUserProfile() != null) {
             throw new ExceptionGraphql("User has a User Profile attached");
         }
-        if (user.getConsultantProfile() == null) {
-            user.setConsultantProfile(consultantProfile);
-            userRepository.save(user);
-        } else {
+        if (user.getConsultantProfile() != null) {
             throw new ExceptionGraphql("User already has a Consultant Profile attached");
         }
+        user.setConsultantProfile(consultantProfile);
+        userRepository.save(user);
         return modelMapperUtil.map(user.getConsultantProfile(), ConsultantProfileDTO.class);
     }
 
@@ -169,27 +138,9 @@ public class ConsultantProfileServiceImp {
     public ConsultantProfileDTO updateConsultantProfile(Long id, ConsultantProfileInput consultantProfileInput) throws ExceptionGraphql {
         ConsultantProfile consultantProfile = consultantProfileRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("ConsultantProfile not found with id: " + id));
-        if (consultantProfileInput.getDateOfBirth() != null && !consultantProfileInput.getDateOfBirth().isBlank()) {
-            consultantProfile.setDateOfBirth(consultantProfileInput.getDateOfBirth());
-        }
-        if (consultantProfileInput.getEmail() != null && !consultantProfileInput.getEmail().isBlank()) {
-            consultantProfile.setEmail(consultantProfileInput.getEmail());
-        }
-        if (consultantProfileInput.getIsAvailable() != null) {
-            consultantProfile.setIsAvailable(consultantProfileInput.getIsAvailable());
-        }
-        if (consultantProfileInput.getIsOnline() != null) {
-            consultantProfile.setIsOnline(consultantProfileInput.getIsOnline());
-        }
+        modelMapperUtil.map(consultantProfileInput, consultantProfile);
         if (consultantProfileInput.getLanguages() != null) {
-            consultantProfile.getLanguages().clear();
-            List<Language> languages = new ArrayList<>();
-            for (Long languageId : consultantProfileInput.getLanguages()) {
-                Language language = languageRepository.findById(languageId)
-                        .orElseThrow(() -> new ExceptionGraphql("Language not found with id: " + languageId));
-                languages.add(language);
-            }
-            consultantProfile.setLanguages(languages);
+            consultantProfile.setLanguages(fetchLanguages(consultantProfileInput.getLanguages()));
         }
         return modelMapperUtil.map(consultantProfileRepository.save(consultantProfile), ConsultantProfileDTO.class);
     }
@@ -213,52 +164,32 @@ public class ConsultantProfileServiceImp {
     public ConsultantProfileDTO updateConsultantProfileByUserId(Long id, ConsultantProfileInput consultantProfileInput) throws ExceptionGraphql {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
-        if (user.getConsultantProfile() == null) {
+        ConsultantProfile consultantProfile = user.getConsultantProfile();
+        if (consultantProfile == null) {
             throw new ExceptionGraphql("User doesn't have a Consultant Profile attached");
         }
-        Long newId = user.getConsultantProfile().getId();
-        ConsultantProfile consultantProfile = consultantProfileRepository.findById(newId)
-                .orElseThrow(() -> new ExceptionGraphql("ConsultantProfile not found with id: " + newId));
-        if (consultantProfileInput.getDateOfBirth() != null && !consultantProfileInput.getDateOfBirth().isBlank()) {
-            consultantProfile.setDateOfBirth(consultantProfileInput.getDateOfBirth());
-        }
-        if (consultantProfileInput.getEmail() != null && !consultantProfileInput.getEmail().isBlank()) {
-            consultantProfile.setEmail(consultantProfileInput.getEmail());
-        }
-        if (consultantProfileInput.getIsAvailable() != null) {
-            consultantProfile.setIsAvailable(consultantProfileInput.getIsAvailable());
-        }
-        if (consultantProfileInput.getIsOnline() != null) {
-            consultantProfile.setIsOnline(consultantProfileInput.getIsOnline());
-        }
+        modelMapperUtil.map(consultantProfileInput, consultantProfile);
         if (consultantProfileInput.getLanguages() != null) {
-            consultantProfile.getLanguages().clear();
-            List<Language> languages = new ArrayList<>();
-            for (Long languageId : consultantProfileInput.getLanguages()) {
-                Language language = languageRepository.findById(languageId)
-                        .orElseThrow(() -> new ExceptionGraphql("Language not found with id: " + languageId));
-                languages.add(language);
-            }
-            consultantProfile.setLanguages(languages);
+            consultantProfile.setLanguages(fetchLanguages(consultantProfileInput.getLanguages()));
         }
         return modelMapperUtil.map(consultantProfileRepository.save(consultantProfile), ConsultantProfileDTO.class);
     }
 
     @Transactional
     public Boolean changeIsAvailableForConsultant(Long id, Boolean isAvailable) throws ExceptionGraphql {
-        ConsultantProfile consultantProfile = consultantProfileRepository.findById(id)
-                .orElseThrow(() -> new ExceptionGraphql("Consultant Profile not found with id: " + id));
-        consultantProfile.setIsAvailable(isAvailable);
-        consultantProfileRepository.save(consultantProfile);
+        int rowsUpdated = consultantProfileRepository.updateIsAvailableById(id, isAvailable);
+        if (rowsUpdated == 0) {
+            throw new ExceptionGraphql("Consultant Profile not found with id: " + id);
+        }
         return true;
     }
 
     @Transactional
     public Boolean changeIsOnlineForConsultant(Long id, Boolean isOnline) throws ExceptionGraphql {
-        ConsultantProfile consultantProfile = consultantProfileRepository.findById(id)
-                .orElseThrow(() -> new ExceptionGraphql("Consultant Profile not found with id: " + id));
-        consultantProfile.setIsOnline(isOnline);
-        consultantProfileRepository.save(consultantProfile);
+        int rowsUpdated = consultantProfileRepository.updateIsOnlineById(id, isOnline);
+        if (rowsUpdated == 0) {
+            throw new ExceptionGraphql("Consultant Profile not found with id: " + id);
+        }
         return true;
     }
 
@@ -295,5 +226,17 @@ public class ConsultantProfileServiceImp {
                 .orElseThrow(() -> new ExceptionGraphql("User not found with id: " + id));
         user.setBalance(balance);
         return modelMapperUtil.map(userRepository.save(user), UserDTO.class);
+    }
+
+    private List<Language> fetchLanguages(List<Long> languageIds) throws ExceptionGraphql {
+        List<Language> languages = new ArrayList<>();
+        if (languageIds != null) {
+            for (Long languageId : languageIds) {
+                Language language = languageRepository.findById(languageId)
+                        .orElseThrow(() -> new ExceptionGraphql("Language not found with id: " + languageId));
+                languages.add(language);
+            }
+        }
+        return languages;
     }
 }
