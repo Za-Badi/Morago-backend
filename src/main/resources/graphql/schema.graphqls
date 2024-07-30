@@ -51,7 +51,7 @@ type Query {
     getTranslatorProfilesByThemeNamePaged(page: Int, size: Int, name: String): TranslatorPage
     searchTranslators(searchInput: String, page: Int, size: Int): TranslatorPage
 
-    getAllLanguages: [LanguageDTO]
+    getAllLanguages(pagingInput: PagingInput): LanguagePageOutput
     getLanguageById(id: ID): LanguageDTO
 
     getAllDebtors: [DebtorDTO]
@@ -419,6 +419,13 @@ type FrequentlyAskedQuestionPageOutput {
     totalPages: Int
     totalElements: Int
     objectList: [FrequentlyAskedQuestionsDTO]
+}
+
+type LanguagePageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [LanguageDTO]
 }
 
 input CreateDebtorInput {
