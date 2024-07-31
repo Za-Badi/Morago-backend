@@ -336,7 +336,7 @@ public class CallServiceImpl implements CallService {
 
         // Financial transactions
         double translatorCallCost = calculateCallCost(duration, call.getTheme().getPrice());
-        double consultantCallCost = calculateCallCost(duration, call.getTheme().getPrice().multiply(new BigDecimal(2)));
+        double consultantCallCost = calculateCallCost(duration, call.getTheme().getConsultantPrice());
         double totalCallCost = translatorCallCost + consultantCallCost;
         deductUserBalance(call.getCaller(), totalCallCost);
         // For translator

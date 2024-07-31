@@ -35,12 +35,6 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private Set<Theme> themes = new HashSet<>();
 
-    public void addTheme(Theme theme) {
-        themes.add(theme);
-        theme.setCategory(this);
-    }
-
-
     @Override
     public String toString() {
         return "Category {" +

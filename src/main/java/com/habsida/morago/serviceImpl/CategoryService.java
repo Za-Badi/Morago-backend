@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,18 +27,19 @@ public class CategoryService {
     private final CategoryRepository repository;
     private final ModelMapper modelMapper;
 
-
-
     public CategoryDTO createCategory(CreateCategoryInput input) {
-        Category category = new Category();
-        if (!input.getName().isEmpty()) {
-            category.setName(input.getName());
+        if (repository.findByName(input.getName()).isPresent()) {
+            throw new EntityExistsException(input.getName() + " already exists");
         } else {
-            throw new ExceptionGraphql("Please enter valid name");
+            if (input.getName().isBlank()) {
+                throw new ExceptionGraphql("Please enter valid name");
+            }
+            Category category = new Category();
+            category.setName(input.getName());
+            category.setIsActive(input.getIsActive());
+            Category savedCategory = repository.save(category);
+            return modelMapper.map(savedCategory, CategoryDTO.class);
         }
-        category.setIsActive(input.getIsActive());
-        Category savedCategory = repository.save(category);
-        return modelMapper.map(savedCategory, CategoryDTO.class);
     }
 
     public PageOutput<CategoryDTO> getAllCategories(PagingInput input) {

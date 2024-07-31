@@ -10,26 +10,20 @@ import com.habsida.morago.model.inputs.UpdateDepositsInput;
 import com.habsida.morago.repository.DepositsRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DepositsService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class DepositsServiceImpl implements DepositsService {
     private final DepositsRepository depositsRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public DepositsServiceImpl(DepositsRepository depositsRepository, UserRepository userRepository, ModelMapper modelMapper) {
-        this.depositsRepository = depositsRepository;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
 
     @Transactional(readOnly = true)
@@ -49,6 +43,10 @@ public class DepositsServiceImpl implements DepositsService {
 
     @Transactional
     public DepositsDTO addDeposit(CreateDepositsInput createDepositsInput) {
+        if (createDepositsInput.getAccountHolder() == null || createDepositsInput.getAccountHolder().isBlank()
+                || createDepositsInput.getNameOfBank() == null || createDepositsInput.getNameOfBank().isBlank()) {
+            throw new GraphqlException("Account holder and name of bank are required");
+        }
         User user = userRepository.findById(createDepositsInput.getUserId())
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createDepositsInput.getUserId()));
 
@@ -60,6 +58,10 @@ public class DepositsServiceImpl implements DepositsService {
 
     @Transactional
     public DepositsDTO updateDeposit(Long id, UpdateDepositsInput updateDepositsInput) {
+        if (updateDepositsInput.getAccountHolder() == null || updateDepositsInput.getAccountHolder().isBlank()
+                || updateDepositsInput.getNameOfBank() == null || updateDepositsInput.getNameOfBank().isBlank()) {
+            throw new GraphqlException("Account holder and name of bank are required");
+        }
         Deposits deposits = depositsRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Deposits not found for id: " + id));
         modelMapper.map(updateDepositsInput, deposits);

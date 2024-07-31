@@ -9,26 +9,20 @@ import com.habsida.morago.model.inputs.UpdateDebtorInput;
 import com.habsida.morago.repository.DebtorRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DebtorService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class DebtorServiceImpl implements DebtorService {
     private final DebtorRepository debtorRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public DebtorServiceImpl(DebtorRepository debtorRepository, UserRepository userRepository, ModelMapper modelMapper) {
-        this.debtorRepository = debtorRepository;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional(readOnly = true)
     public List<DebtorDTO> getAllDebtors() {
@@ -48,6 +42,12 @@ public class DebtorServiceImpl implements DebtorService {
     @Transactional
     public DebtorDTO addDebtor(CreateDebtorInput createDebtorInput) {
         Debtor debtor = new Debtor();
+        if (createDebtorInput.getAccountHolder() == null || createDebtorInput.getAccountHolder().isBlank()
+        || createDebtorInput.getNameOfBank() == null || createDebtorInput.getNameOfBank().isBlank()
+        || createDebtorInput.getIsPaid() == null) {
+            throw new GraphqlException("Account holder and name of bank are required");
+        }
+
         debtor.setAccountHolder(createDebtorInput.getAccountHolder());
         debtor.setNameOfBank(createDebtorInput.getNameOfBank());
         debtor.setIsPaid(createDebtorInput.getIsPaid());
@@ -63,10 +63,10 @@ public class DebtorServiceImpl implements DebtorService {
         Debtor debtor = debtorRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Debtor not found for id: " + id));
 
-        if (updateDebtorInput.getAccountHolder() != null && !updateDebtorInput.getAccountHolder().isEmpty()) {
+        if (updateDebtorInput.getAccountHolder() != null && !updateDebtorInput.getAccountHolder().isBlank()) {
             debtor.setAccountHolder(updateDebtorInput.getAccountHolder());
         }
-        if (updateDebtorInput.getNameOfBank() != null && !updateDebtorInput.getNameOfBank().isEmpty()) {
+        if (updateDebtorInput.getNameOfBank() != null && !updateDebtorInput.getNameOfBank().isBlank()) {
             debtor.setNameOfBank(updateDebtorInput.getNameOfBank());
         }
         if (updateDebtorInput.getIsPaid() != null) {

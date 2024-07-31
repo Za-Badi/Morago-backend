@@ -21,7 +21,11 @@ public class RolesResolver {
         return rolesService.getRoleById(id).orElseThrow(()-> new RuntimeException("resource not found"));
     }
 
-    public void createRoles(RoleDTO roles) {
+    public void createRoles(String roles) {
         rolesService.add(roles);
+    }
+
+    public void deleteRoleById(Long roleId) {
+        rolesService.deleteRoleById(roleId);
     }
 }

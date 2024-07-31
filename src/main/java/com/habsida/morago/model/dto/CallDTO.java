@@ -16,6 +16,7 @@ public class CallDTO {
     private CallStatus status;
     private Double sum;
     private Double commission;
+    private Double consultantCommission;
     private Boolean translatorHasRated;
     private Boolean consultantHasRated;
     private Boolean userHasRated;

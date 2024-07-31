@@ -1,4 +1,4 @@
-package com.habsida.morago.config;
+package com.habsida.morago.util;
 
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -25,18 +25,28 @@ public class SmsProvider {
     }
 
     public boolean sendSms(String to, String notificationText) {
+        if (notificationText == null || notificationText.isBlank()) {
+            throw new IllegalArgumentException("Notification text is null or blank");
+        }
         Message message = new Message();
         message.setFrom(FROM);
         message.setTo(to);
         message.setText(notificationText);
 
-        SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
-        String statusCode = response.getStatusCode();
-        boolean result = statusCode.equals("2000");
-        return result;
+        try {
+            SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
+            String statusCode = response.getStatusCode();
+            return statusCode.equals("2000");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean sendMms(String to, String notificationText, File notificationFile) {
+        if (notificationFile == null) {
+            throw new IllegalArgumentException("Notification file is null");
+        }
         Message message = new Message();
         message.setFrom(FROM);
         message.setTo(to);
@@ -45,9 +55,13 @@ public class SmsProvider {
         String imageId = messageService.uploadFile(notificationFile, StorageType.MMS, null);
         message.setImageId(imageId);
 
-        SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
-        String statusCode = response.getStatusCode();
-        boolean result = statusCode.equals("2000");
-        return result;
+        try {
+            SingleMessageSentResponse response = messageService.sendOne(new SingleMessageSendingRequest(message));
+            String statusCode = response.getStatusCode();
+            return statusCode.equals("2000");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

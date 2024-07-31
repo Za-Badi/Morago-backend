@@ -10,6 +10,7 @@ import com.habsida.morago.model.inputs.UpdateWithdrawalInput;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.WithdrawalRepository;
 import com.habsida.morago.service.WithdrawalService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,18 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class WithdrawalServiceImpl implements WithdrawalService {
 
     private final WithdrawalRepository withdrawalRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-    public WithdrawalServiceImpl(WithdrawalRepository withdrawalRepository, UserRepository userRepository, ModelMapper modelMapper) {
-        this.withdrawalRepository = withdrawalRepository;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Transactional(readOnly = true)
     public List<WithdrawalsDTO> getAllWithdrawals() {
@@ -46,6 +42,10 @@ public class WithdrawalServiceImpl implements WithdrawalService {
 
     @Transactional
     public WithdrawalsDTO addWithdrawal(CreateWithdrawalInput createWithdrawalInput) {
+        if (createWithdrawalInput.getAccountHolder() == null || createWithdrawalInput.getAccountHolder().isBlank()
+                || createWithdrawalInput.getAccountNumber() == null || createWithdrawalInput.getAccountNumber().isBlank()) {
+            throw new GraphqlException("Account holder and number are required");
+        }
         User user = userRepository.findById(createWithdrawalInput.getUserId())
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createWithdrawalInput.getUserId()));
 
@@ -65,10 +65,10 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         Withdrawals withdrawals = withdrawalRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Withdrawal not found for id: " + id));
 
-        if (updateWithdrawalInput.getAccountNumber() != null && !updateWithdrawalInput.getAccountNumber().isEmpty()) {
+        if (updateWithdrawalInput.getAccountNumber() != null && !updateWithdrawalInput.getAccountNumber().isBlank()) {
             withdrawals.setAccountNumber(updateWithdrawalInput.getAccountNumber());
         }
-        if (updateWithdrawalInput.getAccountHolder() != null && !updateWithdrawalInput.getAccountHolder().isEmpty()) {
+        if (updateWithdrawalInput.getAccountHolder() != null && !updateWithdrawalInput.getAccountHolder().isBlank()) {
             withdrawals.setAccountHolder(updateWithdrawalInput.getAccountHolder());
         }
         if (updateWithdrawalInput.getSum() != null) {

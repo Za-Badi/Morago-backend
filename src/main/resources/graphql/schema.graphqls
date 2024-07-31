@@ -485,6 +485,7 @@ input CreateThemeInput {
     name: String!
     koreanTitle: String!
     price: Float!
+    consultantPrice: Float!
     nightPrice: Float!
     description: String!
     isPopular: Boolean!
@@ -497,6 +498,7 @@ input UpdateThemeInput {
     name: String
     koreanTitle: String
     price: Float
+    consultantPrice: Float
     nightPrice: Float
     description: String
     isPopular: Boolean

@@ -48,6 +48,7 @@ public class ModelMapperConfig {
                 map().setStatus(source.getStatus());
                 map().setSum(source.getSum());
                 map().setCommission(source.getCommission());
+                map().setConsultantCommission(source.getConsultantCommission());
                 map().setTranslatorHasRated(source.getTranslatorHasRated());
                 map().setConsultantHasRated(source.getConsultantHasRated());
                 map().setUserHasRated(source.getUserHasRated());
@@ -172,6 +173,7 @@ public class ModelMapperConfig {
                 map().setName(source.getName());
                 map().setKoreanTitle(source.getKoreanTitle());
                 map().setPrice(source.getPrice());
+                map().setConsultantPrice(source.getConsultantPrice());
                 map().setNightPrice(source.getNightPrice());
                 map().setDescription(source.getDescription());
                 map().setIsPopular(source.getIsPopular());

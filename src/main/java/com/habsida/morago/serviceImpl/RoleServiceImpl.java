@@ -1,28 +1,25 @@
 package com.habsida.morago.serviceImpl;
 
+import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.dto.RoleDTO;
 import com.habsida.morago.model.entity.Role;
+import com.habsida.morago.model.entity.User;
 import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.service.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository rolesRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public RoleServiceImpl(RoleRepository rolesRepository, ModelMapper modelMapper) {
-        this.rolesRepository = rolesRepository;
-        this.modelMapper = modelMapper;
-    }
 
     @Override
     public List<RoleDTO> getAllRoles() {
@@ -38,8 +35,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void add(RoleDTO roleDTO) {
-        Role role = modelMapper.map(roleDTO, Role.class);
+    public void add(String roleName) {
+        Role role = new Role();
+        role.setName(roleName);
         rolesRepository.save(role);
+    }
+
+    @Override
+    public void deleteRoleById(Long id) {
+        Role role = rolesRepository.findById(id)
+                .orElseThrow(() -> new ExceptionGraphql("Role not found with id: " + id));
+        role.getUsers().clear();
+        rolesRepository.save(role);
+        rolesRepository.deleteById(id);
     }
 }

@@ -11,6 +11,7 @@ public class ThemeDTO {
     private String name;
     private String koreanTitle;
     private BigDecimal price;
+    private BigDecimal consultantPrice;
     private BigDecimal nightPrice;
     private String description;
     private Boolean isPopular;

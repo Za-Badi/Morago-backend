@@ -48,6 +48,9 @@ public class Call {
     @Column(name = "commission")
     private Double commission;
 
+    @Column(name = "consultant_commission")
+    private Double consultantCommission;
+
     //    @Column(name = "translator_has_rated", columnDefinition = "bit(1)")
     @Column(name = "translator_has_rated")
     private Boolean translatorHasRated;

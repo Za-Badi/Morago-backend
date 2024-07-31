@@ -39,31 +39,20 @@ public class ThemeService {
         if (input.getCategoryId() != null && input.getCategoryId() != 0) {
             theme.setCategory(categoryRepository.findById(input.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("No Category with id: " + input.getCategoryId())));
         }
-        if (input.getDescription() != null && !input.getDescription().isEmpty()) {
-            theme.setDescription(input.getDescription());
-        } else {
-            throw new GraphqlException("Description value is not valid");
+        if (input.getDescription() == null || input.getDescription().isBlank()
+                || input.getName() == null || input.getName().isBlank()
+                ||  input.getKoreanTitle() == null || input.getKoreanTitle().isBlank()) {
+            throw new GraphqlException("Description, Name, or Korean Title value are not valid");
         }
-        if (input.getName() != null && !input.getName().isEmpty()) {
-            theme.setName(input.getName());
-        } else {
-            throw new GraphqlException("Name value is not valid");
+        if (input.getPrice() == null || input.getPrice().compareTo(BigDecimal.ZERO) <= 0
+                || input.getNightPrice() == null || input.getNightPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new GraphqlException("Price or Night Price values are not valid");
         }
-        if (input.getKoreanTitle() != null && !input.getKoreanTitle().isEmpty()) {
-            theme.setKoreanTitle(input.getKoreanTitle());
-        } else {
-            throw new GraphqlException("KoreanTitle value is not valid");
-        }
-        if (!input.getPrice().equals(BigDecimal.ZERO)) {
-            theme.setPrice(input.getPrice());
-        } else {
-            throw new GraphqlException("Price value is not valid");
-        }
-        if (!input.getNightPrice().equals(BigDecimal.ZERO)) {
-            theme.setNightPrice(input.getNightPrice());
-        } else {
-            throw new GraphqlException("NightPrice value is not valid");
-        }
+        theme.setDescription(input.getDescription());
+        theme.setName(input.getName());
+        theme.setKoreanTitle(input.getKoreanTitle());
+        theme.setPrice(input.getPrice());
+        theme.setNightPrice(input.getNightPrice());
         theme.setIsPopular(input.getIsPopular());
         theme.setIsActive(input.getIsActive());
         if (icon != null) {
@@ -86,19 +75,19 @@ public class ThemeService {
         if (input.getCategoryId() != null && input.getCategoryId() != 0) {
             theme.setCategory(categoryRepository.findById(input.getCategoryId()).orElseThrow(() -> new EntityNotFoundException("No Category with id: " + input.getCategoryId())));
         }
-        if (input.getDescription() != null && !input.getDescription().isEmpty()) {
+        if (input.getDescription() != null && !input.getDescription().isBlank()) {
             theme.setDescription(input.getDescription());
         }
-        if (input.getName() != null && !input.getName().isEmpty()) {
+        if (input.getName() != null && !input.getName().isBlank()) {
             theme.setName(input.getName());
         }
-        if (input.getKoreanTitle() != null && !input.getKoreanTitle().isEmpty()) {
+        if (input.getKoreanTitle() != null && !input.getKoreanTitle().isBlank()) {
             theme.setKoreanTitle(input.getKoreanTitle());
         }
-        if (input.getPrice() != null) {
+        if (input.getPrice() != null && input.getPrice().compareTo(BigDecimal.ZERO) > 0) {
             theme.setPrice(input.getPrice());
         }
-        if (input.getNightPrice() != null) {
+        if (input.getNightPrice() != null && input.getNightPrice().compareTo(BigDecimal.ZERO) > 0) {
             theme.setNightPrice(input.getNightPrice());
         }
         if (input.getIsPopular() != null) {

@@ -1,9 +1,8 @@
 package com.habsida.morago.serviceImpl;
 
-import com.habsida.morago.config.SmsProvider;
+import com.habsida.morago.util.SmsProvider;
 import com.habsida.morago.service.SmsService;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import org.springframework.stereotype.Service;
 
 import java.io.File;

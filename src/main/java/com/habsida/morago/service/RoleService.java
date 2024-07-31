@@ -7,7 +7,9 @@ import java.util.Optional;
 public interface RoleService {
     List<RoleDTO> getAllRoles();
 
-    void add(RoleDTO roleDTO);
-
     Optional<RoleDTO> getRoleById(Long id);
+
+    void add(String roleName);
+
+    void deleteRoleById(Long id);
 }

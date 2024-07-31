@@ -9,9 +9,9 @@ import com.habsida.morago.model.inputs.CreateNotificationInput;
 import com.habsida.morago.model.inputs.UpdateNotificationInput;
 import com.habsida.morago.repository.NotificationRepository;
 import com.habsida.morago.repository.UserRepository;
-import com.habsida.morago.service.CallService;
 import com.habsida.morago.service.NotificationService;
 import com.habsida.morago.service.SmsService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +21,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
@@ -28,15 +29,6 @@ public class NotificationServiceImpl implements NotificationService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final SmsService smsService;
-
-    public NotificationServiceImpl(NotificationRepository notificationRepository,
-                                   UserRepository userRepository,
-                                   ModelMapper modelMapper, SmsService smsService) {
-        this.notificationRepository = notificationRepository;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-        this.smsService = smsService;
-    }
 
     @Transactional(readOnly = true)
     public List<NotificationDTO> getAllNotification() {
@@ -55,6 +47,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Transactional
     public NotificationDTO addNotification(CreateNotificationInput createNotificationInput) {
+        if (createNotificationInput.getTitle() == null || createNotificationInput.getTitle().isBlank()
+                || createNotificationInput.getText() == null || createNotificationInput.getText().isBlank()) {
+            throw new GraphqlException("Notification title and text are required");
+        }
         User user = userRepository.findById(createNotificationInput.getUserId())
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createNotificationInput.getUserId()));
 
@@ -74,10 +70,10 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Notification not found for id: " + id));
 
-        if (updateNotificationInput.getText() != null && !updateNotificationInput.getText().isEmpty()) {
+        if (updateNotificationInput.getText() != null && !updateNotificationInput.getText().isBlank()) {
             notification.setText(updateNotificationInput.getText());
         }
-        if (updateNotificationInput.getTitle() != null && !updateNotificationInput.getTitle().isEmpty()) {
+        if (updateNotificationInput.getTitle() != null && !updateNotificationInput.getTitle().isBlank()) {
             notification.setTitle(updateNotificationInput.getTitle());
         }
         notification.setTime(LocalTime.now());
