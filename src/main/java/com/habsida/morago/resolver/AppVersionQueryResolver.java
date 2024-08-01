@@ -3,6 +3,7 @@ package com.habsida.morago.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.habsida.morago.model.dto.AppVersionDTO;
 import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.inputs.PagingInputAppVersion;
 import com.habsida.morago.model.results.AppVersionPageOutput;
 import com.habsida.morago.model.enums.EPlatform;
 import com.habsida.morago.serviceImpl.AppVersionService;
@@ -18,7 +19,7 @@ public class AppVersionQueryResolver implements GraphQLQueryResolver {
         return appVersionService.getAppVersionByPlatform(platform);
     }
 
-    public AppVersionPageOutput getAllAppVersions(PagingInput pagingInput) {
-        return appVersionService.getAll(pagingInput);
+    public AppVersionPageOutput getAllAppVersions(PagingInputAppVersion pagingInputAppVersion) {
+        return appVersionService.getAll(pagingInputAppVersion);
     }
 }
