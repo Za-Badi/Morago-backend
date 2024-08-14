@@ -5,17 +5,22 @@ import com.habsida.morago.model.dto.RatingDTO;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Rating;
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.RatingInput;
 import com.habsida.morago.model.inputs.UpdateRatingInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.CallRepository;
 import com.habsida.morago.repository.RatingRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.RatingService;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,15 +32,21 @@ public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
     private final CallRepository callRepository;
 
     @Override
-    @Transactional
-    public List<RatingDTO> getAllRatings() {
-        return ratingRepository.findAll()
-                .stream()
-                .map(rating -> modelMapper.map(rating, RatingDTO.class))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public PageOutput<RatingDTO> getAllRatings(PagingInput pagingInput) {
+        Page<Rating> ratingPage = ratingRepository.findAll(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                ratingPage.getNumber(),
+                ratingPage.getTotalPages(),
+                ratingPage.getTotalElements(),
+                ratingPage.getContent().stream()
+                        .map(rating -> modelMapperUtil.map(rating, RatingDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override

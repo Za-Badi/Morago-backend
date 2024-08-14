@@ -6,12 +6,17 @@ import com.habsida.morago.model.entity.Deposits;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.enums.PaymentStatus;
 import com.habsida.morago.model.inputs.CreateDepositsInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UpdateDepositsInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.DepositsRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DepositsService;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +29,9 @@ public class DepositsServiceImpl implements DepositsService {
     private final DepositsRepository depositsRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
+    private final ModelMapperUtil modelMapperUtil;
 
     @Transactional(readOnly = true)
-    public List<DepositsDTO> getAllDeposits() {
-        List<Deposits> deposits = depositsRepository.findAllWithUsers();
-        return deposits.stream()
-                .map(deposit -> modelMapper.map(deposit, DepositsDTO.class))
-                .collect(Collectors.toList());
-    }
-    @Transactional(readOnly = true)
-
     public DepositsDTO getDepositById(Long id) {
         Deposits deposit = depositsRepository.findByIdWithUser(id)
                 .orElseThrow(() -> new GraphqlException("Deposits not found for id: " + id));
@@ -77,23 +74,33 @@ public class DepositsServiceImpl implements DepositsService {
     }
 
     @Transactional(readOnly = true)
-    public List<DepositsDTO> getDepositsByStatus(PaymentStatus status) {
-        List<Deposits> deposits = depositsRepository.findByStatusWithUser(status);
-        if (deposits.isEmpty()) {
+    public PageOutput<DepositsDTO> getDepositsByStatus(PaymentStatus status, PagingInput pagingInput) {
+        Page<Deposits> depositsPage = depositsRepository.findByStatusWithUser(status, PageUtil.buildPageable(pagingInput));
+        if (depositsPage.isEmpty()) {
             throw new GraphqlException("Deposits not found for status: " + status);
         }
-        return deposits.stream()
-                .map(deposit -> modelMapper.map(deposit, DepositsDTO.class))
-                .collect(Collectors.toList());
+        return new PageOutput<DepositsDTO>(
+                depositsPage.getNumber(),
+                depositsPage.getTotalPages(),
+                depositsPage.getTotalElements(),
+                depositsPage.getContent().stream()
+                        .map(deposits -> modelMapperUtil.map(deposits, DepositsDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Transactional(readOnly = true)
-    public List<DepositsDTO> getDepositByUserId(Long userId) {
+    public PageOutput<DepositsDTO> getDepositByUserId(Long userId, PagingInput pagingInput) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
-        List<Deposits> deposits = depositsRepository.findByUserIdWithUser(userId);
-        return deposits.stream()
-                .map(deposit -> modelMapper.map(deposit, DepositsDTO.class))
-                .collect(Collectors.toList());
+        Page<Deposits> depositsPage = depositsRepository.findByUserIdWithUser(userId, PageUtil.buildPageable(pagingInput));
+        return new PageOutput<DepositsDTO>(
+                depositsPage.getNumber(),
+                depositsPage.getTotalPages(),
+                depositsPage.getTotalElements(),
+                depositsPage.getContent().stream()
+                        .map(deposits -> modelMapperUtil.map(deposits, DepositsDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 }

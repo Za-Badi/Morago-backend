@@ -10,7 +10,7 @@ import com.habsida.morago.model.inputs.UpdateNotificationInput;
 import com.habsida.morago.repository.NotificationRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.NotificationService;
-import com.habsida.morago.service.SmsService;
+//import com.habsida.morago.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final SmsService smsService;
+//    private final SmsService smsService;
 
     @Transactional(readOnly = true)
     public List<NotificationDTO> getAllNotification() {
@@ -110,7 +110,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "You have a new call request from " + user.getFirstName();
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
 
 
         // Create notification for the user
@@ -120,7 +120,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your call request has been sent to " + translator.getFirstName();
         userNotificationInput.setText(userNotificationText);
         addNotification(userNotificationInput);
-        smsService.sendSms(user.getPhone(), userNotificationText);
+//        smsService.sendSms(user.getPhone(), userNotificationText);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your call with " + translator.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         callerNotificationInput.setText(userNotificationText);
         addNotification(callerNotificationInput);
-        smsService.sendSms(caller.getPhone(), userNotificationText);
+//        smsService.sendSms(caller.getPhone(), userNotificationText);
 
         // Create notification for the translator
         CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
@@ -142,7 +142,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "Your call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "You have a new consultation call request from " + user.getFirstName();
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
 
         // Create notification for the consultant
         CreateNotificationInput consultantNotificationInput = new CreateNotificationInput();
@@ -164,7 +164,7 @@ public class NotificationServiceImpl implements NotificationService {
         String consultantNotificationText = "You have a new consultation call request from " + user.getFirstName();
         consultantNotificationInput.setText(consultantNotificationText);
         addNotification(consultantNotificationInput);
-        smsService.sendSms(consultant.getPhone(), consultantNotificationText);
+//        smsService.sendSms(consultant.getPhone(), consultantNotificationText);
 
         // Create notification for the user
         CreateNotificationInput userNotificationInput = new CreateNotificationInput();
@@ -173,7 +173,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your consultation call request has been sent to translator: " + translator.getFirstName() + " and consultant: " + consultant.getFirstName();
         userNotificationInput.setText(userNotificationText);
         addNotification(userNotificationInput);
-        smsService.sendSms(user.getPhone(), userNotificationText);
+//        smsService.sendSms(user.getPhone(), userNotificationText);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your consultation call with translator: " + translator.getFirstName() + " and consultant: " + consultant.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         callerNotificationInput.setText(userNotificationText);
         addNotification(callerNotificationInput);
-        smsService.sendSms(caller.getPhone(), userNotificationText);
+//        smsService.sendSms(caller.getPhone(), userNotificationText);
 
         // Create notification for the translator
         CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
@@ -195,7 +195,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "Your consultation call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
 
         // Create notification for the consultant
         CreateNotificationInput consultantNotificationInput = new CreateNotificationInput();
@@ -204,6 +204,6 @@ public class NotificationServiceImpl implements NotificationService {
         String consultantNotificationText = "Your consultation call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         consultantNotificationInput.setText(consultantNotificationText);
         addNotification(consultantNotificationInput);
-        smsService.sendSms(translator.getPhone(), consultantNotificationText);
+//        smsService.sendSms(translator.getPhone(), consultantNotificationText);
     }
 }

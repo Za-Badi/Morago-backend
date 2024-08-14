@@ -1,7 +1,6 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.util.SmsProvider;
-import com.habsida.morago.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +8,10 @@ import java.io.File;
 
 @Service
 @RequiredArgsConstructor
-public class SmsServiceImpl implements SmsService {
+public class SmsServiceImpl {
 
     private final SmsProvider smsProvider;
 
-    @Override
     public boolean sendSms(String to, String notificationText) {
         try {
             return smsProvider.sendSms(to, notificationText);
@@ -23,7 +21,6 @@ public class SmsServiceImpl implements SmsService {
         }
     }
 
-    @Override
     public boolean sendMms(String to, String notificationText, File notficationFile) {
         try {
             return smsProvider.sendMms(to, notificationText, notficationFile);
