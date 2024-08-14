@@ -8,8 +8,8 @@ import com.habsida.morago.serviceImpl.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class CategoryQueryResolver implements GraphQLQueryResolver {
     private final CategoryService categoryService;
 

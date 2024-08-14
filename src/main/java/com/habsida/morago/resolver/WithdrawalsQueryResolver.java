@@ -7,17 +7,15 @@ import com.habsida.morago.model.enums.PaymentStatus;
 import com.habsida.morago.model.inputs.CreateWithdrawalInput;
 import com.habsida.morago.model.inputs.UpdateWithdrawalInput;
 import com.habsida.morago.service.WithdrawalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class WithdrawalsQueryResolver implements GraphQLQueryResolver {
     private WithdrawalService withdrawalService;
-
-    public WithdrawalsQueryResolver(WithdrawalService withdrawalService) {
-        this.withdrawalService = withdrawalService;
-    }
 
     public List<WithdrawalsDTO> getAllWithdrawals() {
         return withdrawalService.getAllWithdrawals();

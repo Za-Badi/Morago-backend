@@ -5,18 +5,16 @@ import com.habsida.morago.model.entity.Notification;
 import com.habsida.morago.model.inputs.CreateNotificationInput;
 import com.habsida.morago.model.inputs.UpdateNotificationInput;
 import com.habsida.morago.service.NotificationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class NotificationResolver {
 
     private NotificationService notificationService;
-
-    public NotificationResolver(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
 
     public List<NotificationDTO> getAllNotification() {
         return notificationService.getAllNotification();

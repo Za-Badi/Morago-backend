@@ -55,10 +55,9 @@ type Query {
     getDebtorById(id: ID!): DebtorDTO
     getDebtorByUserId(userId: ID!): [DebtorDTO]
 
-    getAllDeposits: [DepositsDTO]
     getDepositById(id: ID!): DepositsDTO
-    getDepositsByStatus(status: PaymentStatus!): [DepositsDTO]
-    getDepositsByUserId(userId: ID!): [DepositsDTO]
+    getDepositsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): [DepositsDTO]
+    getDepositsByUserId(userId: ID!, pagingInput: PagingInput!): [DepositsDTO]
 
     getAllNotification: [NotificationDTO]
     getNotificationById(id: ID!): NotificationDTO
@@ -92,9 +91,9 @@ type Query {
 }
 
 type Mutation {
-    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersionDTO
-    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersionDTO
-    deleteAppVersion(platform: EPlatform!): Boolean
+#    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersionDTO
+#    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersionDTO
+#    deleteAppVersion(platform: EPlatform!): Boolean
 
     createCoin(input: CreateCoinInput): CoinDTO
     updateCoin(input: UpdateCoinInput): CoinDTO

@@ -3,18 +3,16 @@ package com.habsida.morago.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.habsida.morago.model.dto.NotificationDTO;
 import com.habsida.morago.service.NotificationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class NotificationQueryResolver implements GraphQLQueryResolver {
 
     private final NotificationService notificationService;
-
-    public NotificationQueryResolver(NotificationService notificationService) {
-        this.notificationService = notificationService;
-    }
 
     public List<NotificationDTO> getAllNotification() {
         return notificationService.getAllNotification();
