@@ -8,7 +8,7 @@ type Query {
     getAllCoins(pagingInput: PagingInput): CoinPageOutput
 
     getAppVersionByPlatform(platform: EPlatform!): AppVersionDTO
-    getAllAppVersions(pagingInput: PagingInput): AppVersionPageOutput
+    getAllAppVersions(input: PagingInputAppVersion): AppVersionPageOutput
 
     getAllCategoriesByPaging(input: PagingInput): CategoryPage
     getCategoryById(id: ID!): CategoryDTO
@@ -543,6 +543,14 @@ input PagingInput {
     sortBy: String
     sort: ESort
 }
+
+input PagingInputAppVersion {
+    pageNo: Int
+    pageSize: Int
+    sortBy: String
+    sort: ESort
+}
+
 input UserInput {
     phone: String!
     password: String!

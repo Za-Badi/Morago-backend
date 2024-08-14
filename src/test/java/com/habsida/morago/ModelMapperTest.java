@@ -54,7 +54,7 @@ public class ModelMapperTest {
     @Test
     public void testAppVersionToAppVersionDTO() {
         AppVersion appVersion = new AppVersion();
-        appVersion.setPlatform(EPlatform.IOS);
+        appVersion.setPlatform(EPlatform.ANDROID);
         appVersion.setMin("1.0.0");
         appVersion.setLatest("2.0.0");
         appVersion.setCreatedAt(LocalDateTime.now());

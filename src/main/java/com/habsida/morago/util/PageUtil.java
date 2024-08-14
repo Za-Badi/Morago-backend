@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class PageUtil {
     public static Pageable buildPageable(PagingInput input) {
         Pageable paging;
-        if (input.getSort().equals(ESort.ASC)) {
+        if (input.getSort().equals(ESort.DES)) {
             paging = PageRequest.of(input.getPageNo(), input.getPageSize(), Sort.by(input.getSortBy()).ascending());
         } else {
             paging = PageRequest.of(input.getPageNo(), input.getPageSize(), Sort.by(input.getSortBy()).descending());
@@ -22,7 +22,7 @@ public class PageUtil {
     }
     public static Pageable buildPageable(PagingInput input, Sort sort) {
         Pageable paging;
-        if (input.getSort().equals(ESort.ASC)) {
+        if (input.getSort().equals(ESort.DES)) {
             paging = PageRequest.of(input.getPageNo(), input.getPageSize(), sort);
         } else {
             paging = PageRequest.of(input.getPageNo(), input.getPageSize(), sort);

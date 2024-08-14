@@ -3,17 +3,21 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.model.dto.AppVersionDTO;
 import com.habsida.morago.model.entity.AppVersion;
 import com.habsida.morago.model.enums.EPlatform;
-import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.enums.ESort;
+import com.habsida.morago.model.inputs.PagingInputAppVersion;
 import com.habsida.morago.model.results.AppVersionPageOutput;
 import com.habsida.morago.repository.AppVersionRepository;
 import com.habsida.morago.util.ModelMapperUtil;
-import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,13 +33,18 @@ public class AppVersionService {
     }
 
     @Transactional(readOnly = true)
-    public AppVersionPageOutput getAll(PagingInput pagingInput) {
-        Page<AppVersion> page = repository.findAll(PageUtil.buildPageable(pagingInput));
+    public AppVersionPageOutput getAll(PagingInputAppVersion pagingInput) {
+        Sort sort = pagingInput.getSort().equals(ESort.DES) ?
+                Sort.by(pagingInput.getSortBy()).ascending() :
+                Sort.by(pagingInput.getSortBy()).descending();
+        Pageable pageable = PageRequest.of(pagingInput.getPageNo(), pagingInput.getPageSize(), sort);
+
+        Page<AppVersion> page = repository.findAll(pageable);
         return new AppVersionPageOutput(
                 page.getNumber(),
                 page.getTotalPages(),
                 page.getTotalElements(),
-                page.map(appVersion -> modelMapperUtil.map(appVersion, AppVersionDTO.class)).getContent()
+                page.stream().map(appVersion -> modelMapperUtil.map(appVersion, AppVersionDTO.class)).collect(Collectors.toList())
         );
     }
 
