@@ -18,9 +18,9 @@ public interface DepositsRepository extends JpaRepository<Deposits, Long> {
     @Query("SELECT d FROM Deposits d JOIN FETCH d.user WHERE d.id = :id")
     Optional<Deposits> findByIdWithUser(@Param("id") Long id);
 
-    @Query("SELECT d FROM Deposits d JOIN FETCH d.user WHERE d.status = :status")
-    Page<Deposits> findByStatusWithUser(@Param("status") PaymentStatus status, Pageable pageable);
+//    @Query("SELECT d FROM Deposits d JOIN FETCH d.user WHERE d.status = :status")
+//    Page<Deposits> findByStatusWithUser(@Param("status") PaymentStatus status, Pageable pageable);
 
-    @Query("SELECT d FROM Deposits d JOIN FETCH d.user WHERE d.user.id = :userId")
-    Page<Deposits> findByUserIdWithUser(@Param("userId") Long userId, Pageable pageable);
+//    @Query("SELECT d FROM Deposits d JOIN FETCH d.user WHERE d.user.id = :userId")
+//    Page<Deposits> findByUserIdWithUser(@Param("userId") Long userId, Pageable pageable);
 }

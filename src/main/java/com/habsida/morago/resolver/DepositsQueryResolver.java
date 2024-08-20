@@ -21,11 +21,11 @@ public class DepositsQueryResolver implements GraphQLQueryResolver {
         return depositsService.getDepositById(id);
     }
 
-    public PageOutput<DepositsDTO> getDepositsByStatus(PaymentStatus status, PagingInput pagingInput) {
-        return depositsService.getDepositsByStatus(status, pagingInput);
-    }
+//    public PageOutput<DepositsDTO> getDepositsByStatus(PaymentStatus status, PagingInput pagingInput) {
+//        return depositsService.getDepositsByStatus(status, pagingInput);
+//    }
 
-    public PageOutput<DepositsDTO> getDepositsByUserId(Long userId, PagingInput pagingInput) {
-        return depositsService.getDepositByUserId(userId, pagingInput);
-    }
+//    public PageOutput<DepositsDTO> getDepositsByUserId(Long userId, PagingInput pagingInput) {
+//        return depositsService.getDepositByUserId(userId, pagingInput);
+//    }
 }

@@ -73,34 +73,34 @@ public class DepositsServiceImpl implements DepositsService {
         depositsRepository.delete(deposit);
     }
 
-    @Transactional(readOnly = true)
-    public PageOutput<DepositsDTO> getDepositsByStatus(PaymentStatus status, PagingInput pagingInput) {
-        Page<Deposits> depositsPage = depositsRepository.findByStatusWithUser(status, PageUtil.buildPageable(pagingInput));
-        if (depositsPage.isEmpty()) {
-            throw new GraphqlException("Deposits not found for status: " + status);
-        }
-        return new PageOutput<DepositsDTO>(
-                depositsPage.getNumber(),
-                depositsPage.getTotalPages(),
-                depositsPage.getTotalElements(),
-                depositsPage.getContent().stream()
-                        .map(deposits -> modelMapperUtil.map(deposits, DepositsDTO.class))
-                        .collect(Collectors.toList())
-        );
-    }
+//    @Transactional(readOnly = true)
+//    public PageOutput<DepositsDTO> getDepositsByStatus(PaymentStatus status, PagingInput pagingInput) {
+//        Page<Deposits> depositsPage = depositsRepository.findByStatusWithUser(status, PageUtil.buildPageable(pagingInput));
+//        if (depositsPage.isEmpty()) {
+//            throw new GraphqlException("Deposits not found for status: " + status);
+//        }
+//        return new PageOutput<>(
+//                depositsPage.getNumber(),
+//                depositsPage.getTotalPages(),
+//                depositsPage.getTotalElements(),
+//                depositsPage.getContent().stream()
+//                        .map(deposits -> modelMapperUtil.map(deposits, DepositsDTO.class))
+//                        .collect(Collectors.toList())
+//        );
+//    }
 
-    @Transactional(readOnly = true)
-    public PageOutput<DepositsDTO> getDepositByUserId(Long userId, PagingInput pagingInput) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
-        Page<Deposits> depositsPage = depositsRepository.findByUserIdWithUser(userId, PageUtil.buildPageable(pagingInput));
-        return new PageOutput<DepositsDTO>(
-                depositsPage.getNumber(),
-                depositsPage.getTotalPages(),
-                depositsPage.getTotalElements(),
-                depositsPage.getContent().stream()
-                        .map(deposits -> modelMapperUtil.map(deposits, DepositsDTO.class))
-                        .collect(Collectors.toList())
-        );
-    }
+//    @Transactional(readOnly = true)
+//    public PageOutput<DepositsDTO> getDepositByUserId(Long userId, PagingInput pagingInput) {
+//        userRepository.findById(userId)
+//                .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
+//        Page<Deposits> depositsPage = depositsRepository.findByUserIdWithUser(userId, PageUtil.buildPageable(pagingInput));
+//        return new PageOutput<>(
+//                depositsPage.getNumber(),
+//                depositsPage.getTotalPages(),
+//                depositsPage.getTotalElements(),
+//                depositsPage.getContent().stream()
+//                        .map(deposits -> modelMapperUtil.map(deposits, DepositsDTO.class))
+//                        .collect(Collectors.toList())
+//        );
+//    }
 }

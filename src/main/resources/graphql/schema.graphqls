@@ -55,18 +55,18 @@ type Query {
     getDebtorById(id: ID!): DebtorDTO
     getDebtorByUserId(userId: ID!): [DebtorDTO]
 
-    getDepositById(id: ID!): DepositsPageOutput
-    getDepositsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): [DepositsDTO]
-    getDepositsByUserId(userId: ID!, pagingInput: PagingInput!): [DepositsDTO]
+    getDepositById(id: ID!): DepositsDTO
+#    getDepositsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): DepositsPageOutput
+#    getDepositsByUserId(userId: ID!, pagingInput: PagingInput!): DepositsPageOutput
 
     getAllNotification: [NotificationDTO]
     getNotificationById(id: ID!): NotificationDTO
     getNotificationsByUserId(userId: ID!): [NotificationDTO]
 
-    getAllWithdrawals: [WithdrawalsDTO]
+    getAllWithdrawals(pagingInput: PagingInput!): WithdrawalsPageOutput
     getWithdrawalsById(id: ID!): WithdrawalsDTO
-    getWithdrawalsByStatus(status: PaymentStatus!): [WithdrawalsDTO]
-    getWithdrawalsByUserId(userId: ID!): [WithdrawalsDTO]
+    getWithdrawalsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): WithdrawalsPageOutput
+    getWithdrawalsByUserId(userId: ID!, pagingInput: PagingInput!): WithdrawalsPageOutput
     getUsersAndWithdrawals(pagingInput: PagingInput!): UsersAndWithdrawalsPageOutput
 
     getAllCalls: [CallDTO]
@@ -77,7 +77,7 @@ type Query {
     getCallsByOutgoingIncoming(page: Int!, size: Int!): CallPage!
     getCallsByOutgoingIncomingStatus(status: CallStatus, page: Int!, size: Int!): CallPage!
 
-    getAllRatings: [RatingDTO]
+    getAllRatings(pagingInput: PagingInput!): RatingsPageOutput
     getRatingById(id: ID!): RatingDTO
     getAverageRating(toWhomUserId: ID!): Float
 
@@ -405,7 +405,12 @@ type CallPage {
     pageInfo: PageInfo!
 }
 
-
+type RatingsPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [RatingDTO]
+}
 type CoinPageOutput {
     currentPage: Int
     totalPages: Int
@@ -426,7 +431,12 @@ type FrequentlyAskedQuestionPageOutput {
     totalElements: Int
     objectList: [FrequentlyAskedQuestionsDTO]
 }
-
+type WithdrawalsPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [WithdrawalsDTO]
+}
 type LanguagePageOutput {
     currentPage: Int
     totalPages: Int

@@ -14,6 +14,6 @@ public interface DepositsService {
     public DepositsDTO addDeposit(CreateDepositsInput createDepositsInput);
     public DepositsDTO updateDeposit(Long id, UpdateDepositsInput updateDepositsInput);
     public void deleteDeposit(Long id);
-    public PageOutput<DepositsDTO> getDepositsByStatus(PaymentStatus status, PagingInput pagingInput);
-    public PageOutput<DepositsDTO> getDepositByUserId(Long userId, PagingInput pagingInput);
+//    public PageOutput<DepositsDTO> getDepositsByStatus(PaymentStatus status, PagingInput pagingInput);
+//    public PageOutput<DepositsDTO> getDepositByUserId(Long userId, PagingInput pagingInput);
 }
