@@ -1,36 +1,50 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GraphqlException;
+import com.habsida.morago.model.dto.RatingDTO;
 import com.habsida.morago.model.dto.WithdrawalsDTO;
+import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.enums.PaymentStatus;
 import com.habsida.morago.model.inputs.CreateWithdrawalInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UpdateWithdrawalInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.WithdrawalRepository;
 import com.habsida.morago.service.WithdrawalService;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class WithdrawalServiceImpl implements WithdrawalService {
 
     private final WithdrawalRepository withdrawalRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
 
     @Transactional(readOnly = true)
-    public List<WithdrawalsDTO> getAllWithdrawals() {
-        return withdrawalRepository.findAll().stream()
-                .map(withdrawals -> modelMapper.map(withdrawals, WithdrawalsDTO.class))
-                .collect(Collectors.toList());
+    public PageOutput<WithdrawalsDTO> getAllWithdrawals(PagingInput pagingInput) {
+        Page<Withdrawals> withdrawalsPage = withdrawalRepository.findAll(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                withdrawalsPage.getNumber(),
+                withdrawalsPage.getTotalPages(),
+                withdrawalsPage.getTotalElements(),
+                withdrawalsPage.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(withdrawals, WithdrawalsDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Transactional(readOnly = true)
@@ -90,23 +104,33 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     }
 
     @Transactional(readOnly = true)
-    public List<WithdrawalsDTO> getWithdrawalsByStatus(PaymentStatus status) {
-        List<Withdrawals> withdrawalsByStatus = withdrawalRepository.findByStatus(status);
-        if (withdrawalsByStatus.isEmpty()) {
+    public PageOutput<WithdrawalsDTO> getWithdrawalsByStatus(PaymentStatus status, PagingInput pagingInput) {
+        Page<Withdrawals> withdrawalsByStatus = withdrawalRepository.findByStatus(status, PageUtil.buildPageable(pagingInput));
+        if (withdrawalsByStatus.getContent().isEmpty()) {
             throw new GraphqlException("Withdrawals not found for status: " + status);
         }
-        return withdrawalsByStatus.stream()
-                .map(withdrawals -> modelMapper.map(withdrawals, WithdrawalsDTO.class))
-                .collect(Collectors.toList());
+        return new PageOutput<>(
+                withdrawalsByStatus.getNumber(),
+                withdrawalsByStatus.getTotalPages(),
+                withdrawalsByStatus.getTotalElements(),
+                withdrawalsByStatus.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(withdrawals, WithdrawalsDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Transactional(readOnly = true)
-    public List<WithdrawalsDTO> getWithdrawalsByUserId(Long userId) {
+    public PageOutput<WithdrawalsDTO> getWithdrawalsByUserId(Long userId, PagingInput pagingInput) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + userId));
-        List<Withdrawals> withdrawalsByUserId = withdrawalRepository.findByUserId(userId);
-        return withdrawalsByUserId.stream()
-                .map(withdrawals -> modelMapper.map(withdrawals, WithdrawalsDTO.class))
-                .collect(Collectors.toList());
+        Page<Withdrawals> withdrawalsByUserId = withdrawalRepository.findByUserId(userId, PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                withdrawalsByUserId.getNumber(),
+                withdrawalsByUserId.getTotalPages(),
+                withdrawalsByUserId.getTotalElements(),
+                withdrawalsByUserId.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(withdrawals, WithdrawalsDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 }

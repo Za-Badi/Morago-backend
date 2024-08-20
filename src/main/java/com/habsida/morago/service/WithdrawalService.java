@@ -3,13 +3,15 @@ package com.habsida.morago.service;
 import com.habsida.morago.model.dto.WithdrawalsDTO;
 import com.habsida.morago.model.enums.PaymentStatus;
 import com.habsida.morago.model.inputs.CreateWithdrawalInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UpdateWithdrawalInput;
+import com.habsida.morago.model.results.PageOutput;
 
 import java.util.List;
 
 public interface WithdrawalService {
 
-    public List<WithdrawalsDTO> getAllWithdrawals();
+    public PageOutput<WithdrawalsDTO> getAllWithdrawals(PagingInput pagingInput);
 
     public WithdrawalsDTO getWithdrawalById(Long id);
 
@@ -19,7 +21,7 @@ public interface WithdrawalService {
 
     public void deleteWithdrawal(Long id);
 
-    public List<WithdrawalsDTO> getWithdrawalsByStatus(PaymentStatus status);
+    public PageOutput<WithdrawalsDTO> getWithdrawalsByStatus(PaymentStatus status, PagingInput pagingInput);
 
-    public List<WithdrawalsDTO> getWithdrawalsByUserId(Long userId);
+    public PageOutput<WithdrawalsDTO> getWithdrawalsByUserId(Long userId, PagingInput pagingInput);
 }

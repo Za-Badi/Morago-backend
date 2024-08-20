@@ -28,7 +28,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-//    private final SmsService smsService;
+    private final FirebaseService firebaseService;
 
     @Transactional(readOnly = true)
     public List<NotificationDTO> getAllNotification() {
@@ -110,7 +110,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "You have a new call request from " + user.getFirstName();
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+        firebaseService.sendNotification(translator.getFcmToken(), "New Call Request", translatorNotificationText);
 
 
         // Create notification for the user
@@ -120,7 +120,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your call request has been sent to " + translator.getFirstName();
         userNotificationInput.setText(userNotificationText);
         addNotification(userNotificationInput);
-//        smsService.sendSms(user.getPhone(), userNotificationText);
+        firebaseService.sendNotification(user.getFcmToken(), "Call Request Sent", userNotificationText);
     }
 
     @Override

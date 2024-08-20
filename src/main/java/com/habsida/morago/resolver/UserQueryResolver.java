@@ -3,8 +3,10 @@ package com.habsida.morago.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.dto.UserDTO;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UserPage;
 import com.habsida.morago.model.inputs.UsersAndWithdrawals;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.serviceImpl.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,7 +62,7 @@ public class UserQueryResolver implements GraphQLQueryResolver {
         return userService.getAllUsers();
     }
 
-    public List<UsersAndWithdrawals> getUsersAndWithdrawals() {
-        return userService.getUsersAndWithdrawals();
+    public PageOutput<UsersAndWithdrawals> getUsersAndWithdrawals(PagingInput pagingInput) {
+        return userService.getUsersAndWithdrawals(pagingInput);
     }
 }
