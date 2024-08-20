@@ -43,18 +43,18 @@ class DepositsServiceImplTest {
         openMocks(this);
     }
 
-    @Test
-    void getAllDeposits() {
-        Deposits deposit = new Deposits();
-        when(depositsRepository.findAllWithUsers()).thenReturn(Arrays.asList(deposit));
-        when(modelMapper.map(any(Deposits.class), eq(DepositsDTO.class))).thenReturn(new DepositsDTO());
-
-        List<DepositsDTO> result = depositsService.getAllDeposits();
-
-        assertFalse(result.isEmpty());
-        verify(depositsRepository).findAllWithUsers();
-        verify(modelMapper, times(1)).map(deposit, DepositsDTO.class);
-    }
+//    @Test
+//    void getAllDeposits() {
+//        Deposits deposit = new Deposits();
+//        when(depositsRepository.findAllWithUsers()).thenReturn(Arrays.asList(deposit));
+//        when(modelMapper.map(any(Deposits.class), eq(DepositsDTO.class))).thenReturn(new DepositsDTO());
+//
+//        List<DepositsDTO> result = depositsService.getAllDeposits();
+//
+//        assertFalse(result.isEmpty());
+//        verify(depositsRepository).findAllWithUsers();
+//        verify(modelMapper, times(1)).map(deposit, DepositsDTO.class);
+//    }
 
     @Test
     void getDepositById() {

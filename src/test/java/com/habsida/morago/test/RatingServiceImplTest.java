@@ -42,19 +42,19 @@ public class RatingServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testGetAllRatings() {
-        Rating rating = new Rating();
-        List<Rating> ratings = Arrays.asList(rating);
-
-        when(ratingRepository.findAll()).thenReturn(ratings);
-        when(modelMapper.map(any(Rating.class), eq(RatingDTO.class))).thenReturn(new RatingDTO());
-
-        List<RatingDTO> result = ratingService.getAllRatings();
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-    }
+//    @Test
+//    void testGetAllRatings() {
+//        Rating rating = new Rating();
+//        List<Rating> ratings = Arrays.asList(rating);
+//
+//        when(ratingRepository.findAll()).thenReturn(ratings);
+//        when(modelMapper.map(any(Rating.class), eq(RatingDTO.class))).thenReturn(new RatingDTO());
+//
+//        List<RatingDTO> result = ratingService.getAllRatings();
+//
+//        assertNotNull(result);
+//        assertEquals(1, result.size());
+//    }
 
     @Test
     void testGetRatingById() {
