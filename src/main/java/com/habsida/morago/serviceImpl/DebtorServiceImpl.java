@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class DebtorServiceImpl implements DebtorService {
     private final DebtorRepository debtorRepository;
     private final UserRepository userRepository;
@@ -48,12 +48,23 @@ public class DebtorServiceImpl implements DebtorService {
             throw new GraphqlException("Account holder and name of bank are required");
         }
 
+        User user = userRepository.findById(createDebtorInput.getUserId())
+                .orElseThrow(() -> new GraphqlException("User not found for id: " + createDebtorInput.getUserId()));
+
+        if (user.getIsDebtor()) {
+            throw new GraphqlException("Account holder is already debtor");
+        }
+
         debtor.setAccountHolder(createDebtorInput.getAccountHolder());
         debtor.setNameOfBank(createDebtorInput.getNameOfBank());
         debtor.setIsPaid(createDebtorInput.getIsPaid());
-        User user = userRepository.findById(createDebtorInput.getUserId())
-                .orElseThrow(() -> new GraphqlException("User not found for id: " + createDebtorInput.getUserId()));
         debtor.setUser(user);
+
+        if (!debtor.getIsPaid()) {
+            user.setIsDebtor(true);
+            userRepository.save(user);
+        }
+
         Debtor savedDebtor = debtorRepository.save(debtor);
         return modelMapper.map(savedDebtor, DebtorDTO.class);
     }
@@ -73,6 +84,11 @@ public class DebtorServiceImpl implements DebtorService {
             debtor.setIsPaid(updateDebtorInput.getIsPaid());
         }
 
+        if (debtor.getIsPaid()) {
+            User debtorUser = debtor.getUser();
+            debtorUser.setIsDebtor(false);
+            userRepository.save(debtorUser);
+        }
         Debtor updatedDebtor = debtorRepository.save(debtor);
         return modelMapper.map(updatedDebtor, DebtorDTO.class);
     }

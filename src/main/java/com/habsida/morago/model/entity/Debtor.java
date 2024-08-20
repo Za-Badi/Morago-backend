@@ -28,15 +28,12 @@ public class Debtor {
     private Boolean isPaid;
 
     @CreationTimestamp
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
 
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

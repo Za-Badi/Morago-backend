@@ -3,8 +3,11 @@ package com.habsida.morago.serviceImpl;
 import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.entity.*;
 import com.habsida.morago.model.inputs.LoginUserInput;
+import com.habsida.morago.model.inputs.RegisterTranslatorConsultantInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
+import com.habsida.morago.repository.ConsultantProfileRepository;
 import com.habsida.morago.repository.RoleRepository;
+import com.habsida.morago.repository.TranslatorProfileRepository;
 import com.habsida.morago.repository.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
+    private final ConsultantProfileRepository consultantProfileRepository;
+    private final TranslatorProfileRepository translatorProfileRepository;
 
     @Transactional
     public User signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
@@ -58,17 +63,21 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public User signUpAsTranslator(RegisterUserInput registerUserInput) throws ExceptionGraphql {
-        if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
-                registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
+    public User signUpAsTranslator(RegisterTranslatorConsultantInput registerTranslatorConsultantInput) throws ExceptionGraphql {
+        if (registerTranslatorConsultantInput.getPhone() == null || registerTranslatorConsultantInput.getPhone().isBlank() ||
+                registerTranslatorConsultantInput.getPassword() == null || registerTranslatorConsultantInput.getPassword().isBlank() ||
+                registerTranslatorConsultantInput.getEmail() == null || registerTranslatorConsultantInput.getEmail().isBlank()) {
             throw new ExceptionGraphql("Empty values are not allowed");
         }
-        String phoneInput = registerUserInput.getPhone().replaceAll("\\D", "");
+        String phoneInput = registerTranslatorConsultantInput.getPhone().replaceAll("\\D", "");
         if (phoneInput.isBlank()) {
             throw new ExceptionGraphql("Phone number must contain at least one digit");
         }
-        if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
-            throw new ExceptionGraphql("Phone number is already used: " + registerUserInput.getPhone());
+        if (userRepository.findByPhone(registerTranslatorConsultantInput.getPhone()).isPresent()) {
+            throw new ExceptionGraphql("Phone number is already used: " + registerTranslatorConsultantInput.getPhone());
+        }
+        if (translatorProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()) {
+            throw new ExceptionGraphql("Email address is already used: " + registerTranslatorConsultantInput.getEmail());
         }
         Role translatorRole = roleRepository.findByName("TRANSLATOR")
                 .orElseGet(() -> {
@@ -76,12 +85,13 @@ public class AuthenticationService {
                     return roleRepository.save(newRole);
                 });
         TranslatorProfile translatorProfile = TranslatorProfile.builder()
+                .email(registerTranslatorConsultantInput.getEmail())
                 .languages(new ArrayList<>())
                 .themes(new ArrayList<>())
                 .build();
         User user = User.builder()
                 .phone(phoneInput)
-                .password(passwordEncoder.encode(registerUserInput.getPassword()))
+                .password(passwordEncoder.encode(registerTranslatorConsultantInput.getPassword()))
                 .image(null)
                 .userProfile(null)
                 .translatorProfile(translatorProfile)
@@ -91,17 +101,21 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public User signUpAsConsultant(RegisterUserInput registerUserInput) throws ExceptionGraphql {
-        if (registerUserInput.getPhone() == null || registerUserInput.getPhone().isBlank() ||
-                registerUserInput.getPassword() == null || registerUserInput.getPassword().isBlank()) {
+    public User signUpAsConsultant(RegisterTranslatorConsultantInput registerTranslatorConsultantInput) throws ExceptionGraphql {
+        if (registerTranslatorConsultantInput.getPhone() == null || registerTranslatorConsultantInput.getPhone().isBlank() ||
+                registerTranslatorConsultantInput.getPassword() == null || registerTranslatorConsultantInput.getPassword().isBlank() ||
+                registerTranslatorConsultantInput.getEmail() == null || registerTranslatorConsultantInput.getEmail().isBlank()) {
             throw new ExceptionGraphql("Empty values are not allowed");
         }
-        String phoneInput = registerUserInput.getPhone().replaceAll("\\D", "");
+        String phoneInput = registerTranslatorConsultantInput.getPhone().replaceAll("\\D", "");
         if (phoneInput.isBlank()) {
             throw new ExceptionGraphql("Phone number must contain at least one digit");
         }
-        if (userRepository.findByPhone(registerUserInput.getPhone()).isPresent()) {
-            throw new ExceptionGraphql("Phone number is already used: " + registerUserInput.getPhone());
+        if (userRepository.findByPhone(registerTranslatorConsultantInput.getPhone()).isPresent()) {
+            throw new ExceptionGraphql("Phone number is already used: " + registerTranslatorConsultantInput.getPhone());
+        }
+        if (consultantProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()) {
+            throw new ExceptionGraphql("Email address is already used: " + registerTranslatorConsultantInput.getEmail());
         }
         Role consultantRole = roleRepository.findByName("CONSULTANT")
                 .orElseGet(() -> {
@@ -109,10 +123,13 @@ public class AuthenticationService {
                     return roleRepository.save(newRole);
                 });
         ConsultantProfile consultantProfile = ConsultantProfile.builder()
+                .email(registerTranslatorConsultantInput.getEmail())
+                .languages(new ArrayList<>())
+                .themes(new ArrayList<>())
                 .build();
         User user = User.builder()
                 .phone(phoneInput)
-                .password(passwordEncoder.encode(registerUserInput.getPassword()))
+                .password(passwordEncoder.encode(registerTranslatorConsultantInput.getPassword()))
                 .image(null)
                 .userProfile(null)
                 .consultantProfile(consultantProfile)

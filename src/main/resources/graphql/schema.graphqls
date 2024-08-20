@@ -115,8 +115,8 @@ type Mutation {
     deleteFrequentlyAskedQuestionById(id: ID!): Boolean
 
     signUpAsUser(registerUserInput: RegisterUserInput): String
-    signUpAsTranslator(registerUserInput: RegisterUserInput): String
-    signUpAsConsultant(registerUserInput: RegisterUserInput): String
+    signUpAsTranslator(registerTranslatorConsultantInput: RegisterTranslatorConsultantInput): String
+    signUpAsConsultant(registerTranslatorConsultantInput: RegisterTranslatorConsultantInput): String
     logIn(loginUserInput: LoginUserInput): String
 
     addUser(userInput: UserInput): UserDTO
@@ -602,6 +602,11 @@ input LanguageInput {
 input RegisterUserInput {
     phone: String!
     password: String!
+}
+input RegisterTranslatorConsultantInput {
+    phone: String!
+    password: String!
+    email: String!
 }
 input LoginUserInput {
     phone: String!

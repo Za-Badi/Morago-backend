@@ -4,6 +4,7 @@ import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.habsida.morago.exceptions.ExceptionGraphql;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.LoginUserInput;
+import com.habsida.morago.model.inputs.RegisterTranslatorConsultantInput;
 import com.habsida.morago.model.inputs.RegisterUserInput;
 import com.habsida.morago.serviceImpl.AuthenticationService;
 import com.habsida.morago.serviceImpl.JwtService;
@@ -25,11 +26,11 @@ public class AuthenticationMutationResolver implements GraphQLMutationResolver {
         return jwtService.generateToken(authenticatedUser);
     }
 
-    public String signUpAsTranslator(RegisterUserInput registerUserInput) throws ExceptionGraphql {
-        User user = authenticationService.signUpAsTranslator(registerUserInput);
+    public String signUpAsTranslator(RegisterTranslatorConsultantInput registerTranslatorConsultantInput) throws ExceptionGraphql {
+        User user = authenticationService.signUpAsTranslator(registerTranslatorConsultantInput);
         LoginUserInput loginUserInput = new LoginUserInput();
         loginUserInput.setPhone(user.getPhone());
-        loginUserInput.setPassword(registerUserInput.getPassword());
+        loginUserInput.setPassword(registerTranslatorConsultantInput.getPassword());
         User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
@@ -39,11 +40,11 @@ public class AuthenticationMutationResolver implements GraphQLMutationResolver {
         return jwtService.generateToken(authenticatedUser);
     }
 
-    public String signUpAsConsultant(RegisterUserInput registerUserInput) throws ExceptionGraphql {
-        User user = authenticationService.signUpAsConsultant(registerUserInput);
+    public String signUpAsConsultant(RegisterTranslatorConsultantInput registerTranslatorConsultantInput) throws ExceptionGraphql {
+        User user = authenticationService.signUpAsConsultant(registerTranslatorConsultantInput);
         LoginUserInput loginUserInput = new LoginUserInput();
         loginUserInput.setPhone(user.getPhone());
-        loginUserInput.setPassword(registerUserInput.getPassword());
+        loginUserInput.setPassword(registerTranslatorConsultantInput.getPassword());
         User authenticatedUser = authenticationService.logIn(loginUserInput);
         return jwtService.generateToken(authenticatedUser);
     }
