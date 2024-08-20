@@ -48,6 +48,7 @@ public class AppVersionService {
         );
     }
 
+    @Transactional
     public AppVersionDTO createAppVersion(EPlatform platform, String min, String latest) {
         AppVersion appVersion = new AppVersion();
         appVersion.setPlatform(platform);
