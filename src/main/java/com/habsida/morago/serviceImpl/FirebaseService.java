@@ -29,4 +29,20 @@ public class FirebaseService {
             System.out.println("Failed to send message");
         }
     }
+
+    public void sendSilentNotification(String token, String title, String body) {
+
+        Message message = Message.builder()
+                .setToken(token)
+                .putData(title, body)
+                .build();
+
+        try {
+            String response = FirebaseMessaging.getInstance().send(message);
+            System.out.println("Successfully sent message: " + response);
+        } catch (FirebaseMessagingException e) {
+            e.printStackTrace();
+            System.out.println("Failed to send message");
+        }
+    }
 }

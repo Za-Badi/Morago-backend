@@ -133,7 +133,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your call with " + translator.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         callerNotificationInput.setText(userNotificationText);
         addNotification(callerNotificationInput);
-//        smsService.sendSms(caller.getPhone(), userNotificationText);
+        firebaseService.sendSilentNotification(caller.getFcmToken(), "Call Ended", userNotificationText);
 
         // Create notification for the translator
         CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
@@ -142,7 +142,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "Your call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+        firebaseService.sendSilentNotification(translator.getFcmToken(), "Call Ended", translatorNotificationText);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "You have a new consultation call request from " + user.getFirstName();
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+        firebaseService.sendSilentNotification(translator.getFcmToken(), "New Consultation Call Request", translatorNotificationText);
 
         // Create notification for the consultant
         CreateNotificationInput consultantNotificationInput = new CreateNotificationInput();
@@ -164,7 +164,7 @@ public class NotificationServiceImpl implements NotificationService {
         String consultantNotificationText = "You have a new consultation call request from " + user.getFirstName();
         consultantNotificationInput.setText(consultantNotificationText);
         addNotification(consultantNotificationInput);
-//        smsService.sendSms(consultant.getPhone(), consultantNotificationText);
+        firebaseService.sendSilentNotification(consultant.getFcmToken(), "New Consultation Call Request", consultantNotificationText);
 
         // Create notification for the user
         CreateNotificationInput userNotificationInput = new CreateNotificationInput();
@@ -173,7 +173,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your consultation call request has been sent to translator: " + translator.getFirstName() + " and consultant: " + consultant.getFirstName();
         userNotificationInput.setText(userNotificationText);
         addNotification(userNotificationInput);
-//        smsService.sendSms(user.getPhone(), userNotificationText);
+        firebaseService.sendSilentNotification(user.getFcmToken(), "New Consultation Call Request", userNotificationText);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class NotificationServiceImpl implements NotificationService {
         String userNotificationText = "Your consultation call with translator: " + translator.getFirstName() + " and consultant: " + consultant.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         callerNotificationInput.setText(userNotificationText);
         addNotification(callerNotificationInput);
-//        smsService.sendSms(caller.getPhone(), userNotificationText);
+        firebaseService.sendSilentNotification(caller.getFcmToken(), "Consultation Call Ended", userNotificationText);
 
         // Create notification for the translator
         CreateNotificationInput translatorNotificationInput = new CreateNotificationInput();
@@ -195,7 +195,7 @@ public class NotificationServiceImpl implements NotificationService {
         String translatorNotificationText = "Your consultation call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         translatorNotificationInput.setText(translatorNotificationText);
         addNotification(translatorNotificationInput);
-//        smsService.sendSms(translator.getPhone(), translatorNotificationText);
+        firebaseService.sendSilentNotification(translator.getFcmToken(), "Consultation Call Ended", translatorNotificationText);
 
         // Create notification for the consultant
         CreateNotificationInput consultantNotificationInput = new CreateNotificationInput();
@@ -204,6 +204,6 @@ public class NotificationServiceImpl implements NotificationService {
         String consultantNotificationText = "Your consultation call with " + caller.getFirstName() + " has ended. Duration: " + call.getDuration() + " minutes.";
         consultantNotificationInput.setText(consultantNotificationText);
         addNotification(consultantNotificationInput);
-//        smsService.sendSms(translator.getPhone(), consultantNotificationText);
+        firebaseService.sendSilentNotification(consultant.getFcmToken(), "Consultation Call Ended", consultantNotificationText);
     }
 }

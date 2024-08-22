@@ -15,7 +15,8 @@ import java.io.File;
 public class SmsProvider {
 
     private final DefaultMessageService messageService;
-    @Value("${sms.from-number}") String FROM;
+    @Value("${sms.from-number}")
+    private String FROM;
 
 
     public SmsProvider(@Value("${sms.api-key}") String API_KEY,

@@ -17,7 +17,8 @@ import java.io.File;
 public class EmailUtil {
 
     private final JavaMailSender emailSender;
-    @Value("${spring.mail.username}") String FROM;
+    @Value("${spring.mail.username}")
+    private String FROM;
 
     public void sendSimpleEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();

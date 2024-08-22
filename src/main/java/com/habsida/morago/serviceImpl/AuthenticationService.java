@@ -12,6 +12,7 @@ import com.habsida.morago.repository.UserRepository;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,8 @@ public class AuthenticationService {
     private final ModelMapper modelMapper;
     private final ConsultantProfileRepository consultantProfileRepository;
     private final TranslatorProfileRepository translatorProfileRepository;
+    private final SmsServiceImpl smsService;
+    private final EmailServiceImpl emailService;
 
     @Transactional
     public User signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
@@ -97,7 +100,12 @@ public class AuthenticationService {
                 .translatorProfile(translatorProfile)
                 .roles(new ArrayList<>(List.of(translatorRole)))
                 .build();
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        String interviewLink = "insert interview link here";
+        String successRegistration = "Your registration as a Translator has partially completed, to finalize your registration, please attend an interview via the following link: " + interviewLink + ".";
+        smsService.sendSms(savedUser.getPhone(), successRegistration);
+        emailService.sendInvitationEmail(translatorProfile.getEmail(), "Invitation To Translator Interview", successRegistration);
+        return savedUser;
     }
 
     @Transactional
@@ -135,7 +143,12 @@ public class AuthenticationService {
                 .consultantProfile(consultantProfile)
                 .roles(new ArrayList<>(List.of(consultantRole)))
                 .build();
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        String interviewLink = "insert interview link here";
+        String successRegistration = "Your registration as a Consultant has partially completed, to finalize your registration, please attend an interview via the following link: " + interviewLink + ".";
+        smsService.sendSms(savedUser.getPhone(), successRegistration);
+        emailService.sendInvitationEmail(consultantProfile.getEmail(), "Invitation To Consultant Interview", successRegistration);
+        return savedUser;
     }
 
     @Transactional
