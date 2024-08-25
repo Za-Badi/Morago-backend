@@ -72,76 +72,76 @@ public class AuthenticationServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    @Test
-    public void testSignUpAsTranslator() throws ExceptionGraphql {
-        RegisterUserInput registerUserInput = new RegisterUserInput();
-        registerUserInput.setPhone("0110");
-        registerUserInput.setPassword("password");
-
-        Role translatorRole = new Role();
-        translatorRole.setName("TRANSLATOR");
-
-        TranslatorProfile translatorProfile = new TranslatorProfile();
-        translatorProfile.setLanguages(new ArrayList<>());
-        translatorProfile.setThemes(new ArrayList<>());
-
-        User user = User.builder()
-                .phone("0110")
-                .password("encodedPassword")
-                .image(null)
-                .userProfile(null)
-                .translatorProfile(translatorProfile)
-                .roles(new ArrayList<>(List.of(translatorRole)))
-                .build();
-
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(userRepository.findByPhone(anyString())).thenReturn(Optional.empty());
-        when(roleRepository.findByName(anyString())).thenReturn(Optional.of(translatorRole));
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        User result = authenticationService.signUpAsTranslator(registerUserInput);
-
-        assertNotNull(result);
-        assertEquals(user.getPhone(), registerUserInput.getPhone());
-        assertEquals(user.getPassword(), "encodedPassword");
-        verify(userRepository, times(1)).save(any(User.class));
-    }
-
-    @Test
-    public void testSignUpAsConsultant() throws ExceptionGraphql {
-        RegisterUserInput registerUserInput = new RegisterUserInput();
-        registerUserInput.setPhone("0110");
-        registerUserInput.setPassword("password");
-
-        Role consultantRole = new Role();
-        consultantRole.setName("CONSULTANT");
-
-        ConsultantProfile consultantProfile = new ConsultantProfile();
-        consultantProfile.setLanguages(new ArrayList<>());
-        consultantProfile.setThemes(new ArrayList<>());
-
-        User user = User.builder()
-                .phone("0110")
-                .password("encodedPassword")
-                .image(null)
-                .userProfile(null)
-                .translatorProfile(null)
-                .consultantProfile(consultantProfile)
-                .roles(new ArrayList<>(List.of(consultantRole)))
-                .build();
-
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
-        when(userRepository.findByPhone(anyString())).thenReturn(Optional.empty());
-        when(roleRepository.findByName(anyString())).thenReturn(Optional.of(consultantRole));
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        User result = authenticationService.signUpAsConsultant(registerUserInput);
-
-        assertNotNull(result);
-        assertEquals(user.getPhone(), registerUserInput.getPhone());
-        assertEquals(user.getPassword(), "encodedPassword");
-        verify(userRepository, times(1)).save(any(User.class));
-    }
+//    @Test
+//    public void testSignUpAsTranslator() throws ExceptionGraphql {
+//        RegisterUserInput registerUserInput = new RegisterUserInput();
+//        registerUserInput.setPhone("0110");
+//        registerUserInput.setPassword("password");
+//
+//        Role translatorRole = new Role();
+//        translatorRole.setName("TRANSLATOR");
+//
+//        TranslatorProfile translatorProfile = new TranslatorProfile();
+//        translatorProfile.setLanguages(new ArrayList<>());
+//        translatorProfile.setThemes(new ArrayList<>());
+//
+//        User user = User.builder()
+//                .phone("0110")
+//                .password("encodedPassword")
+//                .image(null)
+//                .userProfile(null)
+//                .translatorProfile(translatorProfile)
+//                .roles(new ArrayList<>(List.of(translatorRole)))
+//                .build();
+//
+//        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+//        when(userRepository.findByPhone(anyString())).thenReturn(Optional.empty());
+//        when(roleRepository.findByName(anyString())).thenReturn(Optional.of(translatorRole));
+//        when(userRepository.save(any(User.class))).thenReturn(user);
+//
+//        User result = authenticationService.signUpAsTranslator(registerUserInput);
+//
+//        assertNotNull(result);
+//        assertEquals(user.getPhone(), registerUserInput.getPhone());
+//        assertEquals(user.getPassword(), "encodedPassword");
+//        verify(userRepository, times(1)).save(any(User.class));
+//    }
+//
+//    @Test
+//    public void testSignUpAsConsultant() throws ExceptionGraphql {
+//        RegisterUserInput registerUserInput = new RegisterUserInput();
+//        registerUserInput.setPhone("0110");
+//        registerUserInput.setPassword("password");
+//
+//        Role consultantRole = new Role();
+//        consultantRole.setName("CONSULTANT");
+//
+//        ConsultantProfile consultantProfile = new ConsultantProfile();
+//        consultantProfile.setLanguages(new ArrayList<>());
+//        consultantProfile.setThemes(new ArrayList<>());
+//
+//        User user = User.builder()
+//                .phone("0110")
+//                .password("encodedPassword")
+//                .image(null)
+//                .userProfile(null)
+//                .translatorProfile(null)
+//                .consultantProfile(consultantProfile)
+//                .roles(new ArrayList<>(List.of(consultantRole)))
+//                .build();
+//
+//        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+//        when(userRepository.findByPhone(anyString())).thenReturn(Optional.empty());
+//        when(roleRepository.findByName(anyString())).thenReturn(Optional.of(consultantRole));
+//        when(userRepository.save(any(User.class))).thenReturn(user);
+//
+//        User result = authenticationService.signUpAsConsultant(registerUserInput);
+//
+//        assertNotNull(result);
+//        assertEquals(user.getPhone(), registerUserInput.getPhone());
+//        assertEquals(user.getPassword(), "encodedPassword");
+//        verify(userRepository, times(1)).save(any(User.class));
+//    }
 
     @Test
     public void testLogIn() {

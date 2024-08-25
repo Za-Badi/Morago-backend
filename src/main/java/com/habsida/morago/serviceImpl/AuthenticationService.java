@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Builder
+//@Builder
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
@@ -35,6 +35,9 @@ public class AuthenticationService {
     private final TranslatorProfileRepository translatorProfileRepository;
     private final SmsServiceImpl smsService;
     private final EmailServiceImpl emailService;
+
+    @Value("${interview.link}")
+    private String INTERVIEW_LINK;
 
     @Transactional
     public User signUpAsUser(RegisterUserInput registerUserInput) throws ExceptionGraphql {
@@ -79,7 +82,8 @@ public class AuthenticationService {
         if (userRepository.findByPhone(registerTranslatorConsultantInput.getPhone()).isPresent()) {
             throw new ExceptionGraphql("Phone number is already used: " + registerTranslatorConsultantInput.getPhone());
         }
-        if (translatorProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()) {
+        if (translatorProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()
+            || consultantProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()) {
             throw new ExceptionGraphql("Email address is already used: " + registerTranslatorConsultantInput.getEmail());
         }
         Role translatorRole = roleRepository.findByName("TRANSLATOR")
@@ -101,8 +105,7 @@ public class AuthenticationService {
                 .roles(new ArrayList<>(List.of(translatorRole)))
                 .build();
         User savedUser = userRepository.save(user);
-        String interviewLink = "insert interview link here";
-        String successRegistration = "Your registration as a Translator has partially completed, to finalize your registration, please attend an interview via the following link: " + interviewLink + ".";
+        String successRegistration = "Your registration as a Translator has partially completed. To finalize your registration, please attend an interview via the following link: " + INTERVIEW_LINK + ".";
         smsService.sendSms(savedUser.getPhone(), successRegistration);
         emailService.sendInvitationEmail(translatorProfile.getEmail(), "Invitation To Translator Interview", successRegistration);
         return savedUser;
@@ -122,7 +125,8 @@ public class AuthenticationService {
         if (userRepository.findByPhone(registerTranslatorConsultantInput.getPhone()).isPresent()) {
             throw new ExceptionGraphql("Phone number is already used: " + registerTranslatorConsultantInput.getPhone());
         }
-        if (consultantProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()) {
+        if (translatorProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()
+                || consultantProfileRepository.findByEmail(registerTranslatorConsultantInput.getEmail()).isPresent()) {
             throw new ExceptionGraphql("Email address is already used: " + registerTranslatorConsultantInput.getEmail());
         }
         Role consultantRole = roleRepository.findByName("CONSULTANT")
@@ -144,8 +148,7 @@ public class AuthenticationService {
                 .roles(new ArrayList<>(List.of(consultantRole)))
                 .build();
         User savedUser = userRepository.save(user);
-        String interviewLink = "insert interview link here";
-        String successRegistration = "Your registration as a Consultant has partially completed, to finalize your registration, please attend an interview via the following link: " + interviewLink + ".";
+        String successRegistration = "Your registration as a Consultant has partially completed. To finalize your registration, please attend an interview via the following link: " + INTERVIEW_LINK + ".";
         smsService.sendSms(savedUser.getPhone(), successRegistration);
         emailService.sendInvitationEmail(consultantProfile.getEmail(), "Invitation To Consultant Interview", successRegistration);
         return savedUser;

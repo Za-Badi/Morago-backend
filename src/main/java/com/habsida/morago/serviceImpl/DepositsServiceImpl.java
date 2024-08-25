@@ -47,7 +47,13 @@ public class DepositsServiceImpl implements DepositsService {
         User user = userRepository.findById(createDepositsInput.getUserId())
                 .orElseThrow(() -> new GraphqlException("User not found for id: " + createDepositsInput.getUserId()));
 
-        Deposits deposits = modelMapper.map(createDepositsInput, Deposits.class);
+//        Deposits deposits = modelMapper.map(createDepositsInput, Deposits.class);
+        Deposits deposits = new Deposits();
+        deposits.setAccountHolder(createDepositsInput.getAccountHolder());
+        deposits.setNameOfBank(createDepositsInput.getNameOfBank());
+        deposits.setCoin(createDepositsInput.getCoin());
+        deposits.setWon(createDepositsInput.getWon());
+        deposits.setStatus(createDepositsInput.getStatus());
         deposits.setUser(user);
         Deposits savedDeposits = depositsRepository.save(deposits);
         return modelMapper.map(savedDeposits, DepositsDTO.class);
@@ -55,13 +61,25 @@ public class DepositsServiceImpl implements DepositsService {
 
     @Transactional
     public DepositsDTO updateDeposit(Long id, UpdateDepositsInput updateDepositsInput) {
-        if (updateDepositsInput.getAccountHolder() == null || updateDepositsInput.getAccountHolder().isBlank()
-                || updateDepositsInput.getNameOfBank() == null || updateDepositsInput.getNameOfBank().isBlank()) {
-            throw new GraphqlException("Account holder and name of bank are required");
-        }
+
         Deposits deposits = depositsRepository.findById(id)
                 .orElseThrow(() -> new GraphqlException("Deposits not found for id: " + id));
-        modelMapper.map(updateDepositsInput, deposits);
+//        modelMapper.map(updateDepositsInput, deposits);
+        if (updateDepositsInput.getAccountHolder() != null && !updateDepositsInput.getAccountHolder().isBlank()){
+            deposits.setAccountHolder(updateDepositsInput.getAccountHolder());
+        }
+        if(updateDepositsInput.getNameOfBank() != null && !updateDepositsInput.getNameOfBank().isBlank()) {
+            deposits.setNameOfBank(updateDepositsInput.getNameOfBank());
+        }
+        if(updateDepositsInput.getCoin() != null && updateDepositsInput.getCoin() >= 0) {
+            deposits.setCoin(updateDepositsInput.getCoin());
+        }
+        if(updateDepositsInput.getWon() != null && updateDepositsInput.getWon() >= 0) {
+            deposits.setWon(updateDepositsInput.getWon());
+        }
+        if(updateDepositsInput.getStatus() != null) {
+            deposits.setStatus(updateDepositsInput.getStatus());
+        }
         Deposits updatedDeposits = depositsRepository.save(deposits);
         return modelMapper.map(updatedDeposits, DepositsDTO.class);
     }

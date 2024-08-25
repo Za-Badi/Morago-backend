@@ -2,6 +2,8 @@ package com.habsida.morago.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.habsida.morago.model.dto.DebtorDTO;
+import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.service.DebtorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,8 +16,8 @@ public class DebtorQueryResolver implements GraphQLQueryResolver {
 
     private final DebtorService debtorService;
 
-    public List<DebtorDTO> getAllDebtors() {
-        return debtorService.getAllDebtors();
+    public PageOutput<DebtorDTO> getAllDebtors(PagingInput pagingInput) {
+        return debtorService.getAllDebtors(pagingInput);
     }
 
     public DebtorDTO getDebtorById(Long id) {

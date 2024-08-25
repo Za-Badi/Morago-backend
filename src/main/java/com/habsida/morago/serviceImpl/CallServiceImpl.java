@@ -8,24 +8,25 @@ import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.enums.CallStatus;
 import com.habsida.morago.model.enums.PaymentStatus;
 import com.habsida.morago.model.enums.UserStatus;
-import com.habsida.morago.model.inputs.CreateCallInput;
 import com.habsida.morago.model.inputs.CreateDepositsInput;
+import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.CallRepository;
 import com.habsida.morago.repository.ThemeRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.CallService;
 import com.habsida.morago.service.DepositsService;
 import com.habsida.morago.service.NotificationService;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,27 +38,46 @@ public class CallServiceImpl implements CallService {
     private final NotificationService notificationService;
     private final DepositsService depositsService;
     private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
 
     @Override
-    @Transactional
-    public List<CallDTO> getAllCalls() {
-        List<Call> calls = callRepository.findAll();
-        return calls.stream()
-                .map(call -> modelMapper.map(call, CallDTO.class))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public PageOutput<CallDTO> getAllCalls(PagingInput pagingInput) {
+//        List<Call> calls = callRepository.findAll();
+//        return calls.stream()
+//                .map(call -> modelMapper.map(call, CallDTO.class))
+//                .collect(Collectors.toList());
+        Page<Call> calls = callRepository.findAll(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                calls.getNumber(),
+                calls.getTotalPages(),
+                calls.getTotalElements(),
+                calls.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(calls, CallDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
-    @Transactional
-    public List<CallDTO> getAllFreeCall() {
-        List<Call> calls = callRepository.getFreeCallIsMade();
-        return calls.stream()
-                .map(call -> modelMapper.map(call, CallDTO.class))
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public PageOutput<CallDTO> getAllFreeCall(PagingInput pagingInput) {
+//        List<Call> calls = callRepository.getFreeCallIsMade();
+//        return calls.stream()
+//                .map(call -> modelMapper.map(call, CallDTO.class))
+//                .collect(Collectors.toList());
+        Page<Call> freeCalls = callRepository.getFreeCallIsMade(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                freeCalls.getNumber(),
+                freeCalls.getTotalPages(),
+                freeCalls.getTotalElements(),
+                freeCalls.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(freeCalls, CallDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public CallDTO getCallById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID must not be null");
@@ -243,36 +263,71 @@ public class CallServiceImpl implements CallService {
     }
 
     @Override
-    @Transactional
-    public List<CallDTO> getCallsByUserId(Long userId) {
-        List<Call> calls = callRepository.findCallsByUserId(userId);
+    @Transactional(readOnly = true)
+    public PageOutput<CallDTO> getCallsByUserId(Long userId, PagingInput pagingInput) {
+//        List<Call> calls = callRepository.findCallsByUserId(userId);
+//        if (calls == null || calls.isEmpty()) {
+//            throw new IllegalArgumentException("Calls not found for user with id: " + userId);
+//        }
+//        return calls.stream()
+//                .map(call -> modelMapper.map(call, CallDTO.class))
+//                .collect(Collectors.toList());
+        Page<Call> calls = callRepository.findCallsByUserId(userId, PageUtil.buildPageable(pagingInput));
         if (calls == null || calls.isEmpty()) {
             throw new IllegalArgumentException("Calls not found for user with id: " + userId);
         }
-        return calls.stream()
-                .map(call -> modelMapper.map(call, CallDTO.class))
-                .collect(Collectors.toList());
+        return new PageOutput<>(
+                calls.getNumber(),
+                calls.getTotalPages(),
+                calls.getTotalElements(),
+                calls.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(calls, CallDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
-    @Transactional
-    public Page<CallDTO> getAllMissedCalls(Long userId, Pageable pageable) {
-        return callRepository.getAllMissedCalls(userId, pageable)
-                .map(call -> modelMapper.map(call, CallDTO.class));
+    @Transactional(readOnly = true)
+    public PageOutput<CallDTO> getAllMissedCalls(Long userId, PagingInput pagingInput) {
+        Page<Call> missedCalls = callRepository.getAllMissedCalls(userId, PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                missedCalls.getNumber(),
+                missedCalls.getTotalPages(),
+                missedCalls.getTotalElements(),
+                missedCalls.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(missedCalls, CallDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
-    @Transactional
-    public Page<CallDTO> getCallsByOutgoingIncomingStatus(CallStatus status, Pageable pageable) {
-        return callRepository.getCallsByOutgoingIncomingStatus(status, pageable)
-                .map(call -> modelMapper.map(call, CallDTO.class));
+    @Transactional(readOnly = true)
+    public PageOutput<CallDTO> getCallsByOutgoingIncomingStatus(CallStatus status, PagingInput pagingInput) {
+        Page<Call> calls = callRepository.getCallsByOutgoingIncomingStatus(status, PageUtil.buildPageable(pagingInput));
+
+        return new PageOutput<>(
+                calls.getNumber(),
+                calls.getTotalPages(),
+                calls.getTotalElements(),
+                calls.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(calls, CallDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
-    @Transactional
-    public Page<CallDTO> getCallsByOutgoingIncoming(Pageable pageable) {
-        return callRepository.getCallsByOutgoingIncoming(pageable)
-                .map(call -> modelMapper.map(call, CallDTO.class));
+    @Transactional(readOnly = true)
+    public PageOutput<CallDTO> getCallsByOutgoingIncoming(PagingInput pagingInput) {
+        Page<Call> calls = callRepository.getCallsByOutgoingIncoming(PageUtil.buildPageable(pagingInput));
+
+        return new PageOutput<>(
+                calls.getNumber(),
+                calls.getTotalPages(),
+                calls.getTotalElements(),
+                calls.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(calls, CallDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override

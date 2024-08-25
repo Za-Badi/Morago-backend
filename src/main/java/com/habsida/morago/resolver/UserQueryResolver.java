@@ -19,8 +19,8 @@ import java.util.List;
 public class UserQueryResolver implements GraphQLQueryResolver {
     private final UserService userService;
 
-    public List<UserDTO> getAllUsers() {
-        return userService.getAllUsers();
+    public PageOutput<UserDTO> getAllUsers(PagingInput pagingInput) {
+        return userService.getAllUsers(pagingInput);
     }
 
     public UserDTO getUserById(Long id) throws ExceptionGraphql {
@@ -47,20 +47,20 @@ public class UserQueryResolver implements GraphQLQueryResolver {
         return userService.searchUsers(searchInput, page, size);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    public List<UserDTO> testAuthentication() {
-        return userService.getAllUsers();
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    public List<UserDTO> testAuthentication() {
+//        return userService.getAllUsers();
+//    }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public List<UserDTO> testUser() {
-        return userService.getAllUsers();
-    }
-
-    @PreAuthorize("hasRole('ROLE_TRANSLATOR')")
-    public List<UserDTO> testTranslator() {
-        return userService.getAllUsers();
-    }
+//    @PreAuthorize("hasRole('ROLE_USER')")
+//    public List<UserDTO> testUser() {
+//        return userService.getAllUsers();
+//    }
+//
+//    @PreAuthorize("hasRole('ROLE_TRANSLATOR')")
+//    public List<UserDTO> testTranslator() {
+//        return userService.getAllUsers();
+//    }
 
     public PageOutput<UsersAndWithdrawals> getUsersAndWithdrawals(PagingInput pagingInput) {
         return userService.getUsersAndWithdrawals(pagingInput);

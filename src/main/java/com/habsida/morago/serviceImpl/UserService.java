@@ -1,9 +1,11 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.ExceptionGraphql;
+import com.habsida.morago.model.dto.CallDTO;
 import com.habsida.morago.model.dto.RatingDTO;
 import com.habsida.morago.model.dto.UserDTO;
 import com.habsida.morago.model.dto.WithdrawalsDTO;
+import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UserInput;
@@ -14,6 +16,7 @@ import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.repository.UserRepositoryPaged;
 import com.habsida.morago.repository.WithdrawalRepository;
+import com.habsida.morago.util.ModelMapperUtil;
 import com.habsida.morago.util.PageUtil;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +44,19 @@ public class UserService {
     private final UserRepositoryPaged userRepositoryPaged;
     private final WithdrawalRepository withdrawalRepository;
     private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
 
     @Transactional(readOnly = true)
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream()
-                .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
+    public PageOutput<UserDTO> getAllUsers(PagingInput pagingInput) {
+        Page<User> users = userRepository.findAll(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                users.getNumber(),
+                users.getTotalPages(),
+                users.getTotalElements(),
+                users.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(users, UserDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Transactional(readOnly = true)

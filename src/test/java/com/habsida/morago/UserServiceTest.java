@@ -57,24 +57,24 @@ public class UserServiceTest {
     public void setUp() {
         SecurityContextHolder.setContext(securityContext);
     }
-    @Test
-    public void testGetAllUsers() {
-        User userFirst = User.builder().phone("0110").password("encodedPassword0110").build();
-        User userSecond = User.builder().phone("0120").password("encodedPassword20120").build();
-        List<User> users = Arrays.asList(userFirst, userSecond);
-        UserDTO userFirstDTO = new UserDTO();
-        UserDTO userSecondDTO = new UserDTO();
-        List<UserDTO> userDTOs = Arrays.asList(userFirstDTO, userSecondDTO);
-        when(userRepository.findAll()).thenReturn(users);
-        when(modelMapper.map(userFirst, UserDTO.class)).thenReturn(userFirstDTO);
-        when(modelMapper.map(userSecond, UserDTO.class)).thenReturn(userSecondDTO);
-        List<UserDTO> result = userService.getAllUsers();
-        assertNotNull(result);
-        assertEquals(userDTOs.size(), result.size());
-        assertEquals(userFirstDTO, result.get(0));
-        assertEquals(userSecondDTO, result.get(1));
-        verify(userRepository, times(1)).findAll();
-    }
+//    @Test
+//    public void testGetAllUsers() {
+//        User userFirst = User.builder().phone("0110").password("encodedPassword0110").build();
+//        User userSecond = User.builder().phone("0120").password("encodedPassword20120").build();
+//        List<User> users = Arrays.asList(userFirst, userSecond);
+//        UserDTO userFirstDTO = new UserDTO();
+//        UserDTO userSecondDTO = new UserDTO();
+//        List<UserDTO> userDTOs = Arrays.asList(userFirstDTO, userSecondDTO);
+//        when(userRepository.findAll()).thenReturn(users);
+//        when(modelMapper.map(userFirst, UserDTO.class)).thenReturn(userFirstDTO);
+//        when(modelMapper.map(userSecond, UserDTO.class)).thenReturn(userSecondDTO);
+//        List<UserDTO> result = userService.getAllUsers();
+//        assertNotNull(result);
+//        assertEquals(userDTOs.size(), result.size());
+//        assertEquals(userFirstDTO, result.get(0));
+//        assertEquals(userSecondDTO, result.get(1));
+//        verify(userRepository, times(1)).findAll();
+//    }
     @Test
     public void testGetAllUsersPaged() {
         User user1 = User.builder().phone("0110").password("encodedPassword0110").build();

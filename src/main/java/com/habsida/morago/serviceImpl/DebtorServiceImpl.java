@@ -1,16 +1,23 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GraphqlException;
+import com.habsida.morago.model.dto.CallDTO;
 import com.habsida.morago.model.dto.DebtorDTO;
+import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Debtor;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.CreateDebtorInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UpdateDebtorInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.DebtorRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.DebtorService;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +30,19 @@ public class DebtorServiceImpl implements DebtorService {
     private final DebtorRepository debtorRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
 
     @Transactional(readOnly = true)
-    public List<DebtorDTO> getAllDebtors() {
-        List<Debtor> debtors = debtorRepository.findAll();
-        return debtors.stream()
-                .map(debtor -> modelMapper.map(debtor, DebtorDTO.class))
-                .collect(Collectors.toList());
+    public PageOutput<DebtorDTO> getAllDebtors(PagingInput pagingInput) {
+        Page<Debtor> debtors = debtorRepository.findAll(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                debtors.getNumber(),
+                debtors.getTotalPages(),
+                debtors.getTotalElements(),
+                debtors.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(debtors, DebtorDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Transactional(readOnly = true)

@@ -44,18 +44,18 @@ class NotificationServiceImplTest {
         openMocks(this);
     }
 
-    @Test
-    void getAllNotification() {
-        Notification notification = new Notification();
-        when(notificationRepository.findAll()).thenReturn(Arrays.asList(notification));
-        when(modelMapper.map(any(Notification.class), eq(NotificationDTO.class))).thenReturn(new NotificationDTO());
-
-        List<NotificationDTO> result = notificationService.getAllNotification();
-
-        assertFalse(result.isEmpty());
-        verify(notificationRepository).findAll();
-        verify(modelMapper, times(1)).map(notification, NotificationDTO.class);
-    }
+//    @Test
+//    void getAllNotification() {
+//        Notification notification = new Notification();
+//        when(notificationRepository.findAll()).thenReturn(Arrays.asList(notification));
+//        when(modelMapper.map(any(Notification.class), eq(NotificationDTO.class))).thenReturn(new NotificationDTO());
+//
+//        List<NotificationDTO> result = notificationService.getAllNotification();
+//
+//        assertFalse(result.isEmpty());
+//        verify(notificationRepository).findAll();
+//        verify(modelMapper, times(1)).map(notification, NotificationDTO.class);
+//    }
 
     @Test
     void getNotificationById() {

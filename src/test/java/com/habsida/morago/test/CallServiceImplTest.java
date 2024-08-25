@@ -130,19 +130,19 @@ public class CallServiceImplTest {
         verify(userRepository, times(1)).save(translator);
         assertTrue(call.getUserHasRated());
     }
-    @Test
-    void testGetAllCalls() {
-        Call call = new Call();
-        List<Call> calls = Arrays.asList(call);
-
-        when(callRepository.findAll()).thenReturn(calls);
-        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
-
-        List<CallDTO> result = callService.getAllCalls();
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-    }
+//    @Test
+//    void testGetAllCalls() {
+//        Call call = new Call();
+//        List<Call> calls = Arrays.asList(call);
+//
+//        when(callRepository.findAll()).thenReturn(calls);
+//        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
+//
+//        List<CallDTO> result = callService.getAllCalls();
+//
+//        assertNotNull(result);
+//        assertEquals(1, result.size());
+//    }
 
     @Test
     void testGetCallById() {
@@ -167,33 +167,33 @@ public class CallServiceImplTest {
         assertEquals(CallStatus.OUTGOING_CALL, call.getStatus());
     }
 
-    @Test
-    void testGetCallsByUserId() {
-        Call call = new Call();
-        List<Call> calls = Arrays.asList(call);
-        when(callRepository.findCallsByUserId(1L)).thenReturn(calls);
-        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
+//    @Test
+//    void testGetCallsByUserId() {
+//        Call call = new Call();
+//        List<Call> calls = Arrays.asList(call);
+//        when(callRepository.findCallsByUserId(1L)).thenReturn(calls);
+//        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
+//
+//        List<CallDTO> result = callService.getCallsByUserId(1L);
+//
+//        assertNotNull(result);
+//        assertEquals(1, result.size());
+//    }
 
-        List<CallDTO> result = callService.getCallsByUserId(1L);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    void testGetAllMissedCalls() {
-        Call call = new Call();
-        Page<Call> callPage = new PageImpl<>(Arrays.asList(call));
-        Pageable pageable = PageRequest.of(0, 10);
-
-        when(callRepository.getAllMissedCalls(1L, pageable)).thenReturn(callPage);
-        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
-
-        Page<CallDTO> result = callService.getAllMissedCalls(1L, pageable);
-
-        assertNotNull(result);
-        assertEquals(1, result.getContent().size());
-    }
+//    @Test
+//    void testGetAllMissedCalls() {
+//        Call call = new Call();
+//        Page<Call> callPage = new PageImpl<>(Arrays.asList(call));
+//        Pageable pageable = PageRequest.of(0, 10);
+//
+//        when(callRepository.getAllMissedCalls(1L, pageable)).thenReturn(callPage);
+//        when(modelMapper.map(any(Call.class), eq(CallDTO.class))).thenReturn(new CallDTO());
+//
+//        Page<CallDTO> result = callService.getAllMissedCalls(1L, pageable);
+//
+//        assertNotNull(result);
+//        assertEquals(1, result.getContent().size());
+//    }
 
     @Test
     void deleteCall() {

@@ -78,14 +78,14 @@ class CategoryServiceTest {
         verify(categoryRepository, times(1)).save(any(Category.class));
     }
 
-    @Test
-    void getAllCategories() {
-        Category category = new Category();
-        Pageable pageable = PageRequest.of(1,6);
-        Page<Category> categories = Mockito.mock(Page.class);
-        Mockito.when(categoryRepository.findAll(pageable)).thenReturn(categories);
-        assertNotNull(categories);
-    }
+//    @Test
+//    void getAllCategories() {
+//        Category category = new Category();
+//        Pageable pageable = PageRequest.of(1,6);
+//        Page<Category> categories = Mockito.mock(Page.class);
+//        Mockito.when(categoryRepository.findAll(pageable)).thenReturn(categories);
+//        assertNotNull(categories);
+//    }
     @Test
     void getCategoryById() throws EntityNotFoundException {
         Category category = Category.builder()

@@ -13,7 +13,7 @@ import java.util.List;
 public interface CallRepository extends JpaRepository<Call, Long> {
 
     @Query("SELECT c FROM Call c WHERE c.caller.id = :userId OR c.recipient.id = :userId OR c.recipientConsultant.id = :userId")
-    List<Call> findCallsByUserId(@Param("userId") Long userId);
+    Page<Call> findCallsByUserId(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT c FROM Call c WHERE c.status = 'INCOMING_CALL' OR c.status = 'OUTGOING_CALL'")
     Page<Call> getCallsByOutgoingIncoming(Pageable pageable);
@@ -29,7 +29,7 @@ public interface CallRepository extends JpaRepository<Call, Long> {
     Page<Call> findAllCallsByUserId(@Param("userId") Long userId, Pageable pageable);
 
     @Query("SELECT c FROM Call c WHERE c.commission = 0 OR c.commission is NULL")
-    List<Call> getFreeCallIsMade();
+    Page<Call> getFreeCallIsMade(Pageable pageable);
 
 //    List<Call> findByStatus(CallStatus callStatus);
 }

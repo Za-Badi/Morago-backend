@@ -25,7 +25,7 @@ type Query {
     getFrequentlyAskedQuestionById(id: ID!): FrequentlyAskedQuestionsDTO
     getAllFrequentlyAskedQuestionsByCategory(pagingInput: PagingInput, category: QuestionsCategories): FrequentlyAskedQuestionPageOutput
 
-    getAllUsers: [UserDTO]
+#    getAllUsers: [UserDTO]
     getUserById(id: ID!): UserDTO
     getUserByPhone(phone: String): UserDTO
     getAuthenticatedUser: UserDTO
@@ -33,13 +33,12 @@ type Query {
     getAllUsersPaged(page: Int, size: Int): UserPage
     searchUsers(searchInput: String, page: Int, size: Int): UserPage
 
-    testUser: [UserDTO]
-    testTranslator: [UserDTO]
-    testAuthentication: [UserDTO]
+#    testUser: [UserDTO]
+#    testTranslator: [UserDTO]
+#    testAuthentication: [UserDTO]
 
     getAllUserProfiles(pagingInput: PagingInput!): UserProfilePageOutput!
     getUserProfileById(id: ID): UserProfileDTO
-
 
     getAllTranslatorProfilesPaged(page: Int, size: Int): TranslatorPage
     getTranslatorProfileById(id: ID): TranslatorProfileDTO
@@ -51,15 +50,15 @@ type Query {
     getAllLanguages(pagingInput: PagingInput): LanguagePageOutput
     getLanguageById(id: ID): LanguageDTO
 
-    getAllDebtors: [DebtorDTO]
+    getAllDebtors(pagingInput: PagingInput!): DebtorPageOutput
     getDebtorById(id: ID!): DebtorDTO
     getDebtorByUserId(userId: ID!): [DebtorDTO]
 
     getDepositById(id: ID!): DepositsDTO
-#    getDepositsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): DepositsPageOutput
-#    getDepositsByUserId(userId: ID!, pagingInput: PagingInput!): DepositsPageOutput
+    getDepositsByStatus(status: PaymentStatus!, pagingInput: PagingInput!): DepositsPageOutput
+    getDepositsByUserId(userId: ID!, pagingInput: PagingInput!): DepositsPageOutput
 
-    getAllNotification: [NotificationDTO]
+    getAllNotification(pagingInput: PagingInput!): NotificationPageOutput
     getNotificationById(id: ID!): NotificationDTO
     getNotificationsByUserId(userId: ID!): [NotificationDTO]
 
@@ -69,13 +68,13 @@ type Query {
     getWithdrawalsByUserId(userId: ID!, pagingInput: PagingInput!): WithdrawalsPageOutput
     getUsersAndWithdrawals(pagingInput: PagingInput!): UsersAndWithdrawalsPageOutput
 
-    getAllCalls: [CallDTO]
+    getAllCalls(pagingInput: PagingInput!): CallPageOutput
     getCallById(id: ID!): CallDTO
-    getAllFreeCalls: [CallDTO]
-    getCallsByUserId(userid: ID!): [CallDTO]
-    getMissedCalls(userId: ID!, page: Int!, size: Int!): CallPage!
-    getCallsByOutgoingIncoming(page: Int!, size: Int!): CallPage!
-    getCallsByOutgoingIncomingStatus(status: CallStatus, page: Int!, size: Int!): CallPage!
+    getAllFreeCalls(pagingInput: PagingInput!): CallPageOutput
+    getCallsByUserId(userid: ID!, pagingInput: PagingInput!): CallPageOutput
+    getMissedCalls(userId: ID!, pagingInput: PagingInput!): CallPageOutput
+    getCallsByOutgoingIncoming(pagingInput: PagingInput!): CallPageOutput
+    getCallsByOutgoingIncomingStatus(status: CallStatus, pagingInput: PagingInput!): CallPageOutput
 
     getAllRatings(pagingInput: PagingInput!): RatingsPageOutput
     getRatingById(id: ID!): RatingDTO
@@ -91,9 +90,9 @@ type Query {
 }
 
 type Mutation {
-#    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersionDTO
-#    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersionDTO
-#    deleteAppVersion(platform: EPlatform!): Boolean
+    createAppVersion(platform: EPlatform!, min: String!, latest: String!): AppVersionDTO
+    updateAppVersion(platform: EPlatform!, min: String, latest: String): AppVersionDTO
+    deleteAppVersion(platform: EPlatform!): Boolean
 
     createCoin(input: CreateCoinInput): CoinDTO
     updateCoin(input: UpdateCoinInput): CoinDTO
@@ -393,7 +392,6 @@ type UsersAndWithdrawalsDTO {
     withdrawals: [WithdrawalsDTO]
 }
 
-
 type PageInfo {
     totalPages: Int!
     totalElements: Int!
@@ -423,6 +421,27 @@ type AppVersionPageOutput {
     totalPages: Int
     totalElements: Int
     objectList: [AppVersionDTO]
+}
+
+type CallPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [CallDTO]
+}
+
+type DebtorPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [DebtorDTO]
+}
+
+type NotificationPageOutput {
+    currentPage: Int
+    totalPages: Int
+    totalElements: Int
+    objectList: [NotificationDTO]
 }
 
 type FrequentlyAskedQuestionPageOutput {

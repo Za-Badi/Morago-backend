@@ -1,13 +1,20 @@
 package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.ExceptionGraphql;
+import com.habsida.morago.model.dto.CallDTO;
 import com.habsida.morago.model.dto.RoleDTO;
+import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Role;
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.inputs.PagingInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.RoleRepository;
 import com.habsida.morago.service.RoleService;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +27,19 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository rolesRepository;
     private final ModelMapper modelMapper;
+    private final ModelMapperUtil modelMapperUtil;
 
     @Override
-    public List<RoleDTO> getAllRoles() {
-        return rolesRepository.findAll().stream()
-                .map(role -> modelMapper.map(role, RoleDTO.class))
-                .collect(Collectors.toList());
+    public PageOutput<RoleDTO> getAllRoles(PagingInput pagingInput) {
+        Page<Role> roles = rolesRepository.findAll(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                roles.getNumber(),
+                roles.getTotalPages(),
+                roles.getTotalElements(),
+                roles.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(roles, RoleDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override

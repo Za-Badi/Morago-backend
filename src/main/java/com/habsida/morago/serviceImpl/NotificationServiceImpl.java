@@ -2,17 +2,24 @@ package com.habsida.morago.serviceImpl;
 
 import com.habsida.morago.exceptions.GraphqlException;
 import com.habsida.morago.model.dto.NotificationDTO;
+import com.habsida.morago.model.dto.WithdrawalsDTO;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.Notification;
 import com.habsida.morago.model.entity.User;
+import com.habsida.morago.model.entity.Withdrawals;
 import com.habsida.morago.model.inputs.CreateNotificationInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UpdateNotificationInput;
+import com.habsida.morago.model.results.PageOutput;
 import com.habsida.morago.repository.NotificationRepository;
 import com.habsida.morago.repository.UserRepository;
 import com.habsida.morago.service.NotificationService;
 //import com.habsida.morago.service.SmsService;
+import com.habsida.morago.util.ModelMapperUtil;
+import com.habsida.morago.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +36,23 @@ public class NotificationServiceImpl implements NotificationService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final FirebaseService firebaseService;
+    private final ModelMapperUtil modelMapperUtil;
 
     @Transactional(readOnly = true)
-    public List<NotificationDTO> getAllNotification() {
-        return notificationRepository.findAll()
-                .stream()
-                .map(notification -> modelMapper.map(notification, NotificationDTO.class))
-                .collect(Collectors.toList());
+    public PageOutput<NotificationDTO> getAllNotification(PagingInput pagingInput) {
+//        return notificationRepository.findAll()
+//                .stream()
+//                .map(notification -> modelMapper.map(notification, NotificationDTO.class))
+//                .collect(Collectors.toList());
+        Page<Notification> notificationsPage = notificationRepository.findAll(PageUtil.buildPageable(pagingInput));
+        return new PageOutput<>(
+                notificationsPage.getNumber(),
+                notificationsPage.getTotalPages(),
+                notificationsPage.getTotalElements(),
+                notificationsPage.getContent().stream()
+                        .map(withdrawals -> modelMapperUtil.map(notificationsPage, NotificationDTO.class))
+                        .collect(Collectors.toList())
+        );
     }
 
     @Transactional(readOnly = true)

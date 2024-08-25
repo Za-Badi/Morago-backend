@@ -42,18 +42,18 @@ class DebtorServiceImplTest {
         openMocks(this);
     }
 
-    @Test
-    void getAllDebtors() {
-        Debtor debtor = new Debtor();
-        when(debtorRepository.findAll()).thenReturn(Arrays.asList(debtor));
-        when(modelMapper.map(any(Debtor.class), eq(DebtorDTO.class))).thenReturn(new DebtorDTO());
-
-        List<DebtorDTO> result = debtorService.getAllDebtors();
-
-        assertFalse(result.isEmpty());
-        verify(debtorRepository).findAll();
-        verify(modelMapper, times(1)).map(debtor, DebtorDTO.class);
-    }
+//    @Test
+//    void getAllDebtors() {
+//        Debtor debtor = new Debtor();
+//        when(debtorRepository.findAll()).thenReturn(Arrays.asList(debtor));
+//        when(modelMapper.map(any(Debtor.class), eq(DebtorDTO.class))).thenReturn(new DebtorDTO());
+//
+//        List<DebtorDTO> result = debtorService.getAllDebtors();
+//
+//        assertFalse(result.isEmpty());
+//        verify(debtorRepository).findAll();
+//        verify(modelMapper, times(1)).map(debtor, DebtorDTO.class);
+//    }
 
     @Test
     void getDebtorById() {

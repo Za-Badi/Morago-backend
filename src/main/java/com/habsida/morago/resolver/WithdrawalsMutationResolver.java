@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class WithdrawalsMutationResolver implements GraphQLMutationResolver {
-    private WithdrawalService withdrawalService;
+    private final WithdrawalService withdrawalService;
 
     public WithdrawalsDTO addWithdrawal(CreateWithdrawalInput withdrawalDto) {
         return withdrawalService.addWithdrawal(withdrawalDto);

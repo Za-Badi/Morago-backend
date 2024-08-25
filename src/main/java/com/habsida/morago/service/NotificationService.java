@@ -4,13 +4,15 @@ import com.habsida.morago.model.dto.NotificationDTO;
 import com.habsida.morago.model.entity.Call;
 import com.habsida.morago.model.entity.User;
 import com.habsida.morago.model.inputs.CreateNotificationInput;
+import com.habsida.morago.model.inputs.PagingInput;
 import com.habsida.morago.model.inputs.UpdateNotificationInput;
+import com.habsida.morago.model.results.PageOutput;
 
 import java.util.List;
 
 public interface NotificationService {
 
-    public List<NotificationDTO> getAllNotification();
+    public PageOutput<NotificationDTO> getAllNotification(PagingInput pagingInput);
 
     public NotificationDTO getNotificationById(Long id);
 

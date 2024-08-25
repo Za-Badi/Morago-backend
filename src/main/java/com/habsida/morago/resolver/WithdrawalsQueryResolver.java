@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class WithdrawalsQueryResolver implements GraphQLQueryResolver {
-    private WithdrawalService withdrawalService;
+    private final WithdrawalService withdrawalService;
 
     public PageOutput<WithdrawalsDTO> getAllWithdrawals(PagingInput pagingInput) {
         return withdrawalService.getAllWithdrawals(pagingInput);
